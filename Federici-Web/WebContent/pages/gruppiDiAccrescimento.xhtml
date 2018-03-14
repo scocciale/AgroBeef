@@ -1,0 +1,277 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="/templates/layout.xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:define name="title">
+		<h:outputText value="Gruppi di accrescimento" />
+	</ui:define>
+	<ui:define name="title-desc">
+		<h:outputText value="" />
+	</ui:define>
+	<ui:define name="content">
+		<p:panel header="Gruppi di accrescimento" closable="false"
+			toggleable="false" widgetVar="accrWidgetVar" id="gruppiDiAccr"
+			style="margin-left: 10px ; margin-right: 10px">
+
+
+			<div class="ui-g">
+				<div class="ui-g-12 ui-md-6 ui-lg-6"
+					style="border-right: solid 1px #ECECEC;">
+					<div class="row">
+						<div class="center-block center">
+							<h:outputLabel value="Nuovo gruppo di accrescimento"
+								style="font-weight: bold; font-size: 1.2em!important; padding-bottom:5%!important; color: #7b7272;"
+								styleClass="center-block" />
+						</div>
+					</div>
+
+					<div class="ui-g-4">
+						<div class="input-field">
+							<p:inputText
+								value="#{accrMB.nuovoStoricoGruppoAccr.safNumAppezzamento}"
+								onkeypress="if (event.keyCode == 13) return false;"
+								maxlength="100" id="nomeNuovoStoricoGruppoAccr">
+							</p:inputText>
+							<label class="left-align" for="nomeNuovoStoricoGruppoAccr">
+								<h:outputText value="Numero appezzamento del gruppo" />
+							</label>
+						</div>
+					</div>
+
+					<div class="ui-g-4">
+						<div class="input-field">
+							<p:outputLabel for="dataApertura" value="Data di apertura"
+								styleClass="left-align"
+								style="font-size: 0.9rem !important;color: #888888;!important" />
+							<p:calendar id="dataApertura"
+								value="#{accrMB.nuovoStoricoGruppoAccr.safDataInizio}"
+								locale="it" navigator="true" styleClass="validate">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:calendar>
+						</div>
+					</div>
+					<div class="ui-g-4">
+						<div class="input-field">
+
+
+							<p:selectOneMenu id="scopoNuovoStoricoGruppoAccr"
+								widgetVar="scopoNuovoStoricoGruppoAccr"
+								value="#{accrMB.nuovoStoricoGruppoAccr.safScopo}"
+								style="width:125px;display: block!important;margin-left: auto !important;margin-right: auto !important;">
+								<f:selectItem itemLabel="Seleziona lo scopo" itemValue="" />
+								<f:selectItem itemValue="Accrescimento"
+									itemLabel="Accrescimento" />
+								<f:selectItem itemValue="Finissaggio" itemLabel="Finissaggio" />
+							</p:selectOneMenu>
+
+
+						</div>
+					</div>
+
+					<div class="ui-g-12">
+						<div class="input-field">
+
+							<p:autoComplete id="acAnimali"
+								completeMethod="#{accrMB.findFromParms}"
+								value="#{accrMB.valueAna}">
+								<p:ajax update="showListAddedAnimal contForm:dlgAnimaleAddedYet"
+									event="itemSelect" listener="#{accrMB.addToGruppoDiAccr()}" />
+							</p:autoComplete>
+
+							<p:outputLabel value="Animali Disponibili"
+								styleClass="left-align" for="acAnimali"
+								style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
+
+							<p:selectOneListbox id="showListAddedAnimal">
+								<f:selectItems itemLabel="#{animale.anaNumMatricola}"
+									itemValue="#{animale}" value="#{accrMB.animaliAggiuntiView}"
+									var="animale" />
+							</p:selectOneListbox>
+
+						</div>
+
+						<p:outputLabel value="*: Toro" styleClass="left-align"
+							style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
+
+					</div>
+
+
+					<div class="row center-block center">
+
+						<p:commandButton value="#{text['button.salva']}"
+							style="float:right!important;margin-top: 6%!important;"
+							actionListener="#{accrMB.salvaGruppoDiAccr()}"
+							id="salvaNewGruppo"
+							onkeypress="if (event.keyCode == 13) return false;"
+							rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
+							styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+							update="contForm:gruppiDiAccr contForm:pickListAnimaliDaAggiungere " />
+						<!-- contForm:pickListAnimali -->
+
+						<p:tooltip for="salvaNewGruppo"
+							value="#{text['tooltip.manageRules.salvaNuovaDetr']}"
+							position="top" />
+					</div>
+				</div>
+
+				<div class="ui-g-12 ui-md-6 ui-lg-6">
+
+					<div class="row">
+						<p:dataTable id="gruppiDiAccrDt" var="saccrVar"
+							value="#{accrMB.gruppiDiAccrList}"
+							style="width:auto!important; float:right!important; "
+							emptyMessage="#{text['label.emptyResult']}"
+							currentPageReportTemplate="({currentPage} Di {totalPages})"
+							rows="15" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
+
+							<p:column width="5%">
+								<p:rowToggler rendered="#{saccrVar.safDataFine==null}" />
+							</p:column>
+
+							<p:column styleClass="center-align" width="19%"
+								style="font-size: 1.2em!important" headerText="Scopo Gruppo">
+								<h:outputText value="#{saccrVar.safScopo}" styleClass="left"
+									style="font-size: 1.2em!important" />
+							</p:column>
+
+							<p:column styleClass="center-align" width="19%"
+								style="font-size: 1.2em!important" headerText="N. appezzamento">
+								<h:outputText value="#{saccrVar.safNumAppezzamento}"
+									styleClass="left" style="font-size: 1.2em!important" />
+							</p:column>
+
+							<p:column styleClass="center-align" headerText="Data apertura"
+								width="19%" style="font-size: 1.2em!important">
+								<h:outputText value="#{saccrVar.safDataInizio}"
+									styleClass="left" style="font-size: 1.2em!important">
+									<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column styleClass="center-align" headerText="Data chiusura"
+								width="19%" style="font-size: 1.2em!important">
+								<h:outputText value="#{saccrVar.safDataFine}" styleClass="left"
+									style="font-size: 1.2em!important">
+									<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column styleClass="center-align">
+								<p:commandButton value="Aggiungi animale"
+									style="float:right!important;font-size: 1.1em!important"
+									id="modificaGruppoDiAccr"
+									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
+									disabled="#{saccrVar.safDataFine !=null}" 
+									action="#{accrMB.showDialogAddAnimali(saccrVar)}"
+									styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+									update="contForm:addAnimaliInGruppoAccr" />
+								<!-- disabled="#{accrMB.animaliDisponibili.source.size() eq 0 or saccrVar.safDataFine !=null} -->
+								<p:tooltip for="modificaGruppoDiAccr"
+									value="Aggiungi un animale o chiudi un gruppo" position="top" />
+								<p:commandLink action="#{accrMB.chiusuraGruppoAccr(saccrVar)}"
+									rendered="#{saccrVar.safDataFine eq null and !userMB.utente.profilo.proNome.equals('lettura')}"
+									update="gruppiDiAccrDt ">
+									<p:graphicImage name="images/icons/delete_icon.png"
+										style="height: 23px; width: 23px;" />
+								</p:commandLink>
+							</p:column>
+
+							<p:rowExpansion>
+								<p:dataTable id="gruppiDiAccrsottoDt" var="ga"
+									value="#{saccrVar.anagrAccrFinis}"
+									style="width:auto!important; float:right!important; "
+									emptyMessage="#{text['label.emptyResult']}">
+
+									<p:column styleClass="center-align" headerText="Matricola"
+										style="font-size: 1.2em!important"
+										sortBy="#{ga.anagrafica.anaNumMatricola}">
+										<h:outputText value="#{ga.anagrafica.anaNumMatricola}"
+											styleClass="left" style="font-size: 1.2em!important" />
+									</p:column>
+									<p:column styleClass="center-align"
+										style="font-size: 1.2em!important"
+										sortBy="#{ga.aafDataEntrata}" headerText="Data inserimento">
+										<h:outputText value="#{ga.aafDataEntrata}" styleClass="left"
+											style="font-size: 1.2em!important">
+											<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column styleClass="center-align" headerText="Toro"
+										style="font-size: 1.2em!important">
+										<h:outputText rendered="#{ga.anagrafica.anaFlagToro eq 1}"
+											styleClass="fa fa-check" />
+									</p:column>
+
+									<p:column styleClass="center-align">
+										<p:commandButton value="Elimina Animale"
+											style="float:right!important;"
+											id="modificaAnimaleGruppoDiAccr"
+											rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
+											action="#{accrMB.modificaAnimaleInGruppoDiAccr(saccrVar,ga.aafId)}"
+											styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+											update="gruppiDiAccrsottoDt contForm:pickListAnimaliDaAggiungere " />
+										<!-- contForm:pickListAnimali -->
+										<p:tooltip for="modificaAnimaleGruppoDiAccr"
+											value="Modifica l'animale nel gruppo di accrescimento"
+											position="top" />
+									</p:column>
+								</p:dataTable>
+
+							</p:rowExpansion>
+
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</p:panel>
+		<p:dialog resizable="false" widgetVar="dlgAnimaleAddedYet" width="35%"
+			id="dlgAnimaleAddedYet" closable="true" styleClass="dialogClass"
+			style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
+
+			<div class="ui-g-12">
+				<div class="row">
+					<p:panelGrid columns="1" layout="grid">
+						<h:outputText value="L'animale è stato già aggiunto alla lista." />
+					</p:panelGrid>
+				</div>
+			</div>
+
+		</p:dialog>
+
+		<p:dialog id="addAnimaliInGruppoAccr" styleClass="dialogClass"
+			widgetVar="dlgAggiuntaAnimaliInGruppoAccr" minWidth="60"
+			closable="true" modal="true" draggable="false" resizable="false">
+			<div class="ui-g-12">
+				<div class="input-field">
+					<p:outputLabel value="Animali Disponibili" styleClass="left-align"
+						style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
+					<p:pickList id="pickListAnimaliDaAggiungere"
+						filterMatchMode="#{ani}"
+						value="#{accrMB.animaliDisponibiliPerAggiunta}" var="ani"
+						itemLabel="#{ani}" itemValue="#{ani}" />
+
+				</div>
+			</div>
+			<div class="row center-block center">
+
+				<p:commandButton value="#{text['button.salva']}"
+					onkeypress="if (event.keyCode == 13) return false;"
+					style="float:right!important;margin-top: 6%!important;"
+					actionListener="#{accrMB.modificaGruppoDiAcrr}" id="aggiornaGruppo"
+					styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+					update="contForm:gruppiDiAccr contForm:pickListAnimaliDaAggiungere "
+					oncomplete="PF('dlgAggiuntaAnimaliInGruppoAccr').hide();" />
+				<!-- contForm:pickListAnimali -->
+
+				<p:tooltip for="aggiornaGruppo"
+					value="#{text['tooltip.manageRules.salvaNuovaDetr']}"
+					position="top" />
+			</div>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

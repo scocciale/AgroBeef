@@ -1,0 +1,58 @@
+<div class="ui-g">
+	<div class="ui-g-12 ui-md-6 ui-lg-6">
+		<div class="row">
+			<div class="center-block center">
+				<h:outputLabel value="Nuovo gruppo di monta"
+					style="font-weight: bold; font-size: 1.2em!important; padding-bottom:5%!important; color: #7b7272;"
+					styleClass="center-block" />
+			</div>
+		</div>
+
+		<div class="ui-g-8">
+			<div class="input-field">
+				<p:inputText value="#{gdmMB.nuovoStoricoGruppoMonta.sgmNome}"
+					onkeypress="if (event.keyCode == 13) return false;" maxlength="100"
+					id="nomeNuovoStoricoGruppoMonta">
+				</p:inputText>
+				<label class="left-align" for="nomeNuovoStoricoGruppoMonta">
+					<h:outputText value="Nome gruppo di monta" />
+				</label>
+			</div>
+		</div>
+		<div class="ui-g-4">
+			<div class="input-field">
+				<p:outputLabel for="dataApertura" value="Data di apertura"
+					styleClass="left-align"
+					style="font-size: 0.9rem !important;color: #888888;!important" />
+				<p:calendar id="dataApertura"
+					value="#{gdmMB.nuovoStoricoGruppoMonta.sgmDataApertura}"
+					locale="it" navigator="true" pattern="dd-MM-yyyy"
+					styleClass="validate" />
+			</div>
+		</div>
+
+
+
+		<div class="ui-g-4">
+			<div class="row">
+				<p:outputLabel for="dataApertura" value="Animali Disponibili"
+					styleClass="left-align"
+					style="font-size: 0.9rem !important;color: #888888;!important" />
+				<p:pickList id="pickListAnimali" value="#{gdmMB.animaliDisponibili}"
+					var="ana" itemLabel="#{ana}" itemValue="#{ana}" />
+
+			</div>
+		</div>
+
+
+		<div class="row center-block center">
+			<p:commandButton value="#{text['button.salva']}"
+				style="float:right!important;margin-top: 6%!important;"
+				actionListener="#{gdmMB.salvaGruppoDiMonta()}" id="salvaNewDetr"
+				styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+				update="@all" />
+			<p:tooltip for="salvaNewDetr"
+				value="#{text['tooltip.manageRules.salvaNuovaDetr']}" position="top" />
+		</div>
+	</div>
+</div>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+	<persistence-unit name="FedericiUnit"
+		transaction-type="JTA">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>jdbc/FedericiDS</jta-data-source>
+		<class>com.entities.AnagrAccrFini</class>
+		<class>com.entities.Anagrafica</class>
+		<class>com.entities.GruppoMonta</class>
+		<class>com.entities.Pesata</class>
+		<class>com.entities.Profilo</class>
+		<class>com.entities.Razza</class>
+		<class>com.entities.Report</class>
+		<class>com.entities.StoricoAccrescFini</class>
+		<class>com.entities.StoricoGruppiMonta</class>
+		<class>com.entities.Utente</class>
+		<class>com.entities.ValutazioneMace</class>
+		<class>com.entities.Veterinaria</class>
+
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+
+
+			<!-- per il deploy utilizzare questi parametri -->
+			<!-- <property name="hibernate.default_schema" value="Sql891011_4" /> 
+			<property name="hibernate.show_sql" value="false" />-->
+			
+			<!-- per sviluppare in locale utilizzare questi parametri -->
+			<property name="hibernate.default_schema" value="federicidb" />
+			<property name="hibernate.show_sql" value="true" />
+
+
+			<property name="hibernate.connection.characterEncoding"
+				value="UTF-8" />
+			<property name="hibernate.connection.charSet" value="UTF-8" />
+		</properties>
+	</persistence-unit>
+</persistence>

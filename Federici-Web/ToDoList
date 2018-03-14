@@ -1,0 +1,34 @@
+
+1) (ANAGRAFICA) controllare che nell inserimento di un nuovo animale le matricole della madre e del padre siano:			+ esistenti
+																															+ M e F 
+																															+ modifica e cancellazione animale
+																															+ se F non può essere toro!
+																															+ ? gestire il flag "gemello" (aprire nuovo dialog se valorizzato)
+																															+ filtrare per data nascita
+																															+ gestire uscita con le cause
+																															+ aggiungere campo abilitato per quando animale esce
+																															+ formato date
+																															+ menu a tendina per le razze
+																															+ se utilizzato in valutazione pesata non piu modificabile
+																															+ settare tendina causa uscita 
+
+2) (GRUPPI DI MONTA) controllare che nell'aggiunta di un animale nel gruppo di monta si rispettino le seguenti regole:		+ solo un toro
+																															+ le vacche (SOLO F) non possono far parte di un altro gruppo
+																															- In un gruppo non possono esserci solo vacche
+																															+ in un gruppo non possono esserci 2 tori
+																															- la data di inserimento deve essere >= della data di apertura del gruppo
+																															- rendere il nome del gruppo creato con il seguente formato: "Gruppo di monta PROGRESSIVO"
+																															+ correggere query
+																															
+0) + (TUTTO) Segnare campi obbligatori con *																									
+
+5) (PESATA COMMERCIALE)	cosa da fare in pesata commerciale: 																+ creare interfaccia che mi determina i campi e i valori scritti sul foglio excel con un form tipo anagrafica
+																															+ Modificare query per adeguare a uscita valutazione (non piu utilizzabile per gdm e gda)
+
+6) inserire "ultimo accesso" su utente
+
+7) profilazione																												+ profilazione prima del rilascio degli allarmi
+																															- profilazione allarmi 
+
+8) allarmi																													- aggiungere dialog per errori sulle query se manca qualche campo valorizzato
+

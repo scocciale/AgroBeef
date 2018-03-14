@@ -1,0 +1,266 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="/templates/layout.xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:define name="title">
+		<h:outputText value="Veterinaria" />
+	</ui:define>
+	<ui:define name="title-desc">
+		<h:outputText value="" />
+	</ui:define>
+	<ui:define name="content">
+		<p:panel header="Interventi veterinari" closable="false"
+			toggleable="false" widgetVar="resultPanelWdg"
+			style="margin-left: 10px ; margin-right: 10px">
+			<div class="row">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<p:dataTable id="anagrafica" var="ana" widgetVar="templateWdg"
+							emptyMessage="#{text['label.emptyResult']}"
+							currentPageReportTemplate="({currentPage} Di {totalPages})"
+							value="#{veteMB.anagraficaList}" paginatorPosition="bottom"
+							rows="15" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+
+							<p:column width="2%">
+								<p:rowToggler rendered="#{ana.veterinarias.size() gt 0}" />
+							</p:column>
+
+							<p:column headerText="Numero matricola"
+								filterStyleClass="filterClass" width="10%"
+								filterBy="#{ana.anaNumMatricola}" filterMatchMode="contains"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaNumMatricola}">
+								<h:outputText value="#{ana.anaNumMatricola}" />
+							</p:column>
+							<p:column headerText="Sesso" filterStyleClass="filterClass"
+								width="4%" filterBy="#{ana.anaSesso}"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaSesso}">
+								<h:outputText value="#{ana.anaSesso}" />
+							</p:column>
+							<p:column headerText="Ultimo peso (Kg)" width="6%"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.pesatas.get(0).pesPeso}">
+								<h:outputText
+									value="#{ana.pesatas.get(ana.pesatas.size()-1).pesPeso}">
+									<f:convertNumber pattern="#,##0.0" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Toro" filterStyleClass="filterClass"
+								width="4%" filterBy="#{ana.anaFlagToro}"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaFlagToro}">
+								<h:outputText rendered="#{ana.anaFlagToro eq 1}"
+									styleClass="fa fa-check" />
+							</p:column>
+							<p:column headerText="Data di nascita" width="15%"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaDataNascita}">
+								<h:outputText value="#{ana.anaDataNascita}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Data acquisto"
+								style="text-align: center; font-size:1.3em;" width="15%"
+								sortBy="#{ana.anaDataAcquisto}">
+								<h:outputText value="#{ana.anaDataAcquisto}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Razza"
+								style="text-align: center; font-size:1.3em;" width="10%"
+								sortBy="#{ana.anaRazza}">
+								<h:outputText value="#{ana.anaRazza}" />
+							</p:column>
+							<p:column width="3%" styleClass="center">
+								<p:commandButton value="+"
+									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
+									style="font-size:1.3em;width:60%!important;" id="addVet"
+									actionListener="#{veteMB.openDialogVet(veteMB.anagraficaList.indexOf(ana))}"
+									styleClass="waves-effect waves-light btn rosso_cdr"
+									update="contForm:dialogVet" />
+								<p:tooltip for="addVet"
+									value="Aggiungere nuovo intervento veterinario" position="top" />
+							</p:column>
+							<p:rowExpansion>
+								<p:dataTable id="vetForAnagDt" var="vet"
+									value="#{ana.veterinarias}"
+									style="width:auto!important; float:right!important; "
+									emptyMessage="#{text['label.emptyResult']}">
+
+									<p:column headerText="Data visita"
+										style="text-align: center; font-size:1.3em;" width="10%"
+										sortBy="#{vet.vetDataVisita}">
+										<h:outputText value="#{vet.vetDataVisita}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Motivo visita"
+										style="text-align: left; font-size:1.3em;" width="20%"
+										sortBy="#{vet.vetMotivoVisita}">
+										<h:outputText value="#{vet.vetMotivoVisita}" />
+									</p:column>
+									<p:column headerText="Farmaci utilizzati"
+										style="text-align: left; font-size:1.3em;" width="30%"
+										sortBy="#{vet.vetFarmaciUtilizzati}">
+										<h:outputText value="#{vet.vetFarmaciUtilizzati}" />
+									</p:column>
+									<p:column headerText="Data diagnosi gravidanza"
+										style="text-align: center; font-size:1.3em;" width="10%"
+										sortBy="#{vet.vetDataDiagnosiGrav}">
+										<h:outputText value="#{vet.vetDataDiagnosiGrav}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Esito gravidanza"
+										style="text-align: center; font-size:1.3em;" width="10%"
+										sortBy="#{vet.vetEsitoGrav}">
+										<h:outputText value="#{vet.vetEsitoGrav}" />
+									</p:column>
+									<!-- <p:column headerText="Ultimo peso"
+										style="text-align: center; font-size:1.3em;" width="10%"
+										sortBy="#{ana.pesatas.get(0).pesPeso}">
+										<h:outputText value="#{vet.vetEsitoGrav}">
+											<f:convertNumber pattern="#.##0,00" />
+										</h:outputText>
+									</p:column> -->
+
+								</p:dataTable>
+							</p:rowExpansion>
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</p:panel>
+		<p:dialog resizable="false" widgetVar="dlgNuovoVet" width="60%"
+			id="dialogVet" closable="true" styleClass="dialogClass"
+			style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
+
+			<div class="row center">
+				<h:outputText value="Dettagli nuovo intervento veterinario"
+					styleClass="text-al-cen"
+					style="font-weight: bold !important; font-size:1.5em" />
+			</div>
+			<div class="row">
+				<p:panelGrid id="gridDettagliAnag" styleClass="companyHeaderGrid">
+					<p:row>
+						<p:column colspan="1">
+							<div class="row">
+								<p:outputLabel value="Matricola: " styleClass="left"
+									for="matricola"
+									style="font-size: 0.9rem !important;color: #888888;!important">
+									<h:outputText id="matricola"
+										style="font-size:2em;font-weight:bold;"
+										value="#{veteMB.nuovoIntVeterinario.anagrafica.anaNumMatricola}" />
+								</p:outputLabel>
+							</div>
+						</p:column>
+						<p:column colspan="1">
+						</p:column>
+						<p:column colspan="1">
+							<div class="input-field right">
+								<p:outputLabel for="dataVisita" value="Data della visita"
+									styleClass="left-align"
+									style="font-size: 0.9rem !important;color: #888888;!important" />
+								<p:calendar id="dataVisita"
+									value="#{veteMB.nuovoIntVeterinario.vetDataVisita}" locale="it"
+									navigator="true" styleClass="validate">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:calendar>
+							</div>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<div class="input-field">
+								<p:outputLabel for="dataPresuntaGrav"
+									value="Data della presunta gravidanza" styleClass="left-align"
+									style="font-size: 0.9rem !important;color: #888888;!important" />
+
+								<p:calendar id="dataPresuntaGrav"
+									value="#{veteMB.nuovoIntVeterinario.vetDataDiagnosiGrav}"
+									locale="it" navigator="true" styleClass="validate">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:calendar>
+
+
+							</div>
+						</p:column>
+						<p:column></p:column>
+						<p:column colspan="1">
+							<div class="row">
+								<p:outputLabel for="motivoVisita" value="Motivo della visita"
+									styleClass="left-align"
+									style="font-size: 0.9rem !important;color: #888888;!important" />
+
+								<p:inputText id="motivoVisita" value="#{veteMB.motivoVisita}"
+									maxlength="255" />
+							</div>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+
+						</p:column>
+
+						<p:column>
+						</p:column>
+
+						<p:column>
+							<div class="row">
+								<p:outputLabel for="farmaciUtilizzati"
+									value="Farmaci utilizzati" styleClass="left-align"
+									style="font-size: 0.9rem !important;color: #888888;!important" />
+								<p:inputText id="farmaciUtilizzati"
+									value="#{veteMB.nuovoIntVeterinario.vetFarmaciUtilizzati}"
+									maxlength="255" />
+							</div>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="1">
+							<div class="input-field">
+								<p:inputText id="peso" styleClass="validate"
+									onkeypress="if (event.keyCode == 13) return false;"
+									value="#{veteMB.pesataDto.pesPeso}">
+								</p:inputText>
+								<label class="left-align" for="fasePeso"><h:outputText
+										value="Fase del peso" /></label>
+
+							</div>
+						</p:column>
+
+						<p:column colspan="1">
+							<div class="input-field">
+								<p:inputText id="fasePeso" styleClass="validate"
+									onkeypress="if (event.keyCode == 13) return false;"
+									value="#{veteMB.pesataDto.pesFase}">
+									<f:convertNumber pattern="#,##0.0" />
+								</p:inputText>
+								<label class="left-align" for="fasePeso"><h:outputText
+										value="Fase del peso" /></label>
+
+							</div>
+						</p:column>
+						<p:column colspan="1">
+
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</div>
+			<div class="row">
+				<h:commandButton id="salvaAnag" value="Salva"
+					actionListener="#{veteMB.salvaDatiVet()}"
+					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
+					style="width:auto; float:right;" />
+				<p:tooltip for="salvaAnag" value="Salva tutti i dati" position="top" />
+			</div>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

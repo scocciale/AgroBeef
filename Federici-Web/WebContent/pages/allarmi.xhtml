@@ -1,0 +1,313 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="/templates/layout.xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:define name="title">
+		<h:outputText value="Allarmi" />
+	</ui:define>
+	<ui:define name="title-desc">
+		<h:outputText value="" />
+	</ui:define>
+	<ui:define name="content">
+		<p:panel header="Report" closable="false" toggleable="false"
+			widgetVar="accrWidgetVar" id="reportList"
+			style="margin-left: 10px ; margin-right: 10px">
+
+			<p:dialog resizable="false" widgetVar="dlgErrore6e7" width="20%"
+				position="center center" id="dialogErrore6e7" closable="false"
+				styleClass="dialogClass"
+				style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
+
+				<div class="row">
+					<div class="row center">
+						<h:outputText
+							value="Controllare che tutti gli animali in 'Macellazione' abbiano valorizzato il peso e il peso vivo alla macellazione."
+							style="font-size:1.5em" />
+					</div>
+				</div>
+				<div class="row">
+					<p:commandButton id="closeDialog6e7" value="OK"
+						styleClass="width-100 waves-effect waves-light btn rosso_cdr "
+						style="width:auto; float:right;"
+						oncomplete="PF('dlgErrore6e7').hide();location.reload();" />
+				</div>
+			</p:dialog>
+
+			<p:dialog resizable="false" widgetVar="dlgErrore8" width="20%"
+				position="center center" id="dialogErrore8" closable="false"
+				styleClass="dialogClass"
+				style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
+
+				<div class="row">
+					<div class="row center">
+						<h:outputText
+							value="Controllare che tutti gli animali in 'Macellazione' abbiano la classificazione SEUROP."
+							style="font-size:1.5em" />
+					</div>
+				</div>
+				<div class="row">
+					<p:commandButton id="closeDialog8" value="OK"
+						styleClass="width-100 waves-effect waves-light btn rosso_cdr "
+						style="width:auto; float:right;"
+						oncomplete="PF('dlgErrore8').hide();location.reload();" />
+				</div>
+			</p:dialog>
+
+			<p:dialog resizable="false" widgetVar="dlgErrore9" width="20%"
+				position="center center" id="dialogErrore9" closable="false"
+				styleClass="dialogClass"
+				style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
+
+				<div class="row">
+					<div class="row center">
+						<h:outputText
+							value="Controllare che tutti gli animali in 'Macellazione' abbiano l'indice SEUROP."
+							style="font-size:1.5em" />
+					</div>
+				</div>
+				<div class="row">
+					<p:commandButton id="closeDialog9" value="OK"
+						styleClass="width-100 waves-effect waves-light btn rosso_cdr "
+						style="width:auto; float:right;"
+						oncomplete="PF('dlgErrore9').hide();location.reload();" />
+				</div>
+			</p:dialog>
+
+			<div class="ui-g">
+				<div class="ui-g-12 ui-md-6 ui-lg-6"
+					style="border-right: solid 1px #ECECEC;">
+
+					<div class="row">
+						<p:dataTable id="reportDt" var="repVar"
+							value="#{allarmiMB.reportDisponibiliList}"
+							style="width:auto!important; float:right!important; "
+							emptyMessage="#{text['label.emptyResult']}">
+
+							<p:column headerText="Nome report" filterStyleClass="filterClass"
+								width="15%" filterBy="#{repVar.repNome}"
+								style=" font-size:1.3em; color:#4f4f4f!important;"
+								sortBy="#{repVar.repNome}">
+								<h:outputText value="#{repVar.repNome}" />
+							</p:column>
+
+							<p:column headerText="Descrizione report"
+								filterStyleClass="filterClass" width="75%"
+								filterBy="#{repVar.repDescrizione}"
+								style="font-size:1.3em; color:#4f4f4f!important;"
+								sortBy="#{repVar.repDescrizione}">
+								<h:outputText value="#{repVar.repDescrizione}" />
+							</p:column>
+
+							<p:column styleClass="center-align" width="10%">
+
+								<!-- <p:tooltip for="eseguiReport"
+									value="Esegui l'estrazione del report seguente" position="top" /> -->
+								<p:commandLink action="#{allarmiMB.eseguiEstrazione(repVar)}"
+									styleClass="center-align" id="eseguiReport"
+									update="contForm:esitoDt">
+									<p:graphicImage name="images/icons/Icon_search.png"
+										style="height: 24px; width: 24px; " />
+								</p:commandLink>
+
+							</p:column>
+
+						</p:dataTable>
+					</div>
+				</div>
+
+				<div class="ui-g-12 ui-md-6 ui-lg-6">
+
+
+
+					<div class="row">
+						<p:dataTable id="esitoDt" var="esitoVar"
+							value="#{allarmiMB.reportResultList}"
+							style="width:auto!important; float:right!important; "
+							emptyMessage="#{text['label.emptyResult']}"
+							currentPageReportTemplate="({currentPage} Di {totalPages})"
+							rows="15" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
+
+							<f:facet name="{Exporters}">
+								<!-- <p:tooltip for="expExcel"
+									rendered="#{allarmiMB.dtRendering != 3}"
+									value="Esporta la tabella in formato Excel" position="bottom" />
+								<h:commandLink id="expExcel"
+									rendered="#{allarmiMB.dtRendering != 3}">
+									<p:graphicImage name="images\export\Excel-icon.png" width="24"
+										style="margin-right:2%;" />
+									<p:dataExporter type="xls" target="esitoDt"
+										fileName="#{allarmiMB.repNome}" />
+								</h:commandLink> -->
+
+								<p:tooltip for="expPdf" rendered="#{allarmiMB.dtRendering != 3}"
+									value="Esporta la tabella in formato PDF" position="bottom" />
+								<h:commandLink id="expPdf"
+									rendered="#{allarmiMB.dtRendering != 3}">
+									<p:graphicImage name="images\export\pdf-square-icon.png"
+										width="24" />
+									<p:dataExporter type="pdf" target="esitoDt"
+										fileName="#{allarmiMB.repNome}" />
+								</h:commandLink>
+							</f:facet>
+
+							<p:column width="4%" rendered="#{allarmiMB.dtRendering == 3}">
+								<p:rowToggler />
+							</p:column>
+
+							<p:column headerText="Numero Matricola"
+								filterStyleClass="filterClass"
+								filterBy="#{esitoVar.anag.anaNumMatricola}"
+								style="font-size:1.3em; color:#4f4f4f!important;"
+								sortBy="#{esitoVar.anag.anaNumMatricola}">
+								<h:outputText value="#{esitoVar.anag.anaNumMatricola}" />
+							</p:column>
+
+							<p:column headerText="Num. Matricola Madre"
+								filterStyleClass="filterClass"
+								filterBy="#{esitoVar.anag.anaNumMatricolaMadre}"
+								style="font-size:1.3em; color:#4f4f4f!important;"
+								sortBy="#{esitoVar.anag.anaNumMatricolaMadre}">
+								<h:outputText value="#{esitoVar.anag.anaNumMatricolaMadre}" />
+							</p:column>
+
+							<p:column headerText="Num. Matricola Padre"
+								filterStyleClass="filterClass"
+								filterBy="#{esitoVar.anag.anaNumMatricolaPadre}"
+								style="font-size:1.3em; color:#4f4f4f!important;"
+								sortBy="#{esitoVar.anag.anaNumMatricolaPadre}">
+								<h:outputText value="#{esitoVar.anag.anaNumMatricolaPadre}" />
+							</p:column>
+
+							<p:column headerText="Età ( mesi )"
+								filterStyleClass="filterClass" filterBy="#{esitoVar.mesiEta}"
+								rendered="#{allarmiMB.dtRendering == 125}"
+								style="font-size:1.3em; color:#4f4f4f!important;"
+								sortBy="#{esitoVar.mesiEta}">
+								<h:outputText value="#{esitoVar.mesiEta}" />
+							</p:column>
+
+							<p:column headerText="Resa ( % )" filterStyleClass="filterClass"
+								filterBy="#{esitoVar.indice}"
+								rendered="#{allarmiMB.dtRendering == 67}"
+								style="font-size:1.3em; color:#4f4f4f!important;"
+								sortBy="#{esitoVar.indice}">
+								<h:outputText value="#{esitoVar.indice}" />
+							</p:column>
+
+							<p:column headerText="Classificazione ( SEUROP )"
+								filterStyleClass="filterClass"
+								filterBy="#{esitoVar.seuropString}"
+								rendered="#{allarmiMB.dtRendering == 8}"
+								style=" font-size:1.3em; color:#4f4f4f!important;"
+								sortBy="#{esitoVar.seuropString}">
+								<h:outputText value="#{esitoVar.seuropString}" />
+							</p:column>
+
+							<p:column headerText="Indice ( SEUROP )"
+								filterStyleClass="filterClass"
+								filterBy="#{esitoVar.seuropIndice}"
+								rendered="#{allarmiMB.dtRendering == 9}"
+								style="text-align: left; font-size:1.3em; color:#4f4f4f!important;"
+								sortBy="#{esitoVar.seuropIndice}">
+								<h:outputText value="#{esitoVar.seuropIndice}" />
+							</p:column>
+
+							<p:rowExpansion>
+
+								<p:dataTable id="dtInterparto" var="inter"
+									value="#{esitoVar.rrList}"
+									style="width:auto!important; float:right!important; "
+									emptyMessage="#{text['label.emptyResult']}"
+									currentPageReportTemplate="({currentPage} Di {totalPages})"
+									rows="15" paginator="true"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+									rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
+
+									<!-- <f:facet name="header">
+										<div style="">
+											<h:outputText value="#{esitoVar.anag.anaNumMatricolaMadre}" />
+										</div>
+									</f:facet> -->
+
+									<f:facet name="{Exporters}">
+										<!-- <p:tooltip for="expExcel"
+											value="Esporta la tabella in formato Excel" position="bottom" />
+										<h:commandLink id="expExcel">
+											<p:graphicImage name="images\export\Excel-icon.png"
+												width="24" style="margin-right:2%;" />
+											<p:dataExporter type="xls" target="dtInterparto"
+												fileName="#{allarmiMB.repNome}" />
+										</h:commandLink> -->
+
+										<p:tooltip for="expPdf"
+											value="Esporta la tabella in formato PDF" position="bottom" />
+										<h:commandLink id="expPdf">
+											<p:graphicImage name="images\export\pdf-square-icon.png"
+												width="24" />
+											<p:dataExporter type="pdf" target="dtInterparto"
+												fileName="#{allarmiMB.repNome}" />
+										</h:commandLink>
+									</f:facet>
+
+									<p:column headerText="Numero Matricola"
+										filterStyleClass="filterClass"
+										filterBy="#{inter.anag.anaNumMatricola}"
+										style="font-size:1.3em; color:#4f4f4f!important;"
+										sortBy="#{inter.anag.anaNumMatricola}">
+										<h:outputText value="#{inter.anag.anaNumMatricola}" />
+									</p:column>
+
+									<p:column headerText="Num. Matricola Madre"
+										filterStyleClass="filterClass" width="15%"
+										filterBy="#{inter.anag.anaNumMatricolaMadre}"
+										style="font-size:1.3em; color:#4f4f4f!important;"
+										sortBy="#{inter.anag.anaNumMatricolaMadre}">
+										<h:outputText value="#{inter.anag.anaNumMatricolaMadre}" />
+									</p:column>
+
+									<p:column headerText="Num. Matricola Padre"
+										filterStyleClass="filterClass"
+										filterBy="#{inter.anag.anaNumMatricolaPadre}"
+										style=" font-size:1.3em; color:#4f4f4f!important;"
+										sortBy="#{inter.anag.anaNumMatricolaPadre}">
+										<h:outputText value="#{inter.anag.anaNumMatricolaPadre}" />
+									</p:column>
+
+									<p:column headerText="Data Nascita"
+										filterStyleClass="filterClass"
+										filterBy="#{inter.anag.anaDataNascita}"
+										style="font-size:1.3em; color:#4f4f4f!important;"
+										sortBy="#{inter.anag.anaDataNascita}">
+										<h:outputText value="#{inter.anag.anaDataNascita}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+
+									<p:column headerText="Interparto ( gg )"
+										filterStyleClass="filterClass"
+										filterBy="#{inter.giorniInterparto}"
+										rendered="#{allarmiMB.dtRendering == 3}"
+										style="font-size:1.3em; color:#4f4f4f!important;"
+										sortBy="#{inter.giorniInterparto}">
+										<h:outputText value="#{inter.giorniInterparto}" />
+									</p:column>
+								</p:dataTable>
+
+							</p:rowExpansion>
+						</p:dataTable>
+					</div>
+
+
+				</div>
+			</div>
+		</p:panel>
+
+
+	</ui:define>
+</ui:composition>

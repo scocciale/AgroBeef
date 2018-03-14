@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="Federici-Ear">
+        <wb-resource deploy-path="/" source-path="/Federici-Ear" tag="defaultRootSource"/>
+        <dependent-module archiveName="Federici-Web.war" deploy-path="/" handle="module:/resource/Federici-Web/Federici-Web">
+            <dependent-object>Module_1490097835121</dependent-object>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="Federici-Data.jar" deploy-path="/lib" handle="module:/resource/Federici-Data/Federici-Data">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="Federici-Ejb.jar" deploy-path="/" handle="module:/resource/Federici-Ejb/Federici-Ejb">
+            <dependent-object>Module_1490097835173</dependent-object>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

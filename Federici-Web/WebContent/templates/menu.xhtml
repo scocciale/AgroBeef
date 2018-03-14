@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:form>
+		<!-- NAVIGATION -->
+		<ul id="slide-out" class="side-nav fixed">
+			<li class="no-padding header-menu"><br />
+				<ul class="collapsible collapsible-accordion mr-top-30">
+					<li class="bold header-info"><a
+						class="collapsible-header bold text-white"><h:outputText
+								value="#{navigationMB.currentUser.username}" /></a>
+						<div class="collapsible-body" style="display: block;">
+							<ul>
+								<li><p:commandLink ajax="false" action="#{userMB.logOut}"
+										update="@all" value="#{text['button.logout']}" /></li>
+
+								<li><a class="modal-trigger" href="#changePsw">#{text['change.password']}</a></li>
+							</ul>
+						</div></li>
+				</ul></li>
+			<li><p:commandLink ajax="false"
+					action="#{navigationMB.homePage}" value="#{text['menu.home']}" />
+			</li>
+			<li><p:commandLink ajax="false"
+					action="#{navigationMB.searchSoggPage}"
+					value="#{text['menu.ricerca.per.soggetto']}" /></li>
+			<li><p:commandLink ajax="false"
+					action="#{navigationMB.searchPartitaPage}"
+					value="#{text['menu.ricerca.per.partita']}" /></li>
+			<li><p:commandLink ajax="false"
+					action="#{navigationMB.elementsPage}" value="test-elements" /></li>
+		</ul>
+		<a href="#" data-activates="slide-out" class="button-collapse"><i
+			class="mdi-navigation-menu"></i></a>
+
+		<!-- END OF NAVIGATION -->
+
+		<!-- CAMBIO PASSWORD -->
+		<div id="changePsw" class="modal">
+			<div class="modal-content padding-container">
+
+				<h2 class="title-section">#{text['change.password']}</h2>
+				<br />
+
+				<div class="input-field">
+					<p:password id="oldPsw" styleClass="validate"
+						value="#{userMB.password}" />
+					<label for="oldPsw">#{text['current.password']}</label>
+				</div>
+
+				<div class="col s6">
+					<div class="input-field">
+						<p:password id="newPsw" styleClass="validate"
+							value="#{userMB.newPassword}" />
+						<label for="newPsw">#{text['new.password']}</label>
+					</div>
+				</div>
+				<div class="col s6">
+					<div class="input-field">
+						<p:password id="newPswConfirm" styleClass="validate"
+							value="#{userMB.newPasswordConfirmation}" />
+						<label for="newPswConfirm">#{text['confirm.new.password']}</label>
+					</div>
+				</div>
+				<br /> <br />
+				<div class="modal-footer">
+					<p:commandButton value="#{text['save']}" update="@this"
+						actionListener="#{userMB.changePassword}"
+						styleClass="waves-effect waves-light btn rosso_cdr" />
+					<br /> <br />
+				</div>
+
+			</div>
+		</div>
+	</h:form>
+
+</ui:composition>
