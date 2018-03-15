@@ -15,7 +15,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.context.RequestContext;
-import org.primefaces.model.DualListModel;
 
 import com.dto.AnagrAccrFiniDTO;
 import com.dto.AnagraficaDTO;
@@ -44,14 +43,16 @@ public class GruppiDiAccrMB extends BaseMB {
 	private AnagraficaDTO val;
 	private String animaliAggiunti;
 	private String valueAna;
+	private Set<AnagraficaDTO> animaliEditAggiuntiView;
 	// // private StoricoGruppiMontaDTO storicoGruppoMontaAggiuntaAnimali;
 	//
-	private DualListModel<String> animaliDisponibili;
-	private List<String> animaliSource;
-	private List<String> animaliTarget;
-	private DualListModel<String> animaliDisponibiliPerAggiunta;
-	private List<String> animaliSourcePerAggiunta;
-	private List<String> animaliTargetPerAggiunta;
+
+	// private DualListModel<String> animaliDisponibili;
+	// private List<String> animaliSource;
+	// private List<String> animaliTarget;
+	// private DualListModel<String> animaliDisponibiliPerAggiunta;
+	// private List<String> animaliSourcePerAggiunta;
+	// private List<String> animaliTargetPerAggiunta;
 
 	@EJB
 	FedericiService federiciService;
@@ -70,12 +71,12 @@ public class GruppiDiAccrMB extends BaseMB {
 		// animali che sono nei gruppi di accrescimento
 		// List<Integer> anagraficaCodice = new ArrayList<>();
 
-		animaliDisponibili = new DualListModel<>();
-		animaliDisponibiliPerAggiunta = new DualListModel<>();
-		animaliSource = new ArrayList<String>();
-		animaliTarget = new ArrayList<String>();
-		animaliSourcePerAggiunta = new ArrayList<>();
-		animaliTargetPerAggiunta = new ArrayList<>();
+		// animaliDisponibili = new DualListModel<>();
+		// animaliDisponibiliPerAggiunta = new DualListModel<>();
+		// animaliSource = new ArrayList<String>();
+		// animaliTarget = new ArrayList<String>();
+		// animaliSourcePerAggiunta = new ArrayList<>();
+		// animaliTargetPerAggiunta = new ArrayList<>();
 
 		//
 		// themesSource =
@@ -150,6 +151,7 @@ public class GruppiDiAccrMB extends BaseMB {
 		animaliAggiuntiView = new LinkedHashSet<>();
 		animaliAggiunti = "";
 		valueAna = "";
+		animaliEditAggiuntiView = new LinkedHashSet<>();
 
 		gruppiDiAccrList = federiciService.getAllGruppiDiAccrescimentoOpen(userMB.getUtente().getUteRifId());
 
@@ -199,18 +201,20 @@ public class GruppiDiAccrMB extends BaseMB {
 	public String salvaGruppoDiAccr() {
 		Date date = new Date();
 		boolean saved = false;
+		List<AnagrAccrFiniDTO> nuoviGruppiAccrDTOList = new ArrayList<>();
 
 		if (nuovoStoricoGruppoAccr != null) {
+			// è giusto che non è possibile creare gruppi in date future ???
 			if (nuovoStoricoGruppoAccr.getSafDataInizio().before(date)
 					|| nuovoStoricoGruppoAccr.getSafDataInizio().equals(date)) {
 				if (animaliAggiuntiView != null && animaliAggiuntiView.size() > 0) {
-					List<AnagrAccrFiniDTO> nuoviGruppiAccrDTOList = new ArrayList<>();
 					// boolean toro = false;
 					for (AnagraficaDTO ana : animaliAggiuntiView) {
 						AnagrAccrFiniDTO gaccrDTO;
 						gaccrDTO = new AnagrAccrFiniDTO();
 						gaccrDTO.setAnagrafica(ana);
 						gaccrDTO.setAafAnaId(ana.getAnaId());
+						gaccrDTO.getAnagrafica().setAnaFlagDisponibile("0");
 						gaccrDTO.setAafDataEntrata(nuovoStoricoGruppoAccr.getSafDataInizio());
 						// gmDTO.setGmoSgmId(gmoSgmId);
 						nuoviGruppiAccrDTOList.add(gaccrDTO);
@@ -218,11 +222,6 @@ public class GruppiDiAccrMB extends BaseMB {
 						// toro = true;
 
 					}
-					// if (!toro) {
-					// addMessage("messages", FacesMessage.SEVERITY_FATAL,
-					// "Attenzione !", "nessun.toro.selezionato");
-					// return null;
-					// }
 					nuovoStoricoGruppoAccr.setAnagrAccrFinis(nuoviGruppiAccrDTOList);
 					nuovoStoricoGruppoAccr.setSafUteId(userMB.getUtente().getUteId());
 					saved = federiciService.saveNuovoGruppoAccrescimentoEfinissaggio(nuovoStoricoGruppoAccr);
@@ -238,9 +237,12 @@ public class GruppiDiAccrMB extends BaseMB {
 			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "storico.gruppo.monta.sbagliato");
 			return null;
 		}
-		if (saved)
+		if (saved) {
+			gruppiDiAccrList.add(nuovoStoricoGruppoAccr);
+			animaliAggiuntiView.clear();
+			valueAna = "";
 			return "ok";
-		else
+		} else
 			return "ko";
 
 	}
@@ -251,19 +253,14 @@ public class GruppiDiAccrMB extends BaseMB {
 				&& storicoGruppoAccrAppoggio.getAnagrAccrFinis().size() > 0) {
 			for (AnagrAccrFiniDTO accr : storicoGruppoAccrAppoggio.getAnagrAccrFinis()) {
 				accr.setAafDataUscita(new Date());
+				accr.getAnagrafica().setAnaFlagDisponibile("1");
 				accr.setAafSafId(storicoGruppoAccrAppoggio.getSafId());
 				federiciService.updateStoricoAccrFinis(storicoGruppoAccrAppoggio,
 						storicoGruppoAccrAppoggio.getAnagrAccrFinis().indexOf(accr));
-				// if (accr.getAnagrafica().getAnaFlagToro() == 1)
-				animaliDisponibili.getSource().add(accr.getAnagrafica().getAnaNumMatricola());
-				// + " *");
-				// else
-				// animaliDisponibili.getSource().add(gm.getAnagrafica().getAnaNumMatricola());
 			}
 			storicoGruppoAccrAppoggio.setSafDataFine(new Date());
 			storicoGruppoAccrAppoggio.setAnagrAccrFinis(new ArrayList<AnagrAccrFiniDTO>());
 			federiciService.updateStoricoAccrFiniss(storicoGruppoAccrAppoggio);
-
 		}
 	}
 
@@ -274,95 +271,74 @@ public class GruppiDiAccrMB extends BaseMB {
 		Iterator<AnagrAccrFiniDTO> iter = saccrVar.getAnagrAccrFinis().iterator();
 		while (iter.hasNext()) {
 			AnagrAccrFiniDTO accr = iter.next();
-			System.out.println(accr.getAafId() + " accr id");
-			System.out.println(agaId + "  id");
 			if (accr.getAafId() == agaId) {
-				// if (accr.getAnagrafica().getAnaFlagToro() == 1 &&
-				// accr.getAnagrafica().getAnaSesso().equals("m")) {
-				// // eliminazione toro, quindi chiusura gruppo con dialog
-				// RequestContext context = RequestContext.getCurrentInstance();
-				// context.execute("PF('dlgEliminaToro').show();");
-				// RequestContext.getCurrentInstance().update("");
-				// return "toro";
-				// } else {
 				accr.setAafDataUscita(new Date());
+				accr.getAnagrafica().setAnaFlagDisponibile("1");
 				saved = federiciService.updateStoricoAccrFinis(saccrVar, saccrVar.getAnagrAccrFinis().indexOf(accr));
 				if (saved) {
-					// if (accr.getAnagrafica().getAnaFlagToro() == 1)
-					// animaliDisponibili.getSource().add(accr.getAnagrafica().getAnaNumMatricola()
-					// + " *");
-					// else
-					animaliDisponibili.getSource().add(accr.getAnagrafica().getAnaNumMatricola());
 					iter.remove();
 				}
-				// }
 			}
 		}
-		// federiciService.updateStoricoGruppoMonta(sgm);
 		return "ok";
 
 	}
 
 	public void modificaGruppoDiAcrr() {
-		animaliTargetPerAggiunta = animaliDisponibiliPerAggiunta.getTarget();
-		List<String> eliminare = new ArrayList<>();
-		// boolean toro = false;
-		// if (storicoGruppoAccrAppoggio.getAnagrAccrFinis() != null) {
-		// for (AnagrAccrFiniDTO gm :
-		// storicoGruppoAccrAppoggio.getAnagrAccrFinis()) {
-		// if (gm.getAnagrafica().getAnaFlagToro() == 1)
-		// toro = true;
-		// }
-		// }
-		for (AnagraficaDTO ana : animaliDisponibiliList) {
-			AnagrAccrFiniDTO accrDTO;
-			for (String animali : animaliTargetPerAggiunta) {
-				boolean saved;
-				// if (animali.contains("*"))
-				// animali = animali.replace(" *", "");
-				if (ana.getAnaNumMatricola().equals(animali)) {
-					// if (ana.getAnaFlagToro() == 1 && toro) {
-					// addMessage("messages", FacesMessage.SEVERITY_FATAL,
-					// "Attenzione !", "toro.gia.selezionato");
-					// return;
-					// } else if (ana.getAnaFlagToro() == 1 && !toro) {
-					// toro = true;
-					// }
-					accrDTO = new AnagrAccrFiniDTO();
-					accrDTO.setAnagrafica(ana);
-					accrDTO.setAafAnaId(ana.getAnaId());
-					accrDTO.setAafDataEntrata(new Date());
-					accrDTO.setAafSafId(storicoGruppoAccrAppoggio.getSafId());
-					storicoGruppoAccrAppoggio.getAnagrAccrFinis().add(accrDTO);
-					saved = federiciService.updateStoricoAccrFinis(storicoGruppoAccrAppoggio,
-							storicoGruppoAccrAppoggio.getAnagrAccrFinis().indexOf(accrDTO));
-					// if (accrDTO.getAnagrafica().getAnaFlagToro() == 1)
-					// eliminare.add(accrDTO.getAnagrafica().getAnaNumMatricola()
-					// + " *");
-					// else
-					// eliminare.add(accrDTO.getAnagrafica().getAnaNumMatricola());
-				}
+		boolean saved = false;
+		if (animaliEditAggiuntiView != null && animaliEditAggiuntiView.size() > 0) {
+			for (AnagraficaDTO ana : animaliEditAggiuntiView) {
+				AnagrAccrFiniDTO accrDTO;
+				accrDTO = new AnagrAccrFiniDTO();
+				accrDTO.setAnagrafica(ana);
+				accrDTO.setAafAnaId(ana.getAnaId());
+				accrDTO.setAafDataEntrata(new Date());
+				accrDTO.setAafSafId(storicoGruppoAccrAppoggio.getSafId());
+				accrDTO.getAnagrafica().setAnaFlagDisponibile("0");
+				storicoGruppoAccrAppoggio.getAnagrAccrFinis().add(accrDTO);
+				saved = federiciService.updateStoricoAccrFinis(storicoGruppoAccrAppoggio,
+						storicoGruppoAccrAppoggio.getAnagrAccrFinis().indexOf(accrDTO));
 			}
+
+		} else {
+			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "nessun.animale.selezionato");
 		}
-		// federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAggiuntaAnimali);
-		for (String eli : eliminare) {
-			animaliTargetPerAggiunta.remove(eli);
-			animaliDisponibili.getSource().remove(eli);
+		if (saved) {
+			animaliEditAggiuntiView.clear();
+			valueAna = "";
 		}
-		System.out.println("finito ");
+		System.out.println("Aggiunta anagrafica in gruppo di accr/finiss ? " + saved);
 	}
 
 	public void showDialogAddAnimali(StoricoAccrescFiniDTO saccrVar) {
 		storicoGruppoAccrAppoggio = saccrVar;
-		animaliSourcePerAggiunta = animaliDisponibili.getSource();
-		animaliTargetPerAggiunta = animaliDisponibili.getTarget();
-		animaliDisponibiliPerAggiunta = new DualListModel<String>(animaliSourcePerAggiunta, animaliTargetPerAggiunta);
+		// animaliSourcePerAggiunta = animaliDisponibili.getSource();
+		// animaliTargetPerAggiunta = animaliDisponibili.getTarget();
+		// animaliDisponibiliPerAggiunta = new
+		// DualListModel<String>(animaliSourcePerAggiunta,
+		// animaliTargetPerAggiunta);
 		showDialogFromName("dlgAggiuntaAnimaliInGruppoAccr");
-		System.out.println("finito");
+		// System.out.println("finito");
+	}
+
+	public void addToEditGruppoDiAccr() {
+		int quantitaAnimali = animaliEditAggiuntiView.size();
+		if (valueAna.contains(" *"))
+			valueAna = valueAna.replace(" *", "");
+		for (AnagraficaDTO a : animaliDisponibiliFinal) {
+			if (a.getAnaNumMatricola().equals(valueAna) && !animaliAggiunti.contains(valueAna)) {
+				animaliEditAggiuntiView.add(a);
+				animaliAggiunti = animaliAggiunti.concat(valueAna);
+			}
+		}
+		if (animaliEditAggiuntiView.size() == quantitaAnimali)
+			showDialogFromName("dlgAnimaleAddedYet");
 	}
 
 	public void addToGruppoDiAccr() {
 		int quantitaAnimali = animaliAggiuntiView.size();
+		if (valueAna.contains(" *"))
+			valueAna = valueAna.replace(" *", "");
 		for (AnagraficaDTO a : animaliDisponibiliFinal) {
 			if (a.getAnaNumMatricola().equals(valueAna) && !animaliAggiunti.contains(valueAna)) {
 				animaliAggiuntiView.add(a);
@@ -398,37 +374,57 @@ public class GruppiDiAccrMB extends BaseMB {
 		this.animaliSelezionateTarget = animaliSelezionateTarget;
 	}
 
-	public DualListModel<String> getAnimaliDisponibili() {
-		return animaliDisponibili;
-	}
-
-	public void setAnimaliDisponibili(DualListModel<String> animaliDisponibili) {
-		this.animaliDisponibili = animaliDisponibili;
-	}
-
-	public DualListModel<String> getAnimaliDisponibiliPerAggiunta() {
-		return animaliDisponibiliPerAggiunta;
-	}
-
-	public void setAnimaliDisponibiliPerAggiunta(DualListModel<String> animaliDisponibiliPerAggiunta) {
-		this.animaliDisponibiliPerAggiunta = animaliDisponibiliPerAggiunta;
-	}
-
-	public List<String> getAnimaliSourcePerAggiunta() {
-		return animaliSourcePerAggiunta;
-	}
-
-	public void setAnimaliSourcePerAggiunta(List<String> animaliSourcePerAggiunta) {
-		this.animaliSourcePerAggiunta = animaliSourcePerAggiunta;
-	}
-
-	public List<String> getAnimaliTargetPerAggiunta() {
-		return animaliTargetPerAggiunta;
-	}
-
-	public void setAnimaliTargetPerAggiunta(List<String> animaliTargetPerAggiunta) {
-		this.animaliTargetPerAggiunta = animaliTargetPerAggiunta;
-	}
+	// public DualListModel<String> getAnimaliDisponibili() {
+	// return animaliDisponibili;
+	// }
+	//
+	// public void setAnimaliDisponibili(DualListModel<String>
+	// animaliDisponibili) {
+	// this.animaliDisponibili = animaliDisponibili;
+	// }
+	//
+	// public DualListModel<String> getAnimaliDisponibiliPerAggiunta() {
+	// return animaliDisponibiliPerAggiunta;
+	// }
+	//
+	// public void setAnimaliDisponibiliPerAggiunta(DualListModel<String>
+	// animaliDisponibiliPerAggiunta) {
+	// this.animaliDisponibiliPerAggiunta = animaliDisponibiliPerAggiunta;
+	// }
+	//
+	// public List<String> getAnimaliSourcePerAggiunta() {
+	// return animaliSourcePerAggiunta;
+	// }
+	//
+	// public void setAnimaliSourcePerAggiunta(List<String>
+	// animaliSourcePerAggiunta) {
+	// this.animaliSourcePerAggiunta = animaliSourcePerAggiunta;
+	// }
+	//
+	// public List<String> getAnimaliTargetPerAggiunta() {
+	// return animaliTargetPerAggiunta;
+	// }
+	//
+	// public void setAnimaliTargetPerAggiunta(List<String>
+	// animaliTargetPerAggiunta) {
+	// this.animaliTargetPerAggiunta = animaliTargetPerAggiunta;
+	// }
+	//
+	// public List<String> getAnimaliSource() {
+	// return animaliSource;
+	// }
+	//
+	// public void setAnimaliSource(List<String> animaliSource) {
+	// this.animaliSource = animaliSource;
+	// }
+	//
+	// public List<String> getAnimaliTarget() {
+	// return animaliTarget;
+	// }
+	//
+	// public void setAnimaliTarget(List<String> animaliTarget) {
+	// this.animaliTarget = animaliTarget;
+	// }
 
 	public List<StoricoAccrescFiniDTO> getGruppiDiAccrList() {
 		return gruppiDiAccrList;
@@ -452,22 +448,6 @@ public class GruppiDiAccrMB extends BaseMB {
 
 	public void setAnimaliNONDisponibiliList(List<AnagraficaDTO> animaliNONDisponibiliList) {
 		this.animaliNONDisponibiliList = animaliNONDisponibiliList;
-	}
-
-	public List<String> getAnimaliSource() {
-		return animaliSource;
-	}
-
-	public void setAnimaliSource(List<String> animaliSource) {
-		this.animaliSource = animaliSource;
-	}
-
-	public List<String> getAnimaliTarget() {
-		return animaliTarget;
-	}
-
-	public void setAnimaliTarget(List<String> animaliTarget) {
-		this.animaliTarget = animaliTarget;
 	}
 
 	public UserMB getUserMB() {
@@ -532,6 +512,14 @@ public class GruppiDiAccrMB extends BaseMB {
 
 	public void setValueAna(String valueAna) {
 		this.valueAna = valueAna;
+	}
+
+	public Set<AnagraficaDTO> getAnimaliEditAggiuntiView() {
+		return animaliEditAggiuntiView;
+	}
+
+	public void setAnimaliEditAggiuntiView(Set<AnagraficaDTO> animaliEditAggiuntiView) {
+		this.animaliEditAggiuntiView = animaliEditAggiuntiView;
 	}
 
 }

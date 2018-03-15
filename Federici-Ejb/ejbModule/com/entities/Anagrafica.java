@@ -32,6 +32,9 @@ public class Anagrafica implements Serializable {
 
 	@Column(name = "ana_flag_gemello")
 	private String anaFlagGemello;
+	
+	@Column(name = "ana_flag_disponibile")
+	private String anaFlagDisponibile;
 
 	@Column(name = "ana_flag_toro")
 	private int anaFlagToro;
@@ -352,6 +355,14 @@ public class Anagrafica implements Serializable {
 
 	public void setRazza(Razza razza) {
 		this.razza = razza;
+	}
+
+	public String getAnaFlagDisponibile() {
+		return anaFlagDisponibile;
+	}
+
+	public void setAnaFlagDisponibile(String anaFlagDisponibile) {
+		this.anaFlagDisponibile = anaFlagDisponibile;
 	}
 
 }

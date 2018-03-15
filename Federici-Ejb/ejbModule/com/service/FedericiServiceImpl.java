@@ -45,7 +45,25 @@ import com.util.BCrypt;
 @Local(FedericiService.class)
 public class FedericiServiceImpl extends BaseService implements FedericiService {
 
-	final static String animaliDisponibiliQueryWithParams = "SELECT a.ana_id, a.ana_num_matricola, a.ana_num_matricola_madre, a.ana_num_matricola_padre, a.ana_flag_toro, a.ana_sesso, a.ana_data_nascita, a.ana_raz_id, a.ana_razza, a.ana_flag_gemello, a.ana_data_acquisto, a.ana_num_parto, a.ana_difficolta_parto, a.ana_ute_id, a.ana_uscita_causa, a.ana_data_uscita  FROM Anagrafica a WHERE a.ana_ute_id = {0} AND a.ana_id NOT IN (SELECT ana.ana_id FROM  Anagrafica ana,  anagr_accr_finis aaf, (SELECT saf.saf_id saf_id FROM  storico_accresc_finis saf WHERE saf.saf_data_fine IS NULL AND saf_ute_id = {1} GROUP BY saf.saf_id) open_group WHERE open_group.saf_id = aaf.aaf_saf_id AND aaf.aaf_ana_id = ana.ana_id ) AND a.ana_id NOT IN (SELECT ana.ana_id FROM  Anagrafica ana,  gruppo_monta gmo, (SELECT sgm.sgm_id sgm_id FROM  storico_gruppi_monta sgm WHERE sgm.sgm_data_chiusura IS NULL AND sgm_ute_id = {2} GROUP BY sgm.sgm_id) open_group_monta WHERE open_group_monta.sgm_id = gmo.gmo_sgm_id AND gmo.gmo_ana_id = ana.ana_id ) AND a.ana_num_matricola LIKE '%{3}%' AND (a.ana_uscita_causa LIKE '' OR a.ana_uscita_causa IS NULL)";
+	// final static String animaliDisponibiliQueryWithParams = "SELECT a.ana_id,
+	// a.ana_num_matricola, a.ana_num_matricola_madre,
+	// a.ana_num_matricola_padre, a.ana_flag_toro, a.ana_sesso,
+	// a.ana_data_nascita, a.ana_raz_id, a.ana_razza, a.ana_flag_gemello,
+	// a.ana_data_acquisto, a.ana_num_parto, a.ana_difficolta_parto,
+	// a.ana_ute_id, a.ana_uscita_causa, a.ana_data_uscita FROM Anagrafica a
+	// WHERE a.ana_ute_id = {0} AND a.ana_id NOT IN (SELECT ana.ana_id FROM
+	// Anagrafica ana, anagr_accr_finis aaf, (SELECT saf.saf_id saf_id FROM
+	// storico_accresc_finis saf WHERE saf.saf_data_fine IS NULL AND saf_ute_id
+	// = {1} GROUP BY saf.saf_id) open_group WHERE open_group.saf_id =
+	// aaf.aaf_saf_id AND aaf.aaf_ana_id = ana.ana_id ) AND a.ana_id NOT IN
+	// (SELECT ana.ana_id FROM Anagrafica ana, gruppo_monta gmo, (SELECT
+	// sgm.sgm_id sgm_id FROM storico_gruppi_monta sgm WHERE
+	// sgm.sgm_data_chiusura IS NULL AND sgm_ute_id = {2} GROUP BY sgm.sgm_id)
+	// open_group_monta WHERE open_group_monta.sgm_id = gmo.gmo_sgm_id AND
+	// gmo.gmo_ana_id = ana.ana_id ) AND a.ana_num_matricola LIKE '%{3}%' AND
+	// (a.ana_uscita_causa LIKE '' OR a.ana_uscita_causa IS NULL)";
+
+	final static String animaliDisponibiliQueryWithParams = "SELECT a.ana_id, a.ana_num_matricola, a.ana_num_matricola_madre, a.ana_num_matricola_padre, a.ana_flag_toro, a.ana_sesso, a.ana_data_nascita, a.ana_raz_id, a.ana_razza, a.ana_flag_gemello, a.ana_data_acquisto, a.ana_num_parto, a.ana_difficolta_parto, a.ana_ute_id, a.ana_uscita_causa, a.ana_data_uscita, a.ana_flag_disponibile FROM Anagrafica a WHERE a.ana_ute_id = {0} AND a.ana_flag_disponibile = '1' AND a.ana_num_matricola LIKE '%{1}%' AND (a.ana_uscita_causa LIKE '' OR a.ana_uscita_causa IS NULL)";
 
 	final static String causaUscita = "Macellazione";
 
@@ -70,9 +88,10 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		List<Anagrafica> list = new ArrayList<>();
 		try {
 			list = (List<Anagrafica>) getSession(em).createCriteria(Anagrafica.class)
-					.add(Restrictions.eq("anaUteId", uteCod)).add(Restrictions.disjunction()
-							.add(Restrictions.eq("anaUscitaCausa", "")).add(Restrictions.isNull("anaUscitaCausa")))
-					.list();
+					.add(Restrictions.eq("anaUteId", uteCod))
+					.add(Restrictions.disjunction().add(Restrictions.eq("anaUscitaCausa", ""))
+							.add(Restrictions.isNull("anaUscitaCausa")))
+					.add(Restrictions.eq("anaFlagDisponibile", "1")).list();
 
 			if (list != null && list.size() > 0) {
 				AnagraficaDTO dto;
@@ -99,6 +118,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 			Criteria crit = getSession(em).createCriteria(Anagrafica.class);
 			crit.add(Restrictions.eq("anaUteId", uteCod));
+			crit.add(Restrictions.eq("anaFlagDisponibile", "1"));
 			if (sortField == null) {
 				sortField = "anaNumMatricola";
 			}
@@ -402,22 +422,9 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		StoricoGruppiMonta entity;
 
 		entity = ConverterDtoToEntity.storicoGruppiMontaDTOtoStoricoGruppiMontaEntity(nuovoStoricoGruppoMonta);
-		System.out.println(entity.toString());
 		try {
 			getSession(em).saveOrUpdate(entity);
 			getSession(em).flush();
-
-			System.out.println(entity.getSgmId() + "<------------- id");
-			// entity = (StoricoGruppiMonta)
-			// getSession(em).createCriteria(StoricoGruppiMonta.class)
-			// .createAlias("utente", "ute")
-			// .add(Restrictions.eq("ute.uteId",
-			// nuovoStoricoGruppoMonta.getSgmUteId()))
-			// .add(Restrictions.eq("sgmDataApertura",
-			// nuovoStoricoGruppoMonta.getSgmDataApertura()))
-			// .add(Restrictions.eq("sgmNome",
-			// nuovoStoricoGruppoMonta.getSgmNome()))
-			// .uniqueResult();
 
 			if (nuovoStoricoGruppoMonta.getGruppoMontas() != null
 					&& nuovoStoricoGruppoMonta.getGruppoMontas().size() > 0) {
@@ -456,18 +463,6 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		try {
 			getSession(em).saveOrUpdate(entity);
 			getSession(em).flush();
-
-			System.out.println(entity.getSafId() + "<------------- id");
-			// entity = (StoricoGruppiMonta)
-			// getSession(em).createCriteria(StoricoGruppiMonta.class)
-			// .createAlias("utente", "ute")
-			// .add(Restrictions.eq("ute.uteId",
-			// nuovoStoricoGruppoMonta.getSgmUteId()))
-			// .add(Restrictions.eq("sgmDataApertura",
-			// nuovoStoricoGruppoMonta.getSgmDataApertura()))
-			// .add(Restrictions.eq("sgmNome",
-			// nuovoStoricoGruppoMonta.getSgmNome()))
-			// .uniqueResult();
 
 			if (nuovoStoricoAccrFini.getAnagrAccrFinis() != null
 					&& nuovoStoricoAccrFini.getAnagrAccrFinis().size() > 0) {
@@ -512,8 +507,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 					.gruppoMontaDTOtoGruppoMontaEntity(sgm.getGruppoMontas().get(gmId));
 			entity.setGmoSgmId(sgm.getSgmId());
 			getSession(em).saveOrUpdate(entity);
+			getSession(em).update(entity.getAnagrafica());
 			getSession(em).flush();
-			System.out.println("aggiorno " + entity.getGmoId());
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -527,8 +522,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 					.anagrAccrFiniDTOtoAnagrAccrFiniEntity(sAccr.getAnagrAccrFinis().get(accrId));
 			entity.setAafSafId(sAccr.getSafId());
 			getSession(em).saveOrUpdate(entity);
+			getSession(em).update(entity.getAnagrafica());
 			getSession(em).flush();
-			System.out.println("aggiorno " + entity.getAafId());
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -798,9 +793,14 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	public List<AnagraficaDTO> getAllMatricoleDisponibili(int uteRifId, String queryParams) {
 		List<AnagraficaDTO> listaAnimaliDisp = new ArrayList<>();
 		try {
+			// String query = animaliDisponibiliQueryWithParams.replace("{0}",
+			// new Integer(uteRifId).toString())
+			// .replace("{1}", new Integer(uteRifId).toString()).replace("{2}",
+			// new Integer(uteRifId).toString())
+			// .replace("{3}", queryParams);
+
 			String query = animaliDisponibiliQueryWithParams.replace("{0}", new Integer(uteRifId).toString())
-					.replace("{1}", new Integer(uteRifId).toString()).replace("{2}", new Integer(uteRifId).toString())
-					.replace("{3}", queryParams);
+					.replace("{1}", queryParams);
 
 			List<Anagrafica> list = (List<Anagrafica>) getSession(em).createSQLQuery(query).addEntity(Anagrafica.class)
 					.list();

@@ -37,7 +37,7 @@ public class GruppoMonta implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "gmo_ana_id", insertable = false, updatable = false)
 	private Anagrafica anagrafica;
-
+	
 	@Column(name = "gmo_sgm_id")
 	private int gmoSgmId;
 

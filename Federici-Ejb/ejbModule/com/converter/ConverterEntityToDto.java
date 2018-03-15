@@ -40,6 +40,7 @@ public class ConverterEntityToDto {
 		anagraficaDTO.setAnaSesso(anagrafica.getAnaSesso());
 		anagraficaDTO.setUtente(utenteEntityToUtenteDTO(anagrafica.getUtente()));
 		anagraficaDTO.setAnaUteId(anagrafica.getUtente().getUteId());
+		anagraficaDTO.setAnaFlagDisponibile(anagrafica.getAnaFlagDisponibile());
 		if (anagrafica.getAnaDataAcquisto() != null)
 			anagraficaDTO.setAnaDataAcquisto(anagrafica.getAnaDataAcquisto());
 		if (anagrafica.getAnaDifficoltaParto() != null)
@@ -77,7 +78,7 @@ public class ConverterEntityToDto {
 
 		if (anagrafica.getRazza() != null) {
 			anagraficaDTO.setRazza(razzaEntityToRazzaDTO(anagrafica.getRazza()));
-			anagraficaDTO.setAnaRazId(anagrafica.getAnaId());
+			anagraficaDTO.setAnaRazId(anagrafica.getRazza().getRazId());
 		}
 		// if (anagrafica.getValutazioneMaces() != null &&
 		// anagrafica.getValutazioneMaces().size() > 0) {

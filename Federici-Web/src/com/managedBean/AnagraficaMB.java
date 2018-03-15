@@ -174,7 +174,9 @@ public class AnagraficaMB extends BaseMB {
 				sesso = "";
 				return null;
 			}
-
+			if (animaleEdit.getAnaDataUscita() != null) {
+				animaleEdit.setAnaFlagDisponibile("0");
+			}
 			animaleEdit.setAnaFlagToro(flagToro ? 1 : 0);
 			animaleEdit.setAnaFlagGemello(flagGemello ? "1" : "0");
 			animaleEdit.setAnaSesso(sesso);

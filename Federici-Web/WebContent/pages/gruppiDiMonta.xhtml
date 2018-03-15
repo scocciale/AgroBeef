@@ -57,12 +57,6 @@
 
 					<div class="ui-g-12">
 						<div class="input-field">
-							<!-- 	<p:outputLabel value="Animali Disponibili"
-								styleClass="left-align"
-								style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
-							<p:pickList id="pickListAnimali" filterMatchMode="#{ana}"
-								value="#{gdmMB.animaliDisponibili}" var="ana" itemLabel="#{ana}"
-								itemValue="#{ana}" /> -->
 
 							<p:autoComplete id="acAnimali"
 								completeMethod="#{gdmMB.findFromParms}"
@@ -75,7 +69,7 @@
 								styleClass="left-align" for="acAnimali"
 								style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
 
-							<p:selectOneListbox id="showListAddedAnimal">
+							<p:selectOneListbox id="showListAddedAnimal" >
 								<f:selectItems itemLabel="#{animale.anaNumMatricola}"
 									itemValue="#{animale}" value="#{gdmMB.animaliAggiuntiView}"
 									var="animale" />
@@ -97,11 +91,10 @@
 							id="salvaNewGruppo"
 							rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 							styleClass="width-100 waves-effect waves-light btn giallo_cdr"
-							update="contForm:gruppiDiMonta" />
+							update="contForm:gruppiDiMonta " />
 						<!-- contForm:pickListAnimali -->
 
-						<p:tooltip for="salvaNewGruppo"
-							value="#{text['tooltip.manageRules.salvaNuovaDetr']}"
+						<p:tooltip for="salvaNewGruppo" value="#{text['tooltip.salva']}"
 							position="top" />
 					</div>
 				</div>
@@ -152,7 +145,7 @@
 									action="#{gdmMB.showDialogAddAnimali(sgdmVar)}"
 									styleClass="width-100 waves-effect waves-light btn giallo_cdr"
 									update="contForm:addAnimaliInGruppo" />
-								<!-- disabled="#{gdmMB.animaliDisponibili.source.size() eq 0 or sgdmVar.sgmDataChiusura!=null}" -->
+								
 								<p:tooltip for="modificaGruppoDiMonta"
 									value="Aggiungi un animale o chiudi un gruppo" position="top" />
 								<p:commandLink action="#{gdmMB.chiusuraGruppoMonta(sgdmVar)}"
@@ -249,7 +242,7 @@
 					<p:commandButton value="Si"
 						actionListener="#{gdmMB.chiusuraGruppoMonta()}"
 						onclick="PF('dlgEliminaToro').close();"
-						update="gruppiDiMontaDt contForm:pickListAnimaliDaAggiungere"
+						update="gruppiDiMontaDt "
 						styleClass="waves-effect waves-light rosso_cdr" icon="fa fa-check"
 						style="margin-left:40%!important; width: 70px;" />
 					<!-- contForm:pickListAnimali -->
@@ -264,24 +257,34 @@
 		<p:dialog id="addAnimaliInGruppo" styleClass="dialogClass"
 			widgetVar="dlg2" minWidth="60" closable="true" modal="true"
 			draggable="false" resizable="false">
+
 			<div class="ui-g-12">
 				<div class="input-field">
+
+					<p:autoComplete id="acAnimaliEdit"
+						completeMethod="#{gdmMB.findFromParms}" value="#{gdmMB.valueAna}">
+						<p:ajax
+							update="showListAddedAnimalEdit contForm:dlgAnimaleAddedYet"
+							event="itemSelect" listener="#{gdmMB.addToEditGruppoDiMonta()}" />
+					</p:autoComplete>
+
 					<p:outputLabel value="Animali Disponibili" styleClass="left-align"
+						for="acAnimaliEdit"
 						style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
-					<p:pickList id="pickListAnimaliDaAggiungere"
-						filterMatchMode="#{ani}"
-						value="#{gdmMB.animaliDisponibiliPerAggiunta}" var="ani"
-						itemLabel="#{ani}" itemValue="#{ani}" />
 
-
-
-
+					<p:selectOneListbox id="showListAddedAnimalEdit">
+						<f:selectItems itemLabel="#{animale.anaNumMatricola}"
+							itemValue="#{animale}" value="#{gdmMB.animaliEditAggiuntiView}"
+							var="animale" />
+					</p:selectOneListbox>
 
 				</div>
 
 				<p:outputLabel value="*: Toro" styleClass="left-align"
 					style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
+
 			</div>
+
 			<div class="row center-block center">
 
 				<p:commandButton value="#{text['button.salva']}"
@@ -291,8 +294,7 @@
 					styleClass="width-100 waves-effect waves-light btn giallo_cdr"
 					update="contForm:gruppiDiMonta" oncomplete="PF('dlg2').hide();" />
 
-				<p:tooltip for="aggiornaGruppo"
-					value="#{text['tooltip.manageRules.salvaNuovaDetr']}"
+				<p:tooltip for="aggiornaGruppo" value="#{text['tooltip.salva']}"
 					position="top" />
 			</div>
 		</p:dialog>

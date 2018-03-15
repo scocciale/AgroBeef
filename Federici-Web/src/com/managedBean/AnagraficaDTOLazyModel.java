@@ -47,8 +47,8 @@ private List<AnagraficaDTO> list;
 		 list.add(a);
 		 }
 
-		//List<AnagraficaDTO> list = federiciService.getAllAnimaliAnagrafica(userMB.getUtente().getUteRifId(), first, pageSize,
-				//sortField, sortOrder);
+//		List<AnagraficaDTO> list = federiciService.getAllAnimaliAnagrafica(userMB.getUtente().getUteRifId(), first, pageSize,
+//				sortField, sortOrder);
 		setRowCount(125);
 
 		return list;

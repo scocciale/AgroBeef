@@ -109,12 +109,11 @@
 							onkeypress="if (event.keyCode == 13) return false;"
 							rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 							styleClass="width-100 waves-effect waves-light btn giallo_cdr"
-							update="contForm:gruppiDiAccr contForm:pickListAnimaliDaAggiungere " />
+							update="contForm:gruppiDiAccr " />
 						<!-- contForm:pickListAnimali -->
 
 						<p:tooltip for="salvaNewGruppo"
-							value="#{text['tooltip.manageRules.salvaNuovaDetr']}"
-							position="top" />
+							value="Salva la modifica del gruppo" position="top" />
 					</div>
 				</div>
 
@@ -166,11 +165,11 @@
 									style="float:right!important;font-size: 1.1em!important"
 									id="modificaGruppoDiAccr"
 									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
-									disabled="#{saccrVar.safDataFine !=null}" 
+									disabled="#{saccrVar.safDataFine !=null}"
 									action="#{accrMB.showDialogAddAnimali(saccrVar)}"
 									styleClass="width-100 waves-effect waves-light btn giallo_cdr"
 									update="contForm:addAnimaliInGruppoAccr" />
-								<!-- disabled="#{accrMB.animaliDisponibili.source.size() eq 0 or saccrVar.safDataFine !=null} -->
+
 								<p:tooltip for="modificaGruppoDiAccr"
 									value="Aggiungi un animale o chiudi un gruppo" position="top" />
 								<p:commandLink action="#{accrMB.chiusuraGruppoAccr(saccrVar)}"
@@ -214,7 +213,7 @@
 											rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 											action="#{accrMB.modificaAnimaleInGruppoDiAccr(saccrVar,ga.aafId)}"
 											styleClass="width-100 waves-effect waves-light btn giallo_cdr"
-											update="gruppiDiAccrsottoDt contForm:pickListAnimaliDaAggiungere " />
+											update="gruppiDiAccrsottoDt " />
 										<!-- contForm:pickListAnimali -->
 										<p:tooltip for="modificaAnimaleGruppoDiAccr"
 											value="Modifica l'animale nel gruppo di accrescimento"
@@ -248,14 +247,30 @@
 			closable="true" modal="true" draggable="false" resizable="false">
 			<div class="ui-g-12">
 				<div class="input-field">
+
+					<p:autoComplete id="acAnimaliEdit"
+						completeMethod="#{accrMB.findFromParms}"
+						value="#{accrMB.valueAna}">
+						<p:ajax
+							update="showListAddedAnimalEdit contForm:dlgAnimaleAddedYet"
+							event="itemSelect" listener="#{accrMB.addToEditGruppoDiAccr()}" />
+					</p:autoComplete>
+
 					<p:outputLabel value="Animali Disponibili" styleClass="left-align"
+						for="acAnimaliEdit"
 						style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
-					<p:pickList id="pickListAnimaliDaAggiungere"
-						filterMatchMode="#{ani}"
-						value="#{accrMB.animaliDisponibiliPerAggiunta}" var="ani"
-						itemLabel="#{ani}" itemValue="#{ani}" />
+
+					<p:selectOneListbox id="showListAddedAnimalEdit">
+						<f:selectItems itemLabel="#{animale.anaNumMatricola}"
+							itemValue="#{animale}" value="#{accrMB.animaliEditAggiuntiView}"
+							var="animale" />
+					</p:selectOneListbox>
 
 				</div>
+
+				<p:outputLabel value="*: Toro" styleClass="left-align"
+					style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
+
 			</div>
 			<div class="row center-block center">
 
@@ -264,12 +279,11 @@
 					style="float:right!important;margin-top: 6%!important;"
 					actionListener="#{accrMB.modificaGruppoDiAcrr}" id="aggiornaGruppo"
 					styleClass="width-100 waves-effect waves-light btn giallo_cdr"
-					update="contForm:gruppiDiAccr contForm:pickListAnimaliDaAggiungere "
+					update="contForm:gruppiDiAccr "
 					oncomplete="PF('dlgAggiuntaAnimaliInGruppoAccr').hide();" />
 				<!-- contForm:pickListAnimali -->
 
-				<p:tooltip for="aggiornaGruppo"
-					value="#{text['tooltip.manageRules.salvaNuovaDetr']}"
+				<p:tooltip for="aggiornaGruppo" value="Salva la modifica del gruppo"
 					position="top" />
 			</div>
 		</p:dialog>

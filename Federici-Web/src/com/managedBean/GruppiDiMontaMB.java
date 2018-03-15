@@ -15,7 +15,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.context.RequestContext;
-import org.primefaces.model.DualListModel;
 
 import com.dto.AnagraficaDTO;
 import com.dto.GruppoMontaDTO;
@@ -41,13 +40,14 @@ public class GruppiDiMontaMB extends BaseMB {
 	private Set<AnagraficaDTO> animaliAggiuntiView;
 	private String animaliAggiunti;
 	private String valueAna;
+	private Set<AnagraficaDTO> animaliEditAggiuntiView;
 
-	private DualListModel<String> animaliDisponibili;
-	private List<String> animaliSource;
-	private List<String> animaliTarget;
-	private DualListModel<String> animaliDisponibiliPerAggiunta;
-	private List<String> animaliSourcePerAggiunta;
-	private List<String> animaliTargetPerAggiunta;
+	// private DualListModel<String> animaliDisponibili;
+	// private List<String> animaliSource;
+	// private List<String> animaliTarget;
+	// private DualListModel<String> animaliDisponibiliPerAggiunta;
+	// private List<String> animaliSourcePerAggiunta;
+	// private List<String> animaliTargetPerAggiunta;
 
 	@EJB
 	FedericiService federiciService;
@@ -172,17 +172,18 @@ public class GruppiDiMontaMB extends BaseMB {
 		// animali che sono disponibili per i gruppi di monta
 		animaliDisponibiliList = new ArrayList<>();
 
-		animaliDisponibili = new DualListModel<>();
-		animaliDisponibiliPerAggiunta = new DualListModel<>();
-		animaliSource = new ArrayList<String>();
-		animaliTarget = new ArrayList<String>();
-		animaliSourcePerAggiunta = new ArrayList<>();
-		animaliTargetPerAggiunta = new ArrayList<>();
+		// animaliDisponibili = new DualListModel<>();
+		// animaliDisponibiliPerAggiunta = new DualListModel<>();
+		// animaliSource = new ArrayList<String>();
+		// animaliTarget = new ArrayList<String>();
+		// animaliSourcePerAggiunta = new ArrayList<>();
+		// animaliTargetPerAggiunta = new ArrayList<>();
 
 		animaliDisponibiliFinal = new ArrayList<>();
 		animaliAggiuntiView = new LinkedHashSet<>();
 		animaliAggiunti = "";
 		valueAna = "";
+		animaliEditAggiuntiView = new LinkedHashSet<>();
 
 		gruppiDiMontaList = federiciService.getAllGruppiDiMontaOpen(userMB.getUtente().getUteRifId());
 	}
@@ -199,8 +200,24 @@ public class GruppiDiMontaMB extends BaseMB {
 		return listaStringAnimali;
 	}
 
+	public void addToEditGruppoDiMonta() {
+		int quantitaAnimali = animaliEditAggiuntiView.size();
+		if (valueAna.contains(" *"))
+			valueAna = valueAna.replace(" *", "");
+		for (AnagraficaDTO a : animaliDisponibiliFinal) {
+			if (a.getAnaNumMatricola().equals(valueAna) && !animaliAggiunti.contains(valueAna)) {
+				animaliEditAggiuntiView.add(a);
+				animaliAggiunti = animaliAggiunti.concat(valueAna);
+			}
+		}
+		if (animaliEditAggiuntiView.size() == quantitaAnimali)
+			showDialogFromName("dlgAnimaleAddedYet");
+	}
+
 	public void addToGruppoDiMonta() {
 		int quantitaAnimali = animaliAggiuntiView.size();
+		if (valueAna.contains(" *"))
+			valueAna = valueAna.replace(" *", "");
 		for (AnagraficaDTO a : animaliDisponibiliFinal) {
 			if (a.getAnaNumMatricola().equals(valueAna) && !animaliAggiunti.contains(valueAna)) {
 				animaliAggiuntiView.add(a);
@@ -217,8 +234,7 @@ public class GruppiDiMontaMB extends BaseMB {
 	}
 
 	public void modificaGruppoDiMonta() {
-		animaliTargetPerAggiunta = animaliDisponibiliPerAggiunta.getTarget();
-		List<String> eliminare = new ArrayList<>();
+		boolean saved = false;
 		boolean toro = false;
 		if (storicoGruppoMontaAppoggio.getGruppoMontas() != null) {
 			for (GruppoMontaDTO gm : storicoGruppoMontaAppoggio.getGruppoMontas()) {
@@ -226,51 +242,40 @@ public class GruppiDiMontaMB extends BaseMB {
 					toro = true;
 			}
 		}
-		for (AnagraficaDTO ana : animaliDisponibiliList) {
-			GruppoMontaDTO gmDTO;
-			for (String animali : animaliTargetPerAggiunta) {
-				boolean saved;
-				if (animali.contains("*"))
-					animali = animali.replace(" *", "");
-				if (ana.getAnaNumMatricola().equals(animali)) {
-					if (ana.getAnaFlagToro() == 1 && toro) {
-						addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "toro.gia.selezionato");
-						return;
-					} else if (ana.getAnaFlagToro() == 1 && !toro) {
-						toro = true;
-					}
-					gmDTO = new GruppoMontaDTO();
-					gmDTO.setAnagrafica(ana);
-					gmDTO.setGmoAnaId(ana.getAnaId());
-					gmDTO.setGmoDataInserimento(new Date());
-					gmDTO.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
-					storicoGruppoMontaAppoggio.getGruppoMontas().add(gmDTO);
-					saved = federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
-							storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gmDTO));
-					if (gmDTO.getAnagrafica().getAnaFlagToro() == 1)
-						eliminare.add(gmDTO.getAnagrafica().getAnaNumMatricola() + " *");
-					else
-						eliminare.add(gmDTO.getAnagrafica().getAnaNumMatricola());
-
+		if (animaliEditAggiuntiView != null && animaliEditAggiuntiView.size() > 0) {
+			for (AnagraficaDTO ana : animaliEditAggiuntiView) {
+				GruppoMontaDTO gmDTO;
+				// è giusto che puo esistere solo un toro in un gruppo di monta
+				// ???
+				if (ana.getAnaFlagToro() == 1 && toro) {
+					addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "toro.gia.selezionato");
+					return;
+				} else if (ana.getAnaFlagToro() == 1 && !toro) {
+					toro = true;
 				}
+				gmDTO = new GruppoMontaDTO();
+				gmDTO.setAnagrafica(ana);
+				gmDTO.setGmoAnaId(ana.getAnaId());
+				gmDTO.setGmoDataInserimento(new Date());
+				gmDTO.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
+				gmDTO.getAnagrafica().setAnaFlagDisponibile("0");
+				storicoGruppoMontaAppoggio.getGruppoMontas().add(gmDTO);
+				saved = federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
+						storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gmDTO));
 			}
-
+		} else {
+			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "nessun.animale.selezionato");
 		}
-		// federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAggiuntaAnimali);
-		for (String eli : eliminare) {
-			animaliTargetPerAggiunta.remove(eli);
-			animaliDisponibili.getSource().remove(eli);
+		if (saved) {
+			animaliEditAggiuntiView.clear();
+			valueAna = "";
 		}
-		System.out.println("finito ");
+		System.out.println("Aggiunta anagrafica a gruppo di monta ? " + saved);
 	}
 
 	public void showDialogAddAnimali(StoricoGruppiMontaDTO sgm) {
 		storicoGruppoMontaAppoggio = sgm;
-		animaliSourcePerAggiunta = animaliDisponibili.getSource();
-		animaliTargetPerAggiunta = animaliDisponibili.getTarget();
-		animaliDisponibiliPerAggiunta = new DualListModel<String>(animaliSourcePerAggiunta, animaliTargetPerAggiunta);
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.execute("PF('dlg2').show();");
+		showDialogFromName("dlg2");
 	}
 
 	public String modificaAnimaleInGruppoDiMonta(StoricoGruppiMontaDTO sgm, int gmId) {
@@ -281,26 +286,21 @@ public class GruppiDiMontaMB extends BaseMB {
 		while (iter.hasNext()) {
 			GruppoMontaDTO gm = iter.next();
 			if (gm.getGmoId() == gmId) {
-				if (gm.getAnagrafica().getAnaFlagToro() == 1 && gm.getAnagrafica().getAnaSesso().equals("m")) {
+				if (gm.getAnagrafica().getAnaFlagToro() == 1 && gm.getAnagrafica().getAnaSesso().equalsIgnoreCase("M")) {
 					// eliminazione toro, quindi chiusura gruppo con dialog
-					RequestContext context = RequestContext.getCurrentInstance();
-					context.execute("PF('dlgEliminaToro').show();");
+					showDialogFromName("dlgEliminaToro");
 					RequestContext.getCurrentInstance().update("");
 					return "toro";
 				} else {
 					gm.setGmoDataUscita(new Date());
+					gm.getAnagrafica().setAnaFlagDisponibile("1");
 					saved = federiciService.updateStoricoGruppoMonta(sgm, sgm.getGruppoMontas().indexOf(gm));
 					if (saved) {
-						if (gm.getAnagrafica().getAnaFlagToro() == 1)
-							animaliDisponibili.getSource().add(gm.getAnagrafica().getAnaNumMatricola() + " *");
-						else
-							animaliDisponibili.getSource().add(gm.getAnagrafica().getAnaNumMatricola());
 						iter.remove();
 					}
 				}
 			}
 		}
-		// federiciService.updateStoricoGruppoMonta(sgm);
 		return "ok";
 	}
 
@@ -309,13 +309,10 @@ public class GruppiDiMontaMB extends BaseMB {
 				&& storicoGruppoMontaAppoggio.getGruppoMontas().size() > 0) {
 			for (GruppoMontaDTO gm : storicoGruppoMontaAppoggio.getGruppoMontas()) {
 				gm.setGmoDataUscita(new Date());
+				gm.getAnagrafica().setAnaFlagDisponibile("1");
 				gm.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
 				federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
 						storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gm));
-				if (gm.getAnagrafica().getAnaFlagToro() == 1)
-					animaliDisponibili.getSource().add(gm.getAnagrafica().getAnaNumMatricola() + " *");
-				else
-					animaliDisponibili.getSource().add(gm.getAnagrafica().getAnaNumMatricola());
 			}
 			storicoGruppoMontaAppoggio.setSgmDataChiusura(new Date());
 			storicoGruppoMontaAppoggio.setGruppoMontas(new ArrayList<GruppoMontaDTO>());
@@ -329,13 +326,10 @@ public class GruppiDiMontaMB extends BaseMB {
 				&& storicoGruppoMontaAppoggio.getGruppoMontas().size() > 0) {
 			for (GruppoMontaDTO gm : storicoGruppoMontaAppoggio.getGruppoMontas()) {
 				gm.setGmoDataUscita(new Date());
+				gm.getAnagrafica().setAnaFlagDisponibile("1");
 				gm.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
 				federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
 						storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gm));
-				if (gm.getAnagrafica().getAnaFlagToro() == 1)
-					animaliDisponibili.getSource().add(gm.getAnagrafica().getAnaNumMatricola() + " *");
-				else
-					animaliDisponibili.getSource().add(gm.getAnagrafica().getAnaNumMatricola());
 			}
 			storicoGruppoMontaAppoggio.setSgmDataChiusura(new Date());
 			storicoGruppoMontaAppoggio.setGruppoMontas(new ArrayList<GruppoMontaDTO>());
@@ -346,32 +340,24 @@ public class GruppiDiMontaMB extends BaseMB {
 	public String salvaGruppoDiMonta() {
 		Date date = new Date();
 		boolean saved = false;
-
+		List<GruppoMontaDTO> nuoviGruppiMontaDTOList = new ArrayList<>();
+		boolean toro = false;
 		if (nuovoStoricoGruppoMonta != null) {
+			// è giusto che non è possibile creare gruppi in date future ???
 			if (nuovoStoricoGruppoMonta.getSgmDataApertura().before(date)
 					|| nuovoStoricoGruppoMonta.getSgmDataApertura().equals(date)) {
-				List<String> animaliTargetTemp = animaliDisponibili.getTarget();
-				System.out.println("animali selected " + animaliTargetTemp.size());
-				System.out.println("animali selected " + animaliDisponibili.getTarget());
-				if (animaliTargetTemp != null && animaliTargetTemp.size() > 0) {
-					List<GruppoMontaDTO> nuoviGruppiMontaDTOList = new ArrayList<>();
-					boolean toro = false;
-					for (AnagraficaDTO ana : animaliDisponibiliList) {
+				if (animaliAggiuntiView != null && animaliAggiuntiView.size() > 0) {
+					for (AnagraficaDTO ana : animaliAggiuntiView) {
 						GruppoMontaDTO gmDTO;
-						for (String animali : animaliTargetTemp) {
-							if (animali.contains("*"))
-								animali = animali.replace(" *", "");
-							if (ana.getAnaNumMatricola().equals(animali)) {
-								gmDTO = new GruppoMontaDTO();
-								gmDTO.setAnagrafica(ana);
-								gmDTO.setGmoAnaId(ana.getAnaId());
-								gmDTO.setGmoDataInserimento(nuovoStoricoGruppoMonta.getSgmDataApertura());
-								// gmDTO.setGmoSgmId(gmoSgmId);
-								nuoviGruppiMontaDTOList.add(gmDTO);
-								if (ana.getAnaFlagToro() == 1)
-									toro = true;
-							}
-						}
+						gmDTO = new GruppoMontaDTO();
+						gmDTO.setAnagrafica(ana);
+						gmDTO.setGmoAnaId(ana.getAnaId());
+						gmDTO.getAnagrafica().setAnaFlagDisponibile("0");
+						gmDTO.setGmoDataInserimento(nuovoStoricoGruppoMonta.getSgmDataApertura());
+						// gmDTO.setGmoSgmId(gmoSgmId);
+						nuoviGruppiMontaDTOList.add(gmDTO);
+						if (ana.getAnaFlagToro() == 1)
+							toro = true;
 					}
 					if (!toro) {
 						addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "nessun.toro.selezionato");
@@ -392,13 +378,16 @@ public class GruppiDiMontaMB extends BaseMB {
 			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "storico.gruppo.monta.sbagliato");
 			return null;
 		}
-		if (saved)
+
+		if (saved) {
+			gruppiDiMontaList.add(nuovoStoricoGruppoMonta);
+			animaliAggiuntiView.clear();
+			valueAna = "";
 			return "ok";
-		else
+		} else
 			return "ko";
 	}
 
-	// TODO
 	public List<StoricoGruppiMontaDTO> getGruppiDiMontaList() {
 		return gruppiDiMontaList;
 	}
@@ -439,29 +428,30 @@ public class GruppiDiMontaMB extends BaseMB {
 		this.animaliSelezionateTarget = animaliSelezionateTarget;
 	}
 
-	public DualListModel<String> getAnimaliDisponibili() {
-		return animaliDisponibili;
-	}
-
-	public void setAnimaliDisponibili(DualListModel<String> animaliDisponibili) {
-		this.animaliDisponibili = animaliDisponibili;
-	}
-
-	public List<String> getAnimaliSource() {
-		return animaliSource;
-	}
-
-	public void setAnimaliSource(List<String> animaliSource) {
-		this.animaliSource = animaliSource;
-	}
-
-	public List<String> getAnimaliTarget() {
-		return animaliTarget;
-	}
-
-	public void setAnimaliTarget(List<String> animaliTarget) {
-		this.animaliTarget = animaliTarget;
-	}
+	// public DualListModel<String> getAnimaliDisponibili() {
+	// return animaliDisponibili;
+	// }
+	//
+	// public void setAnimaliDisponibili(DualListModel<String>
+	// animaliDisponibili) {
+	// this.animaliDisponibili = animaliDisponibili;
+	// }
+	//
+	// public List<String> getAnimaliSource() {
+	// return animaliSource;
+	// }
+	//
+	// public void setAnimaliSource(List<String> animaliSource) {
+	// this.animaliSource = animaliSource;
+	// }
+	//
+	// public List<String> getAnimaliTarget() {
+	// return animaliTarget;
+	// }
+	//
+	// public void setAnimaliTarget(List<String> animaliTarget) {
+	// this.animaliTarget = animaliTarget;
+	// }
 
 	public StoricoGruppiMontaDTO getStoricoGruppoMontaAggiuntaAnimali() {
 		return storicoGruppoMontaAppoggio;
@@ -471,29 +461,32 @@ public class GruppiDiMontaMB extends BaseMB {
 		this.storicoGruppoMontaAppoggio = storicoGruppoMontaAggiuntaAnimali;
 	}
 
-	public DualListModel<String> getAnimaliDisponibiliPerAggiunta() {
-		return animaliDisponibiliPerAggiunta;
-	}
-
-	public void setAnimaliDisponibiliPerAggiunta(DualListModel<String> animaliDisponibiliPerAggiunta) {
-		this.animaliDisponibiliPerAggiunta = animaliDisponibiliPerAggiunta;
-	}
-
-	public List<String> getAnimaliSourcePerAggiunta() {
-		return animaliSourcePerAggiunta;
-	}
-
-	public void setAnimaliSourcePerAggiunta(List<String> animaliSourcePerAggiunta) {
-		this.animaliSourcePerAggiunta = animaliSourcePerAggiunta;
-	}
-
-	public List<String> getAnimaliTargetPerAggiunta() {
-		return animaliTargetPerAggiunta;
-	}
-
-	public void setAnimaliTargetPerAggiunta(List<String> animaliTargetPerAggiunta) {
-		this.animaliTargetPerAggiunta = animaliTargetPerAggiunta;
-	}
+	// public DualListModel<String> getAnimaliDisponibiliPerAggiunta() {
+	// return animaliDisponibiliPerAggiunta;
+	// }
+	//
+	// public void setAnimaliDisponibiliPerAggiunta(DualListModel<String>
+	// animaliDisponibiliPerAggiunta) {
+	// this.animaliDisponibiliPerAggiunta = animaliDisponibiliPerAggiunta;
+	// }
+	//
+	// public List<String> getAnimaliSourcePerAggiunta() {
+	// return animaliSourcePerAggiunta;
+	// }
+	//
+	// public void setAnimaliSourcePerAggiunta(List<String>
+	// animaliSourcePerAggiunta) {
+	// this.animaliSourcePerAggiunta = animaliSourcePerAggiunta;
+	// }
+	//
+	// public List<String> getAnimaliTargetPerAggiunta() {
+	// return animaliTargetPerAggiunta;
+	// }
+	//
+	// public void setAnimaliTargetPerAggiunta(List<String>
+	// animaliTargetPerAggiunta) {
+	// this.animaliTargetPerAggiunta = animaliTargetPerAggiunta;
+	// }
 
 	public StoricoGruppiMontaDTO getStoricoGruppoMontaAppoggio() {
 		return storicoGruppoMontaAppoggio;
@@ -533,6 +526,14 @@ public class GruppiDiMontaMB extends BaseMB {
 
 	public void setValueAna(String valueAna) {
 		this.valueAna = valueAna;
+	}
+
+	public Set<AnagraficaDTO> getAnimaliEditAggiuntiView() {
+		return animaliEditAggiuntiView;
+	}
+
+	public void setAnimaliEditAggiuntiView(Set<AnagraficaDTO> animaliEditAggiuntiView) {
+		this.animaliEditAggiuntiView = animaliEditAggiuntiView;
 	}
 
 }

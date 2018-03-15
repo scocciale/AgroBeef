@@ -28,7 +28,8 @@ public class AnagraficaDTO {
 	private String anaUscitaCausa;
 	private RazzaDTO razza;
 	private int anaRazId;
-
+	private String anaFlagDisponibile;
+	
 	public int getAnaId() {
 		return anaId;
 	}
@@ -220,6 +221,14 @@ public class AnagraficaDTO {
 
 	public void setAnaRazId(int anaRazId) {
 		this.anaRazId = anaRazId;
+	}
+
+	public String getAnaFlagDisponibile() {
+		return anaFlagDisponibile;
+	}
+
+	public void setAnaFlagDisponibile(String anaFlagDisponibile) {
+		this.anaFlagDisponibile = anaFlagDisponibile;
 	}
 
 }
