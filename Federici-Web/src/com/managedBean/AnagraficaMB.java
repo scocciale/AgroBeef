@@ -217,10 +217,12 @@ public class AnagraficaMB extends BaseMB {
 		animaleEdit.setAnaDataNascita(ana.getAnaDataNascita());
 		animaleEdit.setAnaDifficoltaParto(ana.getAnaDifficoltaParto());
 		animaleEdit.setAnaFlagGemello(ana.getAnaFlagGemello());
+
 		if (new Integer(ana.getAnaFlagGemello()) != null)
 			flagGemello = ana.getAnaFlagGemello().equals("1") ? true : false;
 		// flagGemello = true;
 		animaleEdit.setAnaFlagToro(ana.getAnaFlagToro());
+		
 		if (new Integer(ana.getAnaFlagToro()) != null)
 			flagToro = ana.getAnaFlagToro() == 1 ? true : false;
 		// flagToro=true;
