@@ -197,7 +197,9 @@
 								rendered="#{allarmiMB.dtRendering == 67}"
 								style="font-size:1.3em; color:#4f4f4f!important;"
 								sortBy="#{esitoVar.indice}">
-								<h:outputText value="#{esitoVar.indice}" />
+								<h:outputText value="#{esitoVar.indice}">
+									<f:convertNumber pattern="#0.00" />
+								</h:outputText>
 							</p:column>
 
 							<p:column headerText="Classificazione ( SEUROP )"

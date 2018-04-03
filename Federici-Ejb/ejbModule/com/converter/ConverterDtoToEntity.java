@@ -35,7 +35,8 @@ public class ConverterDtoToEntity {
 		anag.setAnaNumMatricola(anagDTO.getAnaNumMatricola());
 		anag.setAnaNumParto(anagDTO.getAnaNumParto());
 		anag.setAnaSesso(anagDTO.getAnaSesso());
-		anag.setAnaFlagDisponibile(anagDTO.getAnaFlagDisponibile());
+		if (anagDTO.getAnaFlagDisponibile() != null)
+			anag.setAnaFlagDisponibile(anagDTO.getAnaFlagDisponibile());
 		if (anagDTO.getAnaUteId() != 0)
 			anag.setAnaUteId(anagDTO.getAnaUteId());
 		if (anagDTO.getUtente() != null)

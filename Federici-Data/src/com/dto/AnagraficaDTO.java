@@ -11,7 +11,7 @@ public class AnagraficaDTO {
 	private String anaDifficoltaParto;
 	private String anaFlagGemello;
 	private int anaFlagToro;
-	private String anaNumMatricola;
+	public String anaNumMatricola;
 	private String anaNumMatricolaMadre;
 	private String anaNumMatricolaPadre;
 	private int anaNumParto;

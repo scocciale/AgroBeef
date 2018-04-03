@@ -1,7 +1,6 @@
 package com.managedBean;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -12,7 +11,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.context.RequestContext;
-import org.primefaces.model.LazyDataModel;
 
 import com.dto.AnagraficaDTO;
 import com.dto.RazzaDTO;
@@ -28,7 +26,8 @@ public class AnagraficaMB extends BaseMB {
 	@ManagedProperty(value = "#{userMB}")
 	private UserMB userMB;
 
-	private List<AnagraficaDTO> anagraficaList;
+	// private List<AnagraficaDTO> anagraficaList;
+	private List<AnagraficaDTO> anagraficaFilteredList;
 	private AnagraficaDTO nuovoAnimale;
 	private AnagraficaDTO animaleEdit;
 	private boolean flagToro = false;
@@ -46,9 +45,7 @@ public class AnagraficaMB extends BaseMB {
 	@PostConstruct
 	public void init() {
 
-		lazyModel = new AnagraficaDTOLazyModel();
-
-		anagraficaList = new ArrayList<>();
+		// anagraficaList = new ArrayList<>();
 		nuovoAnimale = new AnagraficaDTO();
 		animaleEdit = new AnagraficaDTO();
 		razzeList = new ArrayList<>();
@@ -56,10 +53,11 @@ public class AnagraficaMB extends BaseMB {
 		sesso = "";
 		anaNumMatricola = "";
 
-		// anagraficaList =
-		// federiciService.getAllAnimaliAnagrafica(userMB.getUtente().getUteRifId());
+		lazyModel = new AnagraficaDTOLazyModel(userMB, federiciService);
+
 		List<ValutazioneMaceDTO> valutazioneMaceList = federiciService
 				.getAllValutazioniMace(userMB.getUtente().getUteRifId());
+
 		razzeList = federiciService.getAllRazze();
 
 		for (RazzaDTO r : razzeList) {
@@ -70,14 +68,6 @@ public class AnagraficaMB extends BaseMB {
 		for (ValutazioneMaceDTO val : valutazioneMaceList) {
 			valEsistenti.add(val.getAnagrafica().getAnaNumMatricola());
 		}
-
-		// ELContext elContext =
-		// FacesContext.getCurrentInstance().getELContext();
-		// UserM firstBean = (FirstBean)
-		// elContext.getELResolver().getValue(elContext, null, "firstBean");
-
-		// System.out.println(userMB.getUtente().getProfilo().getProNome()+"
-		// uijijiijij");
 	}
 
 	public String salvaDatiAnag() {
@@ -123,14 +113,15 @@ public class AnagraficaMB extends BaseMB {
 
 			nuovoAnimale.setAnaFlagToro(flagToro ? 1 : 0);
 			nuovoAnimale.setAnaFlagGemello(flagGemello ? "1" : "0");
+			nuovoAnimale.setAnaFlagDisponibile("1");
 			for (RazzaDTO r : razzeList) {
 				if (nuovoAnimale.getAnaRazza().equals(r.getRazSigla()))
 					nuovoAnimale.setAnaRazId(r.getRazId());
 			}
 			// nuovoAnimale.setAnaSesso(sesso);
 			boolean saved = federiciService.salvaNuovoAnimale(nuovoAnimale, userMB.getUtente().getUteId());
-			if (saved)
-				anagraficaList.add(federiciService.getAnimale(nuovoAnimale.getAnaNumMatricola()));
+			// if (saved)
+			// anagraficaList.add(federiciService.getAnimale(nuovoAnimale.getAnaNumMatricola()));
 			RequestContext.getCurrentInstance().update("@all");
 			sesso = "";
 			flagGemello = false;
@@ -185,15 +176,16 @@ public class AnagraficaMB extends BaseMB {
 					animaleEdit.setAnaRazId(r.getRazId());
 			}
 			boolean saved = federiciService.updateCambiamentiAnimale(animaleEdit);
-			if (saved) {
-				Iterator<AnagraficaDTO> iter = anagraficaList.iterator();
-				while (iter.hasNext()) {
-					AnagraficaDTO ana = iter.next();
-					if (ana.getAnaNumMatricola().equals(animaleEdit.getAnaNumMatricola()))
-						iter.remove();
-				}
-				anagraficaList.add(federiciService.getAnimale(animaleEdit.getAnaNumMatricola()));
-			}
+			// if (saved) {
+			// Iterator<AnagraficaDTO> iter = anagraficaList.iterator();
+			// while (iter.hasNext()) {
+			// AnagraficaDTO ana = iter.next();
+			// if
+			// (ana.getAnaNumMatricola().equals(animaleEdit.getAnaNumMatricola()))
+			// iter.remove();
+			// }
+			// anagraficaList.add(federiciService.getAnimale(animaleEdit.getAnaNumMatricola()));
+			// }
 			RequestContext.getCurrentInstance().update("@all");
 			sesso = "";
 			flagGemello = false;
@@ -241,7 +233,7 @@ public class AnagraficaMB extends BaseMB {
 		sesso = ana.getAnaSesso();
 		animaleEdit.setAnaUteId(ana.getAnaUteId());
 		animaleEdit.setAnaUscitaCausa(ana.getAnaUscitaCausa());
-
+		animaleEdit.setAnaFlagDisponibile(ana.getAnaFlagDisponibile());
 	}
 
 	public void showDialogAnag() {
@@ -256,14 +248,6 @@ public class AnagraficaMB extends BaseMB {
 
 	public void setUserMB(UserMB userMB) {
 		this.userMB = userMB;
-	}
-
-	public List<AnagraficaDTO> getAnagraficaList() {
-		return anagraficaList;
-	}
-
-	public void setAnagraficaList(List<AnagraficaDTO> anagraficaList) {
-		this.anagraficaList = anagraficaList;
 	}
 
 	public AnagraficaDTO getNuovoAnimale() {
@@ -336,6 +320,14 @@ public class AnagraficaMB extends BaseMB {
 
 	public void setRazzeString(List<String> razzeString) {
 		this.razzeString = razzeString;
+	}
+
+	public List<AnagraficaDTO> getAnagraficaFilteredList() {
+		return anagraficaFilteredList;
+	}
+
+	public void setAnagraficaFilteredList(List<AnagraficaDTO> anagraficaFilteredList) {
+		this.anagraficaFilteredList = anagraficaFilteredList;
 	}
 
 	public AnagraficaDTOLazyModel getLazyModel() {

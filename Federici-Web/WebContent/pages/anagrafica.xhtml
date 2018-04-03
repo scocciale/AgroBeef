@@ -352,7 +352,7 @@
 										styleClass="left-align"
 										style="font-size: 0.9rem !important;color: #888888;!important" />
 									<p:calendar id="dataUscita"
-										value="#{anagMB.nuovoAnimale.anaDataUscita}" locale="it"
+										value="#{anagMB.animaleEdit.anaDataUscita}" locale="it"
 										navigator="true" styleClass="validate">
 										<f:convertDateTime pattern="dd/MM/yyyy" />
 									</p:calendar>
@@ -362,7 +362,7 @@
 							<p:column colspan="1">
 								<div class="input-field">
 									<p:selectOneMenu id="causaUscita"
-										value="#{anagMB.nuovoAnimale.anaUscitaCausa}"
+										value="#{anagMB.animaleEdit.anaUscitaCausa}"
 										style="width:125px">
 										<f:selectItem itemLabel="Causa uscita" itemValue="" />
 										<f:selectItem itemLabel="Morte" itemValue="Morte" />
@@ -390,90 +390,93 @@
 			<div class="row">
 				<div class="ui-g">
 					<div class="ui-g-12">
-<!-- anagraficaList -->
+						<!-- anagraficaList -->
 
-							<p:dataTable id="anagrafica" var="ana" widgetVar="templateWdg"
-								emptyMessage="#{text['label.emptyResult']}"
-								value="#{anagMB.lazyModel}" paginatorPosition="bottom" 
-								currentPageReportTemplate="({currentPage} Di {totalPages})"
-								rows="10" paginator="true" dynamic="true" lazy="true"
-								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-								rowsPerPageTemplate="5,10,15">
+						<p:dataTable id="anagrafica" var="ana" widgetVar="templateWdg"
+							emptyMessage="#{text['label.emptyResult']}"
+							value="#{anagMB.lazyModel}" paginatorPosition="bottom"
+							filteredValue="#{anagMB.anagraficaFilteredList}"
+							currentPageReportTemplate="({currentPage} Di {totalPages})"
+							rows="10" paginator="true" dynamic="true" lazy="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
 
-								<p:column headerText="Numero matricola"
-									filterStyleClass="filterClass" width="10%"
-									filterBy="#{ana.anaNumMatricola}"
-									style="text-align: center; font-size:1.3em;"
-									sortBy="#{ana.anaNumMatricola}">
-									<h:outputText value="#{ana.anaNumMatricola}" />
-								</p:column>
-								<p:column headerText="Matricola Madre"
-									filterStyleClass="filterClass" width="10%"
-									filterBy="#{ana.anaNumMatricolaMadre}"
-									style="text-align: center; font-size:1.3em;"
-									sortBy="#{ana.anaNumMatricolaMadre}">
-									<h:outputText value="#{ana.anaNumMatricolaMadre}" />
-								</p:column>
-								<p:column headerText="Matricola Padre"
-									style="text-align: center; font-size:1.3em;"
-									filterStyleClass="filterClass" width="10%"
-									filterBy="#{ana.anaNumMatricolaPadre}"
-									sortBy="#{ana.anaNumMatricolaPadre}">
-									<h:outputText value="#{ana.anaNumMatricolaPadre}" />
-								</p:column>
-								<p:column headerText="Sesso" filterStyleClass="filterClass"
-									width="4%" filterBy="#{ana.anaSesso}"
-									style="text-align: center; font-size:1.3em;"
-									sortBy="#{ana.anaSesso}">
-									<h:outputText value="#{ana.anaSesso}" />
-								</p:column>
-								<p:column headerText="Toro" filterStyleClass="filterClass"
-									width="4%" filterBy="#{ana.anaFlagToro}"
-									style="text-align: center; font-size:1.3em;"
-									sortBy="#{ana.anaFlagToro}">
-									<h:outputText rendered="#{ana.anaFlagToro eq 1}"
-										styleClass="fa fa-check" />
-								</p:column>
-								<p:column headerText="Data di nascita" width="12%"
-									filterStyleClass="filterClass" filterBy="#{ana.anaDataNascita}"
-									style="text-align: center; font-size:1.3em;"
-									sortBy="#{ana.anaDataNascita}">
-									<h:outputText value="#{ana.anaDataNascita}">
-										<f:convertDateTime pattern="dd/MM/yyyy" />
-									</h:outputText>
-								</p:column>
-								<p:column headerText="Data acquisto"
-									style="text-align: center; font-size:1.3em;" width="12%"
-									sortBy="#{ana.anaDataAcquisto}">
-									<h:outputText value="#{ana.anaDataAcquisto}">
-										<f:convertDateTime pattern="dd/MM/yyyy" />
-									</h:outputText>
-								</p:column>
-								<p:column headerText="Razza"
-									style="text-align: center; font-size:1.3em;" width="10%"
-									sortBy="#{ana.anaRazza}">
-									<h:outputText value="#{ana.anaRazza}" />
-								</p:column>
-								<p:column headerText="Difficoltà parto" width="4%"
-									style="text-align: center; font-size:1.3em;"
-									sortBy="#{ana.anaDifficoltaParto}">
-									<h:outputText value="#{ana.anaDifficoltaParto}" />
-								</p:column>
-								<p:column headerText="Causa uscita" width="6%"
-									style="text-align: center; font-size:1.3em;"
-									sortBy="#{ana.anaUscitaCausa}">
-									<h:outputText value="#{ana.anaUscitaCausa}" />
-								</p:column>
-								<p:column width="4%"
-									style="text-align: center; font-size:1.3em;">
-									<p:commandLink action="#{anagMB.editAnimale(ana)}"
-										rendered="#{!anagMB.valEsistenti.contains(ana.anaNumMatricola) and !userMB.utente.profilo.proNome.equals('lettura')}"
-										oncomplete="PF('dlgNuovoAnagMod').loadContents();">
-										<p:graphicImage name="images/icons/editing-edit-icon.png"
-											style="height: 23px; width: 23px;" />
-									</p:commandLink>
-								</p:column>
-							</p:dataTable>
+							<p:column headerText="Numero matricola"
+								filterStyleClass="filterClass" width="10%"
+								filterBy="#{ana.anaNumMatricola}" filterMatchMode="contains"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaNumMatricola}">
+								<h:outputText value="#{ana.anaNumMatricola}" />
+							</p:column>
+							<p:column headerText="Matricola Madre"
+								filterStyleClass="filterClass" width="10%"
+								filterMatchMode="contains"
+								filterBy="#{ana.anaNumMatricolaMadre}"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaNumMatricolaMadre}">
+								<h:outputText value="#{ana.anaNumMatricolaMadre}" />
+							</p:column>
+							<p:column headerText="Matricola Padre" filterMatchMode="contains"
+								style="text-align: center; font-size:1.3em;"
+								filterStyleClass="filterClass" width="10%"
+								filterBy="#{ana.anaNumMatricolaPadre}"
+								sortBy="#{ana.anaNumMatricolaPadre}">
+								<h:outputText value="#{ana.anaNumMatricolaPadre}" />
+							</p:column>
+							<p:column headerText="Sesso" filterStyleClass="filterClass"
+								width="4%" filterBy="#{ana.anaSesso}" filterMatchMode="contains"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaSesso}">
+								<h:outputText value="#{ana.anaSesso}" />
+							</p:column>
+							<p:column headerText="Toro" filterStyleClass="filterClass"
+								width="4%" filterBy="#{ana.anaFlagToro}"
+								filterMatchMode="contains"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaFlagToro}">
+								<h:outputText rendered="#{ana.anaFlagToro eq 1}"
+									styleClass="fa fa-check" />
+							</p:column>
+							<p:column headerText="Data di nascita" width="12%"
+								filterMatchMode="contains" filterStyleClass="filterClass"
+								filterBy="#{ana.anaDataNascita}"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaDataNascita}">
+								<h:outputText value="#{ana.anaDataNascita}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Data acquisto"
+								style="text-align: center; font-size:1.3em;" width="12%"
+								sortBy="#{ana.anaDataAcquisto}">
+								<h:outputText value="#{ana.anaDataAcquisto}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Razza"
+								style="text-align: center; font-size:1.3em;" width="10%"
+								sortBy="#{ana.anaRazza}">
+								<h:outputText value="#{ana.anaRazza}" />
+							</p:column>
+							<p:column headerText="Difficoltà parto" width="4%"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaDifficoltaParto}">
+								<h:outputText value="#{ana.anaDifficoltaParto}" />
+							</p:column>
+							<p:column headerText="Causa uscita" width="6%"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaUscitaCausa}">
+								<h:outputText value="#{ana.anaUscitaCausa}" />
+							</p:column>
+							<p:column width="4%" style="text-align: center; font-size:1.3em;">
+								<p:commandLink action="#{anagMB.editAnimale(ana)}"
+									rendered="#{!anagMB.valEsistenti.contains(ana.anaNumMatricola) and !userMB.utente.profilo.proNome.equals('lettura')}"
+									oncomplete="PF('dlgNuovoAnagMod').loadContents();">
+									<p:graphicImage name="images/icons/editing-edit-icon.png"
+										style="height: 23px; width: 23px;" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
 					</div>
 				</div>
 			</div>

@@ -1,6 +1,8 @@
 package com.service;
 
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 import com.dto.AnagraficaDTO;
 import com.dto.PesataDTO;
@@ -37,9 +39,8 @@ public interface FedericiService {
 
 	public List<AnagraficaDTO> getAllAnimali(int uteCod);
 
-	// public List<AnagraficaDTO> getAllAnimaliAnagrafica(int uteCod, int first,
-	// int pageSize, String sortField,
-	// SortOrder sortOrder);
+	public List<AnagraficaDTO> getAllAnimaliAnagrafica(int uteCod, int start, int size, String sortOrderToStr,
+			String sortField);
 
 	public AnagraficaDTO getAnimale(String matricola);
 
@@ -90,4 +91,11 @@ public interface FedericiService {
 	// public List<AnagraficaDTO> getAllAnimaliDisponibili(int uteId);
 
 	public List<AnagraficaDTO> getAllMatricoleDisponibili(int uteRifId, String queryParams);
+
+	public BigInteger countAllAnagrafica(int uteRifId);
+
+	public List<AnagraficaDTO> getAllAnimaliAnagraficaFiltered(int uteRifId, int first, int pageSize,
+			String sortOrderToStr, Map<String, Object> filters, String sortField);
+
+	public int countAllAnagraficaFiltered(int uteRifId, Map<String, Object> filters);
 }

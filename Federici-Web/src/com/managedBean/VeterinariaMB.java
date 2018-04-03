@@ -36,6 +36,9 @@ public class VeterinariaMB extends BaseMB {
 	private String anaNumMatricola = "";
 	int indexOfanimale = 0;
 
+	private AnagraficaDTOLazyModel lazyModel;
+	private List<AnagraficaDTO> anagraficaFilteredList;
+
 	@EJB
 	FedericiService federiciService;
 
@@ -46,10 +49,14 @@ public class VeterinariaMB extends BaseMB {
 		indexOfanimale = 0;
 		motivoVisita = null;
 
-		anagraficaList = federiciService.getAllAnimali(userMB.getUtente().getUteRifId());
+		lazyModel = new AnagraficaDTOLazyModel(userMB, federiciService);
+
+		// anagraficaList =
+		// federiciService.getAllAnimali(userMB.getUtente().getUteRifId());
 	}
 
-	public void salvaDatiVet() {
+	public void saveDataVet() {
+
 		System.out.println("entrato");
 
 		if (nuovoIntVeterinario == null) {
@@ -57,12 +64,13 @@ public class VeterinariaMB extends BaseMB {
 			System.out.println("nuovo animale");
 			return;
 		} else {
+			System.out.println("nell'else");
 			if (nuovoIntVeterinario.getVetDataVisita() == null) {
 				addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "data.visita.mancante");
 				System.out.println("Inserire la data della visita");
 				return;
 			}
-			if (motivoVisita == null) {
+			if (motivoVisita == null || motivoVisita.isEmpty()) {
 				addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "motivo.visita.mancante");
 				System.out.println("Inserire la motivo della visita");
 				return;
@@ -73,45 +81,25 @@ public class VeterinariaMB extends BaseMB {
 				System.out.println("data della presunta gravidanza non può essere nel futuro");
 				return;
 			}
-			// if (pesataDto == null) {
-			// addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione
-			// !",
-			// "Errore Tecnico");
-			// return null;
-			// }
-			// if (pesataDto.getPesPeso() == null ||
-			// pesataDto.getPesPeso().equals(new Double (0))) {
-			// addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione
-			// !", "Inserire il peso corretto");
-			// return null;
-			// }
-			// if (pesataDto != null && (pesataDto.getPesPeso() != null &&
-			// !pesataDto.getPesPeso().equals(new Double(0)))
-			// && pesataDto.getPesFase() == null) {
-			// addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione
-			// !",
-			// "Inserire la fase del peso dell'animale");
-			// return null;
-			// }
 			nuovoIntVeterinario.setVetMotivoVisita(motivoVisita);
 			pesataDto.setPesData(nuovoIntVeterinario.getVetDataVisita());
 			pesataDto.setPesAnaId(nuovoIntVeterinario.getVetAnaId());
 			boolean saved = federiciService.salvaNuovaVetEPesata(nuovoIntVeterinario, pesataDto);
 			if (saved) {
-				if (null == anagraficaList.get(getIndexOfanimale()).getVeterinarias()) {
+				if (nuovoIntVeterinario.getAnagrafica().getVeterinarias() == null) {
 					System.out.println("lista vet a null");
 					List<VeterinariaDTO> listaVet = new ArrayList<>();
 					listaVet.add(nuovoIntVeterinario);
-					anagraficaList.get(getIndexOfanimale()).setVeterinarias(listaVet);
+					nuovoIntVeterinario.getAnagrafica().setVeterinarias(listaVet);
 				} else
-					anagraficaList.get(getIndexOfanimale()).getVeterinarias().add(nuovoIntVeterinario);
-				if (null == anagraficaList.get(getIndexOfanimale()).getPesatas()) {
+					nuovoIntVeterinario.getAnagrafica().getVeterinarias().add(nuovoIntVeterinario);
+				if (nuovoIntVeterinario.getAnagrafica().getPesatas() == null) {
 					System.out.println("lista pes a null");
 					List<PesataDTO> listaPes = new ArrayList<>();
 					listaPes.add(pesataDto);
-					anagraficaList.get(getIndexOfanimale()).setPesatas(listaPes);
+					nuovoIntVeterinario.getAnagrafica().setPesatas(listaPes);
 				} else
-					anagraficaList.get(getIndexOfanimale()).getPesatas().add(pesataDto);
+					nuovoIntVeterinario.getAnagrafica().getPesatas().add(pesataDto);
 				nuovoIntVeterinario = new VeterinariaDTO();
 				pesataDto = new PesataDTO();
 				motivoVisita = "";
@@ -120,21 +108,17 @@ public class VeterinariaMB extends BaseMB {
 				System.out.println("false");
 			}
 
-			return
-			// saved ? "ok" : "ko"
-			;
-
+			return;
 		}
-		// return null;
 	}
 
-	public void openDialogVet(int indexOfAna) {
+	public void openDialogVet(AnagraficaDTO ana) {
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("PF('dlgNuovoVet').show();");
-		setIndexOfanimale(indexOfAna);
+		// setIndexOfanimale(indexOfAna);
 		nuovoIntVeterinario = new VeterinariaDTO();
-		nuovoIntVeterinario.setAnagrafica(anagraficaList.get(indexOfAna));
-		nuovoIntVeterinario.setVetAnaId(anagraficaList.get(indexOfAna).getAnaId());
+		nuovoIntVeterinario.setAnagrafica(ana);
+		nuovoIntVeterinario.setVetAnaId(ana.getAnaId());
 		nuovoIntVeterinario.setVetDataVisita(new Date());
 	}
 
@@ -225,6 +209,22 @@ public class VeterinariaMB extends BaseMB {
 
 	public void setMotivoVisita(String motivoVisita) {
 		this.motivoVisita = motivoVisita;
+	}
+
+	public AnagraficaDTOLazyModel getLazyModel() {
+		return lazyModel;
+	}
+
+	public void setLazyModel(AnagraficaDTOLazyModel lazyModel) {
+		this.lazyModel = lazyModel;
+	}
+
+	public List<AnagraficaDTO> getAnagraficaFilteredList() {
+		return anagraficaFilteredList;
+	}
+
+	public void setAnagraficaFilteredList(List<AnagraficaDTO> anagraficaFilteredList) {
+		this.anagraficaFilteredList = anagraficaFilteredList;
 	}
 
 }

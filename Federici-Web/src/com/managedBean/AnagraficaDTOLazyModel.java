@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.EJB;
-import javax.faces.bean.ManagedProperty;
-
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -15,57 +12,77 @@ import com.service.FedericiService;
 
 public class AnagraficaDTOLazyModel extends LazyDataModel<AnagraficaDTO> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -9045696725776984798L;
 
-	@EJB
-	FedericiService federiciService;
+	private FedericiService federiciService;
 
-	@ManagedProperty(value = "#{userMB}")
 	private UserMB userMB;
 
-private List<AnagraficaDTO> list;
+	private List<AnagraficaDTO> list;
+
+	private int rowCount;
 
 	public AnagraficaDTOLazyModel() {
-		// TODO Auto-generated constructor stub
+		super();
+	}
+
+	public AnagraficaDTOLazyModel(UserMB userMB, FedericiService federiciService) {
+		
+		setUserMB(userMB);
+		setFedericiService(federiciService);
+		
+		rowCount = Integer.parseInt(federiciService.countAllAnagrafica(userMB.getUtente().getUteRifId()).toString());
 	}
 
 	@Override
 	public List<AnagraficaDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder,
 			Map<String, Object> filters) {
-
-		 list = new ArrayList<>();
 		
-		 for (int i = first; i < first + pageSize; i++) {
-		 AnagraficaDTO a = new AnagraficaDTO();
-		 a.setAnaId(i);
-		 a.setAnaNumMatricola("aaa" + new Integer(i).toString());
-		 a.setAnaFlagToro(1);
-		 a.setAnaFlagGemello("1");
-		 list.add(a);
-		 }
+		String sortOrderToStr = "";
+		list = new ArrayList<>();
 
-//		List<AnagraficaDTO> list = federiciService.getAllAnimaliAnagrafica(userMB.getUtente().getUteRifId(), first, pageSize,
-//				sortField, sortOrder);
-		setRowCount(125);
+		if (sortOrder.equals(SortOrder.DESCENDING)) {
+			sortOrderToStr = "desc";
+		} else {
+			sortOrderToStr = "asc";
+		}
+
+		if (filters != null && filters.size() != 0) {
+
+			list = federiciService.getAllAnimaliAnagraficaFiltered(userMB.getUtente().getUteRifId(), first, pageSize,
+					sortOrderToStr, filters, sortField);
+
+			setRowCount(federiciService.countAllAnagraficaFiltered(userMB.getUtente().getUteRifId(), filters));
+		} else {
+
+			list = federiciService.getAllAnimaliAnagrafica(userMB.getUtente().getUteRifId(), first, pageSize,
+					sortOrderToStr, sortField);
+
+			setRowCount(rowCount);
+		}
 
 		return list;
 	}
 
-//	@Override
-//	public AnagraficaDTO getRowData(String rowKey) {
-//		for (AnagraficaDTO anag : list) {
-//			if (new Integer(anag.getAnaId()).toString().equals(rowKey))
-//				return anag;
-//		}
-//		return null;
-//	}
-
 	@Override
 	public Object getRowKey(AnagraficaDTO dto) {
 		return dto.getAnaId();
+	}
+
+	public UserMB getUserMB() {
+		return userMB;
+	}
+
+	public void setUserMB(UserMB userMB) {
+		this.userMB = userMB;
+	}
+
+	public FedericiService getFedericiService() {
+		return federiciService;
+	}
+
+	public void setFedericiService(FedericiService federiciService) {
+		this.federiciService = federiciService;
 	}
 
 }

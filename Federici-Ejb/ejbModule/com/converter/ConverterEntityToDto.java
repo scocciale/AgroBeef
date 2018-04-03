@@ -40,7 +40,8 @@ public class ConverterEntityToDto {
 		anagraficaDTO.setAnaSesso(anagrafica.getAnaSesso());
 		anagraficaDTO.setUtente(utenteEntityToUtenteDTO(anagrafica.getUtente()));
 		anagraficaDTO.setAnaUteId(anagrafica.getUtente().getUteId());
-		anagraficaDTO.setAnaFlagDisponibile(anagrafica.getAnaFlagDisponibile());
+		if (anagrafica.getAnaFlagDisponibile() != null)
+			anagraficaDTO.setAnaFlagDisponibile(anagrafica.getAnaFlagDisponibile());
 		if (anagrafica.getAnaDataAcquisto() != null)
 			anagraficaDTO.setAnaDataAcquisto(anagrafica.getAnaDataAcquisto());
 		if (anagrafica.getAnaDifficoltaParto() != null)

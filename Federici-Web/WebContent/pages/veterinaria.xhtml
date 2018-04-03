@@ -21,9 +21,10 @@
 					<div class="ui-g-12">
 						<p:dataTable id="anagrafica" var="ana" widgetVar="templateWdg"
 							emptyMessage="#{text['label.emptyResult']}"
+							value="#{veteMB.lazyModel}" paginatorPosition="bottom"
+							filteredValue="#{veteMB.anagraficaFilteredList}"
 							currentPageReportTemplate="({currentPage} Di {totalPages})"
-							value="#{veteMB.anagraficaList}" paginatorPosition="bottom"
-							rows="15" paginator="true"
+							rows="10" paginator="true" dynamic="true" lazy="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15">
 
@@ -82,7 +83,7 @@
 								<p:commandButton value="+"
 									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 									style="font-size:1.3em;width:60%!important;" id="addVet"
-									actionListener="#{veteMB.openDialogVet(veteMB.anagraficaList.indexOf(ana))}"
+									actionListener="#{veteMB.openDialogVet(ana)}"
 									styleClass="waves-effect waves-light btn rosso_cdr"
 									update="contForm:dialogVet" />
 								<p:tooltip for="addVet"
@@ -231,7 +232,7 @@
 									value="#{veteMB.pesataDto.pesPeso}">
 								</p:inputText>
 								<label class="left-align" for="fasePeso"><h:outputText
-										value="Fase del peso" /></label>
+										value="Peso" /></label>
 
 							</div>
 						</p:column>
@@ -256,7 +257,7 @@
 			</div>
 			<div class="row">
 				<h:commandButton id="salvaAnag" value="Salva"
-					actionListener="#{veteMB.salvaDatiVet()}"
+					action="#{veteMB.saveDataVet()}"
 					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 					style="width:auto; float:right;" />
 				<p:tooltip for="salvaAnag" value="Salva tutti i dati" position="top" />

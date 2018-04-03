@@ -1,12 +1,16 @@
 package com.service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -65,6 +69,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 	final static String animaliDisponibiliQueryWithParams = "SELECT a.ana_id, a.ana_num_matricola, a.ana_num_matricola_madre, a.ana_num_matricola_padre, a.ana_flag_toro, a.ana_sesso, a.ana_data_nascita, a.ana_raz_id, a.ana_razza, a.ana_flag_gemello, a.ana_data_acquisto, a.ana_num_parto, a.ana_difficolta_parto, a.ana_ute_id, a.ana_uscita_causa, a.ana_data_uscita, a.ana_flag_disponibile FROM Anagrafica a WHERE a.ana_ute_id = {0} AND a.ana_flag_disponibile = '1' AND a.ana_num_matricola LIKE '%{1}%' AND (a.ana_uscita_causa LIKE '' OR a.ana_uscita_causa IS NULL)";
 
+	final static String countRowInAnagraficaFromUte = "SELECT count(*) FROM Anagrafica a WHERE a.ana_ute_id = {0}";
+
 	final static String causaUscita = "Macellazione";
 
 	@Override
@@ -109,8 +115,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<AnagraficaDTO> getAllAnimaliAnagrafica(int uteCod, int start, int size, String sortField,
-			javax.swing.SortOrder sortOrder) {
+	public List<AnagraficaDTO> getAllAnimaliAnagrafica(int uteCod, int start, int size, String sortOrderToStr,
+			String sortField) {
 
 		List<AnagraficaDTO> listDTO = new ArrayList<>();
 		List<Anagrafica> list = new ArrayList<>();
@@ -118,25 +124,23 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 			Criteria crit = getSession(em).createCriteria(Anagrafica.class);
 			crit.add(Restrictions.eq("anaUteId", uteCod));
-			crit.add(Restrictions.eq("anaFlagDisponibile", "1"));
-			if (sortField == null) {
-				sortField = "anaNumMatricola";
+
+			// ordering query
+			if (sortField != null && !sortField.isEmpty()) {
+				if (sortOrderToStr != null && !sortOrderToStr.isEmpty()) {
+					if (sortOrderToStr.equals("desc")) {
+						crit.addOrder(Order.desc(sortField));
+					} else {
+						crit.addOrder(Order.asc(sortField));
+					}
+				}
 			}
-			if (sortOrder == javax.swing.SortOrder.DESCENDING) {
-				crit.addOrder(Order.asc(sortField));
-			} else {
-				crit.addOrder(Order.desc(sortField));
-			}
+
+			// limit in query
 			crit.setFirstResult(start);
 			crit.setMaxResults(size);
 
-			// crit.setFirstResult(1);
-			// crit.setMaxResults(29);
-
 			list = (List<Anagrafica>) crit.list();
-			// list = (List<Anagrafica>)
-			// getSession(em).createCriteria(Anagrafica.class)
-			// .add(Restrictions.eq("anaUteId", uteCod)).list();
 
 			if (list != null && list.size() > 0) {
 				AnagraficaDTO dto;
@@ -817,4 +821,83 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		return listaAnimaliDisp;
 
 	}
+
+	public BigInteger countAllAnagrafica(int uteRifId) {
+
+		String query = countRowInAnagraficaFromUte.replace("{0}", new Integer(uteRifId).toString());
+
+		return (BigInteger) getSession(em).createSQLQuery(query).uniqueResult();
+	}
+
+	public List<AnagraficaDTO> getAllAnimaliAnagraficaFiltered(int uteRifId, int first, int pageSize,
+			String sortOrderToStr, Map<String, Object> filters, String sortField) {
+
+		List<Anagrafica> listaAnimaliFiltered = new ArrayList<>();
+		List<AnagraficaDTO> listaAnimaliDone = new ArrayList<>();
+
+		try {
+			Criteria crit = getSession(em).createCriteria(Anagrafica.class);
+			crit.add(Restrictions.eq("anaUteId", uteRifId));
+
+			for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
+				String filterProperty = it.next();
+				if (filterProperty != null && !filterProperty.equals("")) {
+					if (filters.get(filterProperty) != null && !filters.get(filterProperty).toString().isEmpty())
+						crit.add(Restrictions.ilike(filterProperty, filters.get(filterProperty).toString(),
+								MatchMode.ANYWHERE));
+				}
+			}
+
+			// ordering query
+			if (sortField != null && !sortField.isEmpty()) {
+				if (sortOrderToStr != null && !sortOrderToStr.isEmpty()) {
+					if (sortOrderToStr.equals("desc")) {
+						crit.addOrder(Order.desc(sortField));
+					} else {
+
+						crit.addOrder(Order.asc(sortField));
+					}
+				}
+			}
+
+			// limit query
+			crit.setFirstResult(first);
+			crit.setMaxResults(pageSize);
+
+			listaAnimaliFiltered = (List<Anagrafica>) crit.list();
+
+			AnagraficaDTO dto;
+			for (Anagrafica anagrafica : listaAnimaliFiltered) {
+				dto = new AnagraficaDTO();
+				dto = ConverterEntityToDto.anagraficaEntityToAngraficaDTO(anagrafica);
+				listaAnimaliDone.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listaAnimaliDone;
+
+	}
+
+	public int countAllAnagraficaFiltered(int uteRifId, Map<String, Object> filters) {
+
+		Criteria crit = getSession(em).createCriteria(Anagrafica.class);
+		crit.add(Restrictions.eq("anaUteId", uteRifId));
+		for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
+			String filterProperty = it.next();
+			if (filterProperty != null && !filterProperty.equals("")) {
+				if (filters.get(filterProperty) != null && !filters.get(filterProperty).toString().isEmpty())
+					crit.add(Restrictions.ilike(filterProperty, filters.get(filterProperty).toString(),
+							MatchMode.ANYWHERE));
+			}
+		}
+
+		crit.setProjection(Projections.rowCount());
+
+		Long l = (Long) crit.uniqueResult();
+
+		return Integer.parseInt(l.toString());
+
+	}
+
 }
