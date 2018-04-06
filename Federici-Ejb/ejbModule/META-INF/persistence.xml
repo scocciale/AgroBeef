@@ -25,12 +25,12 @@
 
 
 			<!-- per il deploy utilizzare questi parametri -->
-			<!-- <property name="hibernate.default_schema" value="Sql891011_4" /> 
-			<property name="hibernate.show_sql" value="false" />-->
+			<property name="hibernate.default_schema" value="Sql891011_4" /> 
+			<property name="hibernate.show_sql" value="false" />
 			
 			<!-- per sviluppare in locale utilizzare questi parametri -->
-			<property name="hibernate.default_schema" value="federicidb" />
-			<property name="hibernate.show_sql" value="true" />
+			<!-- <property name="hibernate.default_schema" value="federicidb" />
+			<property name="hibernate.show_sql" value="true" />-->
 
 
 			<property name="hibernate.connection.characterEncoding"
