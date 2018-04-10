@@ -3,6 +3,7 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
+import java.sql.Timestamp;
 
 /**
  * The persistent class for the utente database table.
@@ -32,6 +33,9 @@ public class Utente implements Serializable {
 	
 	@Column(name = "ute_rif_id")
 	private int uteRifId;
+	
+	@Column(name = "ute_ultimo_acc")
+	private Timestamp uteUltimoAcc;
 
 	// bi-directional many-to-one association to Anagrafica
 	@OneToMany(mappedBy = "utente")
@@ -173,6 +177,14 @@ public class Utente implements Serializable {
 
 	public void setUteRifId(int uteRifId) {
 		this.uteRifId = uteRifId;
+	}
+
+	public Timestamp getUteUltimoAcc() {
+		return uteUltimoAcc;
+	}
+
+	public void setUteUltimoAcc(Timestamp uteUltimoAcc) {
+		this.uteUltimoAcc = uteUltimoAcc;
 	}
 
 }

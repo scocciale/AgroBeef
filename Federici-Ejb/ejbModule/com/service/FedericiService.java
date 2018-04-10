@@ -98,4 +98,6 @@ public interface FedericiService {
 			String sortOrderToStr, Map<String, Object> filters, String sortField);
 
 	public int countAllAnagraficaFiltered(int uteRifId, Map<String, Object> filters);
+
+	public boolean updateLastAccess(UtenteDTO utente);
 }

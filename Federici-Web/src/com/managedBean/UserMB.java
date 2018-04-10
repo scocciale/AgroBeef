@@ -31,8 +31,14 @@ public class UserMB extends BaseMB {
 		if (utente == null) {
 			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "message.fatal.error.login");
 			return null;
-		} else
-			return navigateTo("HOME");
+		} else {
+			if (federiciService.updateLastAccess(this.utente))
+				return navigateTo("HOME");
+			else {
+				addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "errore.tecnico");
+				return null;
+			}
+		}
 	}
 
 	public void logOut() {

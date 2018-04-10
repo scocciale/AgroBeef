@@ -7,13 +7,13 @@
 
 
 	<ui:define name="title">
-		<h:outputText value="Veterinaria" />
+		<h:outputText value="#{text['title.veterinaria']}" />
 	</ui:define>
 	<ui:define name="title-desc">
 		<h:outputText value="" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Interventi veterinari" closable="false"
+		<p:panel header="#{text['panel.veterinaria']}" closable="false"
 			toggleable="false" widgetVar="resultPanelWdg"
 			style="margin-left: 10px ; margin-right: 10px">
 			<div class="row">
@@ -32,20 +32,20 @@
 								<p:rowToggler rendered="#{ana.veterinarias.size() gt 0}" />
 							</p:column>
 
-							<p:column headerText="Numero matricola"
+							<p:column headerText="#{text['column.header.numero.mat']}"
 								filterStyleClass="filterClass" width="10%"
 								filterBy="#{ana.anaNumMatricola}" filterMatchMode="contains"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaNumMatricola}">
 								<h:outputText value="#{ana.anaNumMatricola}" />
 							</p:column>
-							<p:column headerText="Sesso" filterStyleClass="filterClass"
+							<p:column headerText="#{text['column.header.sesso']}" filterStyleClass="filterClass"
 								width="4%" filterBy="#{ana.anaSesso}"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaSesso}">
 								<h:outputText value="#{ana.anaSesso}" />
 							</p:column>
-							<p:column headerText="Ultimo peso (Kg)" width="6%"
+							<p:column headerText="#{text['column.header.ultimo.peso']}" width="6%"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.pesatas.get(0).pesPeso}">
 								<h:outputText
@@ -53,41 +53,41 @@
 									<f:convertNumber pattern="#,##0.0" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="Toro" filterStyleClass="filterClass"
+							<p:column headerText="#{text['column.header.toro']}" filterStyleClass="filterClass"
 								width="4%" filterBy="#{ana.anaFlagToro}"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaFlagToro}">
 								<h:outputText rendered="#{ana.anaFlagToro eq 1}"
 									styleClass="fa fa-check" />
 							</p:column>
-							<p:column headerText="Data di nascita" width="15%"
+							<p:column headerText="#{text['column.header.data.nasc']}" width="15%"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaDataNascita}">
 								<h:outputText value="#{ana.anaDataNascita}">
 									<f:convertDateTime pattern="dd/MM/yyyy" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="Data acquisto"
+							<p:column headerText="#{text['column.header.data.acquisto']}"
 								style="text-align: center; font-size:1.3em;" width="15%"
 								sortBy="#{ana.anaDataAcquisto}">
 								<h:outputText value="#{ana.anaDataAcquisto}">
 									<f:convertDateTime pattern="dd/MM/yyyy" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="Razza"
+							<p:column headerText="#{text['column.header.razza']}"
 								style="text-align: center; font-size:1.3em;" width="10%"
 								sortBy="#{ana.anaRazza}">
 								<h:outputText value="#{ana.anaRazza}" />
 							</p:column>
 							<p:column width="3%" styleClass="center">
-								<p:commandButton value="+"
+								<p:commandButton value="#{text['button.aggiungi.simbolo']}"
 									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 									style="font-size:1.3em;width:60%!important;" id="addVet"
 									actionListener="#{veteMB.openDialogVet(ana)}"
 									styleClass="waves-effect waves-light btn rosso_cdr"
 									update="contForm:dialogVet" />
 								<p:tooltip for="addVet"
-									value="Aggiungere nuovo intervento veterinario" position="top" />
+									value="#{text['tooltip.nuovo.veterinario']}" position="top" />
 							</p:column>
 							<p:rowExpansion>
 								<p:dataTable id="vetForAnagDt" var="vet"
@@ -95,31 +95,31 @@
 									style="width:auto!important; float:right!important; "
 									emptyMessage="#{text['label.emptyResult']}">
 
-									<p:column headerText="Data visita"
+									<p:column headerText="#{text['column.header.data.visita']}"
 										style="text-align: center; font-size:1.3em;" width="10%"
 										sortBy="#{vet.vetDataVisita}">
 										<h:outputText value="#{vet.vetDataVisita}">
 											<f:convertDateTime pattern="dd/MM/yyyy" />
 										</h:outputText>
 									</p:column>
-									<p:column headerText="Motivo visita"
+									<p:column headerText="#{text['column.header.motivo.visita']}"
 										style="text-align: left; font-size:1.3em;" width="20%"
 										sortBy="#{vet.vetMotivoVisita}">
 										<h:outputText value="#{vet.vetMotivoVisita}" />
 									</p:column>
-									<p:column headerText="Farmaci utilizzati"
+									<p:column headerText="#{text['column.header.farmaci']}"
 										style="text-align: left; font-size:1.3em;" width="30%"
 										sortBy="#{vet.vetFarmaciUtilizzati}">
 										<h:outputText value="#{vet.vetFarmaciUtilizzati}" />
 									</p:column>
-									<p:column headerText="Data diagnosi gravidanza"
+									<p:column headerText="#{text['column.header.data.diagn.grav']}"
 										style="text-align: center; font-size:1.3em;" width="10%"
 										sortBy="#{vet.vetDataDiagnosiGrav}">
 										<h:outputText value="#{vet.vetDataDiagnosiGrav}">
 											<f:convertDateTime pattern="dd/MM/yyyy" />
 										</h:outputText>
 									</p:column>
-									<p:column headerText="Esito gravidanza"
+									<p:column headerText="#{text['column.header.esito.grav']}"
 										style="text-align: center; font-size:1.3em;" width="10%"
 										sortBy="#{vet.vetEsitoGrav}">
 										<h:outputText value="#{vet.vetEsitoGrav}" />
@@ -144,7 +144,7 @@
 			style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
 
 			<div class="row center">
-				<h:outputText value="Dettagli nuovo intervento veterinario"
+				<h:outputText value="#{text['label.dettagli.intervento.vet']}"
 					styleClass="text-al-cen"
 					style="font-weight: bold !important; font-size:1.5em" />
 			</div>
@@ -153,7 +153,7 @@
 					<p:row>
 						<p:column colspan="1">
 							<div class="row">
-								<p:outputLabel value="Matricola: " styleClass="left"
+								<p:outputLabel value="#{text['column.header.numero.mat']}: " styleClass="left"
 									for="matricola"
 									style="font-size: 0.9rem !important;color: #888888;!important">
 									<h:outputText id="matricola"
@@ -166,7 +166,7 @@
 						</p:column>
 						<p:column colspan="1">
 							<div class="input-field right">
-								<p:outputLabel for="dataVisita" value="Data della visita"
+								<p:outputLabel for="dataVisita" value="#{text['label.data.visita']}"
 									styleClass="left-align"
 									style="font-size: 0.9rem !important;color: #888888;!important" />
 								<p:calendar id="dataVisita"
@@ -181,7 +181,7 @@
 						<p:column>
 							<div class="input-field">
 								<p:outputLabel for="dataPresuntaGrav"
-									value="Data della presunta gravidanza" styleClass="left-align"
+									value="#{text['label.data.gravidanza']}" styleClass="left-align"
 									style="font-size: 0.9rem !important;color: #888888;!important" />
 
 								<p:calendar id="dataPresuntaGrav"
@@ -196,7 +196,7 @@
 						<p:column></p:column>
 						<p:column colspan="1">
 							<div class="row">
-								<p:outputLabel for="motivoVisita" value="Motivo della visita"
+								<p:outputLabel for="motivoVisita" value="#{text['label.motivo.visita']}"
 									styleClass="left-align"
 									style="font-size: 0.9rem !important;color: #888888;!important" />
 
@@ -207,7 +207,6 @@
 					</p:row>
 					<p:row>
 						<p:column>
-
 						</p:column>
 
 						<p:column>
@@ -216,7 +215,7 @@
 						<p:column>
 							<div class="row">
 								<p:outputLabel for="farmaciUtilizzati"
-									value="Farmaci utilizzati" styleClass="left-align"
+									value="#{text['label.farmaci.utilizzati']}" styleClass="left-align"
 									style="font-size: 0.9rem !important;color: #888888;!important" />
 								<p:inputText id="farmaciUtilizzati"
 									value="#{veteMB.nuovoIntVeterinario.vetFarmaciUtilizzati}"
@@ -245,7 +244,7 @@
 									<f:convertNumber pattern="#,##0.0" />
 								</p:inputText>
 								<label class="left-align" for="fasePeso"><h:outputText
-										value="Fase del peso" /></label>
+										value="#{text['label.fase.peso']}" /></label>
 
 							</div>
 						</p:column>
@@ -256,11 +255,11 @@
 				</p:panelGrid>
 			</div>
 			<div class="row">
-				<h:commandButton id="salvaAnag" value="Salva"
+				<h:commandButton id="salvaAnag" value="#{text['button.salva']}"
 					action="#{veteMB.saveDataVet()}"
 					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 					style="width:auto; float:right;" />
-				<p:tooltip for="salvaAnag" value="Salva tutti i dati" position="top" />
+				<p:tooltip for="salvaAnag" value="#{text['button.salva']}" position="top" />
 			</div>
 		</p:dialog>
 	</ui:define>

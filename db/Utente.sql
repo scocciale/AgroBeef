@@ -1,0 +1,1 @@
+ALTER TABLE `Utente` ADD COLUMN `ute_ultimo_acc` TIMESTAMP NULL COMMENT 'indica il sysdate dell''ultimo accesso';

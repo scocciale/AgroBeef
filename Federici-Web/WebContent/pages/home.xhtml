@@ -9,57 +9,57 @@
 		<h:form id="homeForm" prependId="false">
 			<div id="home-container" class="ui-g">
 
-				<div class="ui-g-12 ui-md-3 ui-lg-3" style="">
+				<div class="ui-g-12 ui-md-3 ui-lg-3">
 
 
-					<p:panel styleClass="card-panel stacked_panel" header="Analisi">
+					<p:panel styleClass="card-panel stacked_panel" header="#{text['panel.home.analisi']}">
 						<p:panel styleClass="card-panel"
 							style="box-shadow: none!important;">
 							<div class="panel">
-								<div class="panel-heading">
-									<div class="row">
-										<p:graphicImage styleClass="card-analisi-img"
-											value="#{resource['images/home/riscossione1.jpg']}" />
-									</div>
-								</div>
 								<p:commandLink action="#{homeMB.navigateTo('ANAGRAFICA')}">
-									<h:outputText />
+									<div class="panel-heading">
+										<div class="row">
+											<p:graphicImage styleClass="card-analisi-img"
+												value="#{resource['images/home/riscossione1.jpg']}" />
+										</div>
+									</div>
 									<div
 										class="panel-footer colored color_verde_petrolio textForCard">
-										<span class="pull-left">Anagrafica</span> <span
-											class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+										<span class="pull-left">#{text['menu.anagrafica']}</span> <span
+											class="pull-right"><i
+											class="fa fa-arrow-circle-right fa-2x"></i></span>
 										<div class="clearfix"></div>
 									</div>
 								</p:commandLink>
 							</div>
 						</p:panel>
-
 
 						<p:panel styleClass="card-panel"
 							style="box-shadow: none!important;">
 							<div class="panel">
-								<div class="panel-heading">
-									<div class="row">
-										<p:graphicImage styleClass="card-analisi-img"
-											value="#{resource['images/home/simu.jpg']}" />
-									</div>
-								</div>
 								<p:commandLink action="#{homeMB.navigateTo('VETERINARIA')}">
-									<h:outputText />
+									<div class="panel-heading">
+										<div class="row">
+											<p:graphicImage styleClass="card-analisi-img"
+												value="#{resource['images/home/simu.jpg']}" />
+										</div>
+									</div>
 									<div class="panel-footer colored color_green textForCard">
-										<span class="pull-left">Veterinaria</span> <span
-											class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+										<span class="pull-left">#{text['menu.veterinaria']}</span> <span
+											class="pull-right"><i
+											class="fa fa-arrow-circle-right fa-2x"></i></span>
 										<div class="clearfix"></div>
 									</div>
 								</p:commandLink>
 							</div>
 						</p:panel>
+
 					</p:panel>
 				</div>
 
 
 
-				<div class="ui-g-12 ui-md-9 ui-lg-9" style="">
+				<div class="ui-g-12 ui-md-9 ui-lg-9">
 					<div class="ui-g">
 						<div class="ui-g-4">
 							<p:panel styleClass="card-panel stacked_panel" header="">
@@ -67,19 +67,18 @@
 								<p:panel styleClass="card-panel"
 									style="box-shadow: none!important;">
 									<div class="panel">
-										<div class="panel-heading">
-											<div class="row">
-												<p:graphicImage styleClass="card-analisi-img"
-													value="#{resource['images/home/dataset.jpg']}" />
-											</div>
-										</div>
 										<p:commandLink action="#{homeMB.navigateTo('GRUPPI_MONTA')}">
-											<h:outputText />
+											<div class="panel-heading">
+												<div class="row">
+													<p:graphicImage styleClass="card-analisi-img"
+														value="#{resource['images/home/dataset.jpg']}" />
+												</div>
+											</div>
 											<div
 												class="panel-footer colored color_rosso_oscuro textForCard">
-												<span class="pull-left">Gruppi di monta</span> <span
+												<span class="pull-left">#{text['menu.gdm']}</span> <span
 													class="pull-right"><i
-													class="fa fa-arrow-circle-right"></i></span>
+													class="fa fa-arrow-circle-right fa-2x"></i></span>
 												<div class="clearfix"></div>
 											</div>
 										</p:commandLink>
@@ -94,19 +93,17 @@
 								<p:panel styleClass="card-panel"
 									style="box-shadow: none!important;">
 									<div class="panel">
-										<div class="panel-heading">
-											<div class="row">
-												<p:graphicImage styleClass="card-analisi-img"
-													value="#{resource['images/home/simu.jpg']}" />
-											</div>
-										</div>
 										<p:commandLink
 											action="#{homeMB.navigateTo('GRUPPI_ACCRESCIMENTO')}">
-											<h:outputText />
+											<div class="panel-heading">
+												<div class="row">
+													<p:graphicImage styleClass="card-analisi-img"
+														value="#{resource['images/home/simu.jpg']}" />
+												</div>
+											</div>
 											<div class="panel-footer colored color_orange textForCard">
-												<span class="pull-left">Gruppi di accrescimento e
-													finissaggio</span> <span class="pull-right"><i
-													class="fa fa-arrow-circle-right"></i></span>
+												<span class="pull-left">#{text['menu.gdm.esteso']}</span> <span class="pull-right"><i
+													class="fa fa-arrow-circle-right fa-2x"></i></span>
 												<div class="clearfix"></div>
 											</div>
 										</p:commandLink>
@@ -121,19 +118,18 @@
 								<p:panel styleClass="card-panel"
 									style="box-shadow: none!important;">
 									<div class="panel">
-										<div class="panel-heading">
-											<div class="row">
-												<p:graphicImage styleClass="card-analisi-img"
-													value="#{resource['images/home/simu.jpg']}" />
-											</div>
-										</div>
 										<p:commandLink
 											action="#{homeMB.navigateTo('PESATA_COMMERCIALE')}">
-											<h:outputText />
+											<div class="panel-heading">
+												<div class="row">
+													<p:graphicImage styleClass="card-analisi-img"
+														value="#{resource['images/home/simu.jpg']}" />
+												</div>
+											</div>
 											<div class="panel-footer colored color_orange textForCard">
-												<span class="pull-left">Pesata commerciale</span> <span
+												<span class="pull-left">#{text['menu.pesata.comm']}</span> <span
 													class="pull-right"><i
-													class="fa fa-arrow-circle-right"></i></span>
+													class="fa fa-arrow-circle-right fa-2x"></i></span>
 												<div class="clearfix"></div>
 											</div>
 										</p:commandLink>
@@ -144,22 +140,22 @@
 					</div>
 					<div class="ui-g">
 						<div class="ui-g-12 ui-md-6 ui-lg-6">
-							<p:panel styleClass="card-panel stacked_panel" header="Allarmi">
+							<p:panel styleClass="card-panel stacked_panel" header="#{text['panel.home.allarmi']}">
 								<p:panel styleClass="card-panel"
 									style="box-shadow: none!important;">
 									<div class="panel">
-										<div class="panel-heading">
-											<div class="row">
-												<p:graphicImage styleClass="card-big-img"
-													value="#{resource['images/home/modellazione.jpg']}" />
-											</div>
-										</div>
 										<p:commandLink action="#{homeMB.navigateTo('ALLARMI')}">
+											<div class="panel-heading">
+												<div class="row">
+													<p:graphicImage styleClass="card-big-img"
+														value="#{resource['images/home/modellazione.jpg']}" />
+												</div>
+											</div>
 											<h:outputText />
 											<div class="panel-footer colored color_red textForCard">
-												<span class="pull-left">Allarmi </span> <span
+												<span class="pull-left">#{text['menu.allarmi']} </span> <span
 													class="pull-right"><i
-													class="fa fa-arrow-circle-right"></i></span>
+													class="fa fa-arrow-circle-right fa-2x"></i></span>
 												<div class="clearfix"></div>
 											</div>
 										</p:commandLink>
@@ -173,7 +169,6 @@
 						<div class="ui-g-12 ui-md-6 ui-lg-6"></div>
 					</div>
 				</div>
-
 			</div>
 		</h:form>
 	</ui:define>

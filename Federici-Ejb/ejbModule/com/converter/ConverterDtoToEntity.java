@@ -163,11 +163,13 @@ public class ConverterDtoToEntity {
 		ute.setUteId(uteDTO.getUteId());
 		ute.setUtePwd(uteDTO.getUtePwd());
 		ute.setUteUsername(uteDTO.getUteUsername());
+		ute.setUteUltimoAcc(uteDTO.getUteUltimoAcc());
 		if (uteDTO.getUteCognome() != null)
 			ute.setUteCognome(uteDTO.getUteCognome());
 		if (uteDTO.getUteNome() != null)
 			ute.setUteNome(uteDTO.getUteNome());
 		ute.setProfilo(profiloDTOToProfilo(uteDTO.getProfilo()));
+		ute.setUteRifId(uteDTO.getUteRifId());
 
 		return ute;
 	}

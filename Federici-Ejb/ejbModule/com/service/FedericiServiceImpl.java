@@ -1,6 +1,7 @@
 package com.service;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -898,6 +899,22 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 		return Integer.parseInt(l.toString());
 
+	}
+	
+	public boolean updateLastAccess(UtenteDTO utente){
+		Utente ute = new Utente();
+
+		ute = ConverterDtoToEntity.utenteDTOToUtente(utente);
+		ute.setUteUltimoAcc(new Timestamp(System.currentTimeMillis()));
+
+		try {
+			getSession(em).update(ute);
+			getSession(em).flush();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

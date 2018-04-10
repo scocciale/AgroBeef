@@ -7,7 +7,7 @@
 
 
 	<ui:define name="title">
-		<h:outputText value="Valutazioni commerciali pesate" />
+		<h:outputText value="#{text['title.pesata.comm']}" />
 	</ui:define>
 	<ui:define name="title-desc">
 		<h:outputText value="" />
@@ -15,19 +15,19 @@
 	<ui:define name="content">
 
 		<p:panel closable="false" toggleable="false" widgetVar="gdmWidgetVar"
-			header="Pesata Commerciale" id="gruppiDiMonta"
+			header="#{text['panel.pesata.comm']}" id="gruppiDiMonta"
 			style="margin-left: 10px ; margin-right: 10px">
 
 			<div class="row">
 
-				<p:commandButton value="Nuova Valutazione"
+				<p:commandButton value="#{text['button.nuova.val']}"
 					rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 					style="float:right!important;" id="addValutazione"
 					action="#{pcommMB.showDialogNuovaVal}"
 					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 					update="dialogVal" />
-				<p:tooltip for="addValutazione"
-					value="Aggiungere nuova valutazione pesata" position="top" />
+				<p:tooltip for="addValutazione" value="#{text['tooltip.nuova.val']}"
+					position="top" />
 
 			</div>
 
@@ -36,7 +36,8 @@
 				style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
 
 				<div class="row center">
-					<h:outputText value="Dettagli animale" styleClass="text-al-cen"
+					<h:outputText value="#{text['label.animale.dettagli']}"
+						styleClass="text-al-cen"
 						style="font-weight: bold !important; font-size:1.5em" />
 				</div>
 				<div class="row">
@@ -46,13 +47,14 @@
 								<div class="input-field row">
 
 									<label class="left-align" for="matricola"><h:outputText
-											value="Matricola" /></label>
+											value="#{text['column.header.numero.mat']}" /></label>
 
 									<p:selectOneMenu id="matricola"
 										widgetVar="animaleNuovaValutazione"
 										value="#{pcommMB.matricolaAnimale}"
 										style="display: block!important;margin-left: auto !important;margin-right: auto !important;">
-										<f:selectItem itemLabel="Seleziona un animale" itemValue="" />
+										<f:selectItem itemLabel="#{text['label.seleziona.animale']}"
+											itemValue="" />
 										<f:selectItems value="#{pcommMB.animaliUscitiMatricola}" />
 										<p:ajax event="change"
 											listener="#{pcommMB.getAnagraficaFromMatricola()}"
@@ -64,7 +66,8 @@
 							</p:column>
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:outputLabel for="dataMacellazione" value="Data macellazione"
+									<p:outputLabel for="dataMacellazione"
+										value="#{text['label.data.macellazione']}"
 										styleClass="left-align"
 										style="font-size: 0.9rem !important;color: #888888;!important" />
 									<p:calendar id="dataMacellazione"
@@ -83,7 +86,7 @@
 										value="#{pcommMB.nuovaValutazione.vmaPesoCarcassa}">
 									</p:inputText>
 									<label class="left-align" for="pesoCarcassa"><h:outputText
-											value="Peso carcassa" /></label>
+											value="#{text['label.peso.carcassa']}" /></label>
 								</div>
 							</p:column>
 
@@ -94,7 +97,7 @@
 										value="#{pcommMB.nuovaValutazione.vmaPesoMacellazione}">
 									</p:inputText>
 									<label class="left-align" for="pesoMacellazione"><h:outputText
-											value="Peso macellazione" /></label>
+											value="#{text['label.peso.macellazione']}" /></label>
 								</div>
 							</p:column>
 
@@ -105,7 +108,7 @@
 										value="#{pcommMB.nuovaValutazione.vmaPesoTaglioTot}">
 									</p:inputText>
 									<label class="left-align" for="pesoTaglio"><h:outputText
-											value="Peso al taglio" /></label>
+											value="#{text['label.peso.taglio']}" /></label>
 								</div>
 							</p:column>
 						</p:row>
@@ -117,7 +120,8 @@
 							</p:column>
 							<p:column colspan="1">
 								<div class="input-field center">
-									<h:outputText value="Valutazioni" style="font-weight:bold;" />
+									<h:outputText value="#{text['label.valutazioni']}"
+										style="font-weight:bold;" />
 								</div>
 							</p:column>
 							<p:column colspan="1">
@@ -126,18 +130,24 @@
 						<p:row>
 							<p:column colspan="1">
 								<label class="left-align" for="matricola"><h:outputText
-										value="Classificazione SEUROP" /></label>
+										value="#{text['label.valutaz.seurop.section']}" /></label>
 
 								<p:outputPanel id="customPanelSeurop" style="margin-bottom:20px">
 									<p:selectOneRadio id="customSeurop"
 										value="#{pcommMB.nuovaValutazione.vmaClassSeurop}"
 										layout="custom">
-										<f:selectItem itemLabel="S" itemValue="S" />
-										<f:selectItem itemLabel="E" itemValue="E" />
-										<f:selectItem itemLabel="U" itemValue="U" />
-										<f:selectItem itemLabel="R" itemValue="R" />
-										<f:selectItem itemLabel="O" itemValue="O" />
-										<f:selectItem itemLabel="P" itemValue="P" />
+										<f:selectItem itemLabel="#{text['label.valutaz.seurop.s']}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{text['label.valutaz.seurop.e']}"
+											itemValue="E" />
+										<f:selectItem itemLabel="#{text['label.valutaz.seurop.u']}"
+											itemValue="U" />
+										<f:selectItem itemLabel="#{text['label.valutaz.seurop.r']}"
+											itemValue="R" />
+										<f:selectItem itemLabel="#{text['label.valutaz.seurop.o']}"
+											itemValue="O" />
+										<f:selectItem itemLabel="#{text['label.valutaz.seurop.p']}"
+											itemValue="P" />
 									</p:selectOneRadio>
 
 									<div class="ui-grid ui-grid-responsive">
@@ -147,7 +157,8 @@
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt1Seurop" for="customSeurop"
 													itemIndex="0">
-													<p:tooltip for="opt1Seurop" value="Superiore"
+													<p:tooltip for="opt1Seurop"
+														value="#{text['tooltip.valutaz.seurop.0']}"
 														position="bottom" />
 												</p:radioButton>
 											</div>
@@ -156,7 +167,8 @@
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt2Seurop" for="customSeurop"
 													itemIndex="1">
-													<p:tooltip for="opt2Seurop" value="Eccellente"
+													<p:tooltip for="opt2Seurop"
+														value="#{text['tooltip.valutaz.seurop.1']}"
 														position="bottom" />
 												</p:radioButton>
 											</div>
@@ -165,7 +177,8 @@
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt3Seurop" for="customSeurop"
 													itemIndex="2">
-													<p:tooltip for="opt3Seurop" value="Ottimo"
+													<p:tooltip for="opt3Seurop"
+														value="#{text['tooltip.valutaz.seurop.2']}"
 														position="bottom" />
 												</p:radioButton>
 											</div>
@@ -174,7 +187,9 @@
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt4Seurop" for="customSeurop"
 													itemIndex="3">
-													<p:tooltip for="opt4Seurop" value="Buono" position="bottom" />
+													<p:tooltip for="opt4Seurop"
+														value="#{text['tooltip.valutaz.seurop.3']}"
+														position="bottom" />
 												</p:radioButton>
 											</div>
 											<div class="ui-grid-col-2" style="text-align: center">
@@ -182,7 +197,8 @@
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt5Seurop" for="customSeurop"
 													itemIndex="4">
-													<p:tooltip for="opt5Seurop" value="Abbastanza buono"
+													<p:tooltip for="opt5Seurop"
+														value="#{text['tooltip.valutaz.seurop.4']}"
 														position="bottom" />
 												</p:radioButton>
 											</div>
@@ -191,7 +207,8 @@
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt6Seurop" for="customSeurop"
 													itemIndex="5">
-													<p:tooltip for="opt6Seurop" value="Mediocre"
+													<p:tooltip for="opt6Seurop"
+														value="#{text['tooltip.valutaz.seurop.5']}"
 														position="bottom" />
 												</p:radioButton>
 											</div>
@@ -203,16 +220,21 @@
 							</p:column>
 							<p:column colspan="1">
 								<label class="left-align" for="matricola"><h:outputText
-										value="Classificazione Grasso" /></label>
+										value="#{text['label.class.seurop.section']}" /></label>
 								<p:outputPanel id="customPanel" style="margin-bottom:20px">
 									<p:selectOneRadio id="custom"
 										value="#{pcommMB.nuovaValutazione.vmaGrassoSeurop}"
 										layout="custom">
-										<f:selectItem itemLabel="1" itemValue="1" />
-										<f:selectItem itemLabel="2" itemValue="2" />
-										<f:selectItem itemLabel="3" itemValue="3" />
-										<f:selectItem itemLabel="4" itemValue="4" />
-										<f:selectItem itemLabel="5" itemValue="5" />
+										<f:selectItem itemLabel="#{text['label.class.seurop.1']}"
+											itemValue="1" />
+										<f:selectItem itemLabel="#{text['label.class.seurop.2']}"
+											itemValue="2" />
+										<f:selectItem itemLabel="#{text['label.class.seurop.3']}"
+											itemValue="3" />
+										<f:selectItem itemLabel="#{text['label.class.seurop.4']}"
+											itemValue="4" />
+										<f:selectItem itemLabel="#{text['label.class.seurop.5']}"
+											itemValue="5" />
 									</p:selectOneRadio>
 
 									<div class="ui-grid ui-grid-responsive">
@@ -221,7 +243,8 @@
 												<h:outputLabel for="opt1" value="1"
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt1" for="custom" itemIndex="0">
-													<p:tooltip for="opt1" value="Molto scarso"
+													<p:tooltip for="opt1"
+														value="#{text['tooltip.class.seurop.0']}"
 														position="bottom" />
 												</p:radioButton>
 											</div>
@@ -229,14 +252,17 @@
 												<h:outputLabel for="opt2" value="2"
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt2" for="custom" itemIndex="1">
-													<p:tooltip for="opt2" value="Scarso" position="bottom" />
+													<p:tooltip for="opt2"
+														value="#{text['tooltip.class.seurop.1']}"
+														position="bottom" />
 												</p:radioButton>
 											</div>
 											<div class="ui-grid-col-2" style="text-align: center">
 												<h:outputLabel for="opt3" value="3"
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt3" for="custom" itemIndex="2">
-													<p:tooltip for="opt3" value="Mediamente importante"
+													<p:tooltip for="opt3"
+														value="#{text['tooltip.class.seurop.2']}"
 														position="bottom" />
 												</p:radioButton>
 											</div>
@@ -244,14 +270,17 @@
 												<h:outputLabel for="opt4" value="4"
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt4" for="custom" itemIndex="3">
-													<p:tooltip for="opt4" value="Abbondante" position="bottom" />
+													<p:tooltip for="opt4"
+														value="#{text['tooltip.class.seurop.3']}"
+														position="bottom" />
 												</p:radioButton>
 											</div>
 											<div class="ui-grid-col-2" style="text-align: center">
 												<h:outputLabel for="opt5" value="5"
 													style="display:block;margin-bottom:8px" />
 												<p:radioButton id="opt5" for="custom" itemIndex="4">
-													<p:tooltip for="opt5" value="Molto importante"
+													<p:tooltip for="opt5"
+														value="#{text['tooltip.class.seurop.4']}"
 														position="bottom" />
 												</p:radioButton>
 											</div>
@@ -266,13 +295,13 @@
 					</p:panelGrid>
 				</div>
 				<div class="row">
-					<p:commandButton id="salvaAnag" value="Salva"
+					<p:commandButton id="salvaAnag" value="#{text['button.salva']}"
 						actionListener="#{pcommMB.salvaDatiValutazione}"
 						styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 						style="width:auto; float:right;"
 						oncomplete="PF('dlgNuovaVal').hide();"
 						update="messages valutazioneMaceDt" />
-					<p:tooltip for="salvaAnag" value="Salva tutti i dati"
+					<p:tooltip for="salvaAnag" value="#{text['button.salva']}"
 						position="top" />
 				</div>
 			</p:dialog>
@@ -297,14 +326,14 @@
 
 								<p:column styleClass="center-align" width="26%"
 									style="font-size: 1.2em!important"
-									headerText="Matricola animale">
+									headerText="#{text['column.header.numero.mat']}">
 									<h:outputText value="#{vmVar.anagrafica.anaNumMatricola}"
 										styleClass="left" style="font-size: 1.2em!important" />
 								</p:column>
 
 								<p:column styleClass="center-align"
-									headerText="Data macellazione" width=""
-									style="font-size: 1.2em!important">
+									headerText="#{text['column.header.data.macellazione']}"
+									width="" style="font-size: 1.2em!important">
 									<h:outputText value="#{vmVar.vmaData}" styleClass="left"
 										style="font-size: 1.2em!important">
 										<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
@@ -312,33 +341,36 @@
 								</p:column>
 
 								<p:column styleClass="center-align"
-									headerText="Peso alla macellazione" width=""
-									style="font-size: 1.2em!important">
+									headerText="#{text['column.header.peso.macellazione']}"
+									width="" style="font-size: 1.2em!important">
 									<h:outputText value="#{vmVar.vmaPesoMacellazione}"
 										styleClass="left" style="font-size: 1.2em!important" />
 								</p:column>
 
-								<p:column styleClass="center-align" headerText="Peso carcassa"
-									width="" style="font-size: 1.2em!important">
+								<p:column styleClass="center-align"
+									headerText="#{text['column.header.peso.carcassa']}" width=""
+									style="font-size: 1.2em!important">
 									<h:outputText value="#{vmVar.vmaPesoCarcassa}"
 										styleClass="left" style="font-size: 1.2em!important" />
 								</p:column>
 
 								<p:column styleClass="center-align"
-									headerText="SEUROP conformazione" width=""
+									headerText="#{text['column.header.conf.seurop']}" width=""
 									style="font-size: 1.2em!important">
 									<h:outputText value="#{vmVar.vmaClassSeurop}" styleClass="left"
 										style="font-size: 1.2em!important" />
 								</p:column>
 
-								<p:column styleClass="center-align" headerText="SEUROP grasso"
-									width="" style="font-size: 1.2em!important">
+								<p:column styleClass="center-align"
+									headerText="#{text['column.header.grasso.seurop']}" width=""
+									style="font-size: 1.2em!important">
 									<h:outputText value="#{vmVar.vmaGrassoSeurop}"
 										styleClass="left" style="font-size: 1.2em!important" />
 								</p:column>
 
-								<p:column styleClass="center-align" headerText="Peso al taglio"
-									width="" style="font-size: 1.2em!important">
+								<p:column styleClass="center-align"
+									headerText="#{text['column.header.peso.taglio']}" width=""
+									style="font-size: 1.2em!important">
 									<h:outputText value="#{vmVar.vmaPesoTaglioTot}"
 										styleClass="left" style="font-size: 1.2em!important" />
 								</p:column>

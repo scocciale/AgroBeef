@@ -7,30 +7,32 @@
 
 
 	<ui:define name="title">
-		<h:outputText value="Anagrafica" />
+		<h:outputText value="#{text['title.anagrafica']}" />
 	</ui:define>
 	<ui:define name="title-desc">
 		<h:outputText value="" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Anagrafica" closable="false" toggleable="false"
-			widgetVar="resultPanelWdg"
+		<p:panel header="#{text['panel.anagrafica.datatable']}"
+			closable="false" toggleable="false" widgetVar="resultPanelWdg"
 			style="margin-left: 10px ; margin-right: 10px">
 			<div class="row">
-				<p:commandButton value="Aggiungi" style="float:right!important;"
+				<p:commandButton value="#{text['button.aggiungi']}"
+					style="float:right!important;"
 					rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 					id="addAnag" action="#{anagMB.showDialogAnag}"
 					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 					update="dialogAnag" />
-				<p:tooltip for="addAnag" value="Aggiungere nuovo animale"
-					position="top" />
+				<p:tooltip for="addAnag"
+					value="#{text['tooltip.aggiungi.nuovo.animale']}" position="top" />
 			</div>
 			<p:dialog resizable="false" widgetVar="dlgNuovoAnag" width="60%"
 				id="dialogAnag" closable="true" styleClass="dialogClass"
 				style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
 
 				<div class="row center">
-					<h:outputText value="Dettagli animale" styleClass="text-al-cen"
+					<h:outputText value="#{text['label.animale.dettagli']}"
+						styleClass="text-al-cen"
 						style="font-weight: bold !important; font-size:1.5em" />
 				</div>
 				<div class="row">
@@ -41,18 +43,20 @@
 									<p:inputText id="matricola" styleClass="validate"
 										value="#{anagMB.nuovoAnimale.anaNumMatricola}"></p:inputText>
 									<label class="left-align" for="matricola"><h:outputText
-											value="Matricola *" /></label>
+											value="#{text['column.header.numero.mat']} #{text['mandatory']}" /></label>
 								</div>
 							</p:column>
 							<p:column colspan="1">
 							</p:column>
 							<p:column colspan="1">
 								<div class="row">
-									<p:outputLabel value="Sesso *: " for="sesso">
+									<p:outputLabel
+										value="#{text['column.header.sesso']} #{text['mandatory']}"
+										for="sesso">
 										<p:selectOneRadio id="sesso"
 											value="#{anagMB.nuovoAnimale.anaSesso}" style="width: 40px;">
-											<f:selectItem itemLabel="F" itemValue="F" />
-											<f:selectItem itemLabel="M" itemValue="M" />
+											<f:selectItem itemLabel="#{text['gender.f']}" itemValue="F" />
+											<f:selectItem itemLabel="#{text['gender.m']}" itemValue="M" />
 										</p:selectOneRadio>
 									</p:outputLabel>
 
@@ -68,7 +72,7 @@
 										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
 									</p:inputText>
 									<label class="left-align" for="matMadre"><h:outputText
-											value="Matricola Madre" /></label>
+											value="#{text['column.header.numero.mat.madre']}" /></label>
 								</div>
 							</p:column>
 
@@ -80,14 +84,14 @@
 										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
 									</p:inputText>
 									<label class="left-align" for="matPadre"><h:outputText
-											value="Matricola Padre" /></label>
+											value="#{text['column.header.numero.mat.padre']}" /></label>
 								</div>
 							</p:column>
 
 							<p:column colspan="1">
 								<div class="row" style="">
-									<p:outputLabel value="Toro" style="margin-left: 20px;"
-										for="flagToro" />
+									<p:outputLabel value="#{text['column.header.toro']}"
+										style="margin-left: 20px;" for="flagToro" />
 									<p:selectBooleanCheckbox value="#{anagMB.flagToro}"
 										style="margin-left: 20px;" id="flagToro" />
 								</div>
@@ -96,7 +100,8 @@
 						<p:row>
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:outputLabel for="dataNasc" value="Data di nascita"
+									<p:outputLabel for="dataNasc"
+										value="#{text['column.header.data.nasc']}"
 										styleClass="left-align"
 										style="font-size: 0.9rem !important;color: #888888;!important" />
 									<p:calendar id="dataNasc"
@@ -109,8 +114,8 @@
 
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:outputLabel for="dataAcq" value="Data di acquisto"
-										styleClass="left-align"
+									<p:outputLabel for="dataAcq"
+										value="#{text['label.data.acquisto']}" styleClass="left-align"
 										style="font-size: 0.9rem !important;color: #888888;!important" />
 									<p:calendar id="dataAcq"
 										value="#{anagMB.nuovoAnimale.anaDataAcquisto}" locale="it"
@@ -127,16 +132,14 @@
 							<p:column colspan="1">
 								<div class="input-field">
 									<label class="left-align" for="razza"><h:outputText
-											value="Razza" /></label>
+											value="#{text['column.header.razza']}" /></label>
 
 									<p:selectOneMenu id="razza" widgetVar="razzaNuovoAnimale"
 										value="#{anagMB.nuovoAnimale.anaRazza}"
 										style="width:125px;display: block!important;margin-left: auto !important;margin-right: auto !important;">
-										<f:selectItem itemLabel="Seleziona la razza" itemValue="" />
+										<f:selectItem itemLabel="#{text['label.seleziona.razza']}"
+											itemValue="" />
 										<f:selectItems value="#{anagMB.razzeString}" />
-										<!-- <f:selectItem itemValue="MTT" itemLabel="MTT" />
-										<f:selectItem itemValue="MLS" itemLabel="MLS" />
-										<f:selectItem itemValue="MCG" itemLabel="MCG" /> -->
 									</p:selectOneMenu>
 								</div>
 							</p:column>
@@ -148,13 +151,13 @@
 										value="#{anagMB.nuovoAnimale.anaNumParto}">
 									</p:inputText>
 									<label class="left-align" for="nParto"><h:outputText
-											value="Numero parto" /></label>
+											value="#{text['label.num.parto']}" /></label>
 								</div>
 							</p:column>
 							<p:column colspan="1">
 								<div class="row" style="">
-									<p:outputLabel value="Gemello" style="margin-left: 20px;"
-										for="flagGemello" />
+									<p:outputLabel value="#{text['column.header.gemello']}"
+										style="margin-left: 20px;" for="flagGemello" />
 									<p:selectBooleanCheckbox value="#{anagMB.flagGemello}"
 										style="margin-left: 20px;" id="flagGemello" />
 								</div>
@@ -168,7 +171,7 @@
 										onkeypress="if (event.keyCode == 13) return false;">
 									</p:inputText>
 									<label class="left-align" for="diffParto"><h:outputText
-											value="Difficoltà parto" /></label>
+											value="#{text['label.diff.parto']}" /></label>
 								</div>
 							</p:column>
 
@@ -176,13 +179,13 @@
 					</p:panelGrid>
 				</div>
 				<div class="row">
-					<p:commandButton id="salvaAnag" value="Salva"
+					<p:commandButton id="salvaAnag" value="#{text['button.salva']}"
 						actionListener="#{anagMB.salvaDatiAnag}"
 						styleClass="width-100 waves-effect waves-light btn rosso_cdr "
 						style="width:auto; float:right;"
 						oncomplete="PF('dlgNuovoAnag').hide();location.reload();"
 						update="anagrafica messages" />
-					<p:tooltip for="salvaAnag" value="Salva tutti i dati"
+					<p:tooltip for="salvaAnag" value="#{text['tooltip.salva']}"
 						position="top" />
 				</div>
 			</p:dialog>
@@ -193,7 +196,7 @@
 
 				<div class="row center">
 					<h:outputText
-						value="Dettagli animale #{anagMB.animaleEdit.anaNumMatricola}"
+						value="#{text['label.animale.dettagli']} #{anagMB.animaleEdit.anaNumMatricola}"
 						styleClass="text-al-cen"
 						style="font-weight: bold !important; font-size:1.5em" />
 				</div>
@@ -214,7 +217,7 @@
 										value="#{anagMB.animaleEdit.anaNumMatricola}">
 									</p:inputText>
 									<label class="left-align" for="matricolaMod"><h:outputText
-											value="Matricola" /></label>
+											value="#{text['column.header.numero.mat']}" /></label>
 
 								</div>
 							</p:column>
@@ -222,11 +225,12 @@
 							</p:column>
 							<p:column colspan="1">
 								<div class="row">
-									<p:outputLabel value="Sesso: " for="sessoMod">
+									<p:outputLabel value="#{text['column.header.sesso']}"
+										for="sessoMod">
 										<p:selectOneRadio id="sessoMod" value="#{anagMB.sesso}"
 											style="width: 40px;">
-											<f:selectItem itemLabel="F" itemValue="F" />
-											<f:selectItem itemLabel="M" itemValue="M" />
+											<f:selectItem itemLabel="#{text['gender.f']}" itemValue="F" />
+											<f:selectItem itemLabel="#{text['gender.m']}" itemValue="M" />
 										</p:selectOneRadio>
 									</p:outputLabel>
 
@@ -242,7 +246,7 @@
 										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
 									</p:inputText>
 									<label class="left-align" for="matMadreMod"><h:outputText
-											value="Matricola Madre" /></label>
+											value="#{text['column.header.numero.mat.madre']}" /></label>
 								</div>
 							</p:column>
 
@@ -254,14 +258,14 @@
 										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
 									</p:inputText>
 									<label class="left-align" for="matPadreMod"><h:outputText
-											value="Matricola Padre" /></label>
+											value="#{text['column.header.numero.mat.padre']}" /></label>
 								</div>
 							</p:column>
 
 							<p:column colspan="1">
 								<div class="row" style="">
-									<p:outputLabel value="Toro" style="margin-left: 20px;"
-										for="flagToroMod" />
+									<p:outputLabel value="#{text['column.header.toro']}"
+										style="margin-left: 20px;" for="flagToroMod" />
 									<p:selectBooleanCheckbox value="#{anagMB.flagToro}"
 										style="margin-left: 20px;" id="flagToroMod" />
 								</div>
@@ -270,7 +274,8 @@
 						<p:row>
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:outputLabel for="dataNascMod" value="Data di nascita"
+									<p:outputLabel for="dataNascMod"
+										value="#{text['column.header.data.nasc']}"
 										styleClass="left-align"
 										style="font-size: 0.9rem !important;color: #888888;!important" />
 									<p:calendar id="dataNascMod"
@@ -283,8 +288,8 @@
 
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:outputLabel for="dataAcqMod" value="Data di acquisto"
-										styleClass="left-align"
+									<p:outputLabel for="dataAcqMod"
+										value="#{text['label.data.acquisto']}" styleClass="left-align"
 										style="font-size: 0.9rem !important;color: #888888;!important" />
 									<p:calendar id="dataAcqMod"
 										value="#{anagMB.animaleEdit.anaDataAcquisto}" locale="it"
@@ -307,11 +312,9 @@
 									<p:selectOneMenu id="razzaMod" widgetVar="razzaAnimaleEditing"
 										value="#{anagMB.animaleEdit.anaRazza}"
 										style="width:125px;display: block!important;margin-left: auto !important;margin-right: auto !important;">
-										<f:selectItem itemLabel="Seleziona la razza" itemValue="" />
+										<f:selectItem itemLabel="#{text['label.seleziona.razza']}"
+											itemValue="" />
 										<f:selectItems value="#{anagMB.razzeString}" />
-										<!--<f:selectItem itemValue="MTT" itemLabel="MTT" /> 
-										<f:selectItem itemValue="MLS" itemLabel="MLS" />
-										<f:selectItem itemValue="MCG" itemLabel="MCG" /> -->
 									</p:selectOneMenu>
 								</div>
 							</p:column>
@@ -323,13 +326,13 @@
 										value="#{anagMB.animaleEdit.anaNumParto}">
 									</p:inputText>
 									<label class="left-align" for="nPartoMod"><h:outputText
-											value="Numero parto" /></label>
+											value="#{text['label.num.parto']}" /></label>
 								</div>
 							</p:column>
 							<p:column colspan="1">
 								<div class="row" style="">
-									<p:outputLabel value="Gemello" style="margin-left: 20px;"
-										for="flagGemelloMod" />
+									<p:outputLabel value="#{text['column.header.gemello']}"
+										style="margin-left: 20px;" for="flagGemelloMod" />
 									<p:selectBooleanCheckbox value="#{anagMB.flagGemello}"
 										style="margin-left: 20px;" id="flagGemelloMod" />
 								</div>
@@ -343,13 +346,13 @@
 										onkeypress="if (event.keyCode == 13) return false;">
 									</p:inputText>
 									<label class="left-align" for="diffPartoMod"><h:outputText
-											value="Difficoltà parto" /></label>
+											value="#{text['label.diff.parto']}" /></label>
 								</div>
 							</p:column>
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:outputLabel for="dataUscita" value="Data di uscita"
-										styleClass="left-align"
+									<p:outputLabel for="dataUscita"
+										value="#{text['label.data.uscita']}" styleClass="left-align"
 										style="font-size: 0.9rem !important;color: #888888;!important" />
 									<p:calendar id="dataUscita"
 										value="#{anagMB.animaleEdit.anaDataUscita}" locale="it"
@@ -364,11 +367,14 @@
 									<p:selectOneMenu id="causaUscita"
 										value="#{anagMB.animaleEdit.anaUscitaCausa}"
 										style="width:125px">
-										<f:selectItem itemLabel="Causa uscita" itemValue="" />
-										<f:selectItem itemLabel="Morte" itemValue="Morte" />
-										<f:selectItem itemLabel="Macellazione"
+										<f:selectItem itemLabel="#{text['label.causa.uscita']}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{text['label.causa.morte']}"
+											itemValue="Morte" />
+										<f:selectItem itemLabel="#{text['label.causa.macellazione']}"
 											itemValue="Macellazione" />
-										<f:selectItem itemLabel="Vita" itemValue="Vita" />
+										<f:selectItem itemLabel="#{text['label.causa.vita']}"
+											itemValue="Vita" />
 									</p:selectOneMenu>
 								</div>
 							</p:column>
@@ -376,13 +382,13 @@
 					</p:panelGrid>
 				</div>
 				<div class="row">
-					<p:commandButton id="salvaAnagMod" value="Salva"
+					<p:commandButton id="salvaAnagMod" value="#{text['tooltip.salva']}"
 						actionListener="#{anagMB.updateDatiAnag()}"
 						styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 						style="width:auto; float:right;"
 						oncomplete="PF('dlgNuovoAnagMod').hide();"
 						update="anagrafica messages" />
-					<p:tooltip for="salvaAnag" value="Salva tutti i dati"
+					<p:tooltip for="salvaAnag" value="#{text['tooltip.salva']}"
 						position="top" />
 				</div>
 			</p:dialog>
@@ -401,14 +407,14 @@
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15">
 
-							<p:column headerText="Numero matricola"
+							<p:column headerText="#{text['column.header.numero.mat']}"
 								filterStyleClass="filterClass" width="10%"
 								filterBy="#{ana.anaNumMatricola}" filterMatchMode="contains"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaNumMatricola}">
 								<h:outputText value="#{ana.anaNumMatricola}" />
 							</p:column>
-							<p:column headerText="Matricola Madre"
+							<p:column headerText="#{text['column.header.numero.mat.madre']}"
 								filterStyleClass="filterClass" width="10%"
 								filterMatchMode="contains"
 								filterBy="#{ana.anaNumMatricolaMadre}"
@@ -416,22 +422,24 @@
 								sortBy="#{ana.anaNumMatricolaMadre}">
 								<h:outputText value="#{ana.anaNumMatricolaMadre}" />
 							</p:column>
-							<p:column headerText="Matricola Padre" filterMatchMode="contains"
+							<p:column headerText="#{text['column.header.numero.mat.padre']}"
+								filterMatchMode="contains"
 								style="text-align: center; font-size:1.3em;"
 								filterStyleClass="filterClass" width="10%"
 								filterBy="#{ana.anaNumMatricolaPadre}"
 								sortBy="#{ana.anaNumMatricolaPadre}">
 								<h:outputText value="#{ana.anaNumMatricolaPadre}" />
 							</p:column>
-							<p:column headerText="Sesso" filterStyleClass="filterClass"
-								width="4%" filterBy="#{ana.anaSesso}" filterMatchMode="contains"
+							<p:column headerText="#{text['column.header.sesso']}"
+								filterStyleClass="filterClass" width="4%"
+								filterBy="#{ana.anaSesso}" filterMatchMode="contains"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaSesso}">
 								<h:outputText value="#{ana.anaSesso}" />
 							</p:column>
-							<p:column headerText="Toro" filterStyleClass="filterClass"
-								width="4%" filterBy="#{ana.anaFlagToro}"
-								filterMatchMode="contains"
+							<p:column headerText="#{text['column.header.toro']}"
+								filterStyleClass="filterClass" width="4%"
+								filterBy="#{ana.anaFlagToro}" filterMatchMode="contains"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaFlagToro}">
 								<h:outputText rendered="#{ana.anaFlagToro eq 1}"
@@ -446,25 +454,25 @@
 									<f:convertDateTime pattern="dd/MM/yyyy" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="Data acquisto"
+							<p:column headerText="#{text['column.header.data.acquisto']}"
 								style="text-align: center; font-size:1.3em;" width="12%"
 								sortBy="#{ana.anaDataAcquisto}">
 								<h:outputText value="#{ana.anaDataAcquisto}">
 									<f:convertDateTime pattern="dd/MM/yyyy" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="Razza"
+							<p:column headerText="#{text['column.header.razza']}"
 								style="text-align: center; font-size:1.3em;" width="10%"
 								sortBy="#{ana.anaRazza}">
 								<h:outputText value="#{ana.anaRazza}" />
 							</p:column>
-							<p:column headerText="Difficoltà parto" width="4%"
-								style="text-align: center; font-size:1.3em;"
+							<p:column headerText="#{text['column.header.diff.parto']}"
+								width="4%" style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaDifficoltaParto}">
 								<h:outputText value="#{ana.anaDifficoltaParto}" />
 							</p:column>
-							<p:column headerText="Causa uscita" width="6%"
-								style="text-align: center; font-size:1.3em;"
+							<p:column headerText="#{text['column.header.causa.uscita']}"
+								width="6%" style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaUscitaCausa}">
 								<h:outputText value="#{ana.anaUscitaCausa}" />
 							</p:column>

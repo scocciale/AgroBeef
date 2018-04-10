@@ -71,18 +71,13 @@
 	<h:outputScript name="script/primefix.js"></h:outputScript>
 	<h:outputScript name="script/navigation.js"></h:outputScript>
 	<script>
-		$('document')
-				.load(
-						(function() {
-							var link = document
-									.querySelector("link[rel*='icon']")
-									|| document.createElement('link');
-							link.type = 'image/png';
-							link.rel = 'shortcut icon';
-							link.href = '/AgroBeef/resources/images/agroDesk_logo_tabIcon.png';
-							document.getElementsByTagName('head')[0]
-									.appendChild(link);
-						})())
+	$('document').load((function() {
+		var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+		link.type = 'image/png';
+		link.rel = 'shortcut icon';
+		link.href = '/AgroBeef/resources/images/agroDesk_logo_tabIcon.png';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	})())
 	</script>
 </h:body>
 </html>

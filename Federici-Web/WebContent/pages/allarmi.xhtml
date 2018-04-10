@@ -7,14 +7,14 @@
 
 
 	<ui:define name="title">
-		<h:outputText value="Allarmi" />
+		<h:outputText value="#{text['title.allarmi']}" />
 	</ui:define>
 	<ui:define name="title-desc">
 		<h:outputText value="" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Report" closable="false" toggleable="false"
-			widgetVar="accrWidgetVar" id="reportList"
+		<p:panel header="#{text['panel.report.header']}" closable="false"
+			toggleable="false" widgetVar="accrWidgetVar" id="reportList"
 			style="margin-left: 10px ; margin-right: 10px">
 
 			<p:dialog resizable="false" widgetVar="dlgErrore6e7" width="20%"
@@ -24,8 +24,7 @@
 
 				<div class="row">
 					<div class="row center">
-						<h:outputText
-							value="Controllare che tutti gli animali in 'Macellazione' abbiano valorizzato il peso e il peso vivo alla macellazione."
+						<h:outputText value="#{text['dialog.msg.warning.peso.mac']}"
 							style="font-size:1.5em" />
 					</div>
 				</div>
@@ -44,13 +43,12 @@
 
 				<div class="row">
 					<div class="row center">
-						<h:outputText
-							value="Controllare che tutti gli animali in 'Macellazione' abbiano la classificazione SEUROP."
+						<h:outputText value="#{text['dialog.msg.warning.seurop.mac']}"
 							style="font-size:1.5em" />
 					</div>
 				</div>
 				<div class="row">
-					<p:commandButton id="closeDialog8" value="OK"
+					<p:commandButton id="closeDialog8" value="#{text['button.ok']}"
 						styleClass="width-100 waves-effect waves-light btn rosso_cdr "
 						style="width:auto; float:right;"
 						oncomplete="PF('dlgErrore8').hide();location.reload();" />
@@ -65,7 +63,7 @@
 				<div class="row">
 					<div class="row center">
 						<h:outputText
-							value="Controllare che tutti gli animali in 'Macellazione' abbiano l'indice SEUROP."
+							value="#{text['dialog.msg.warning.seurop.indice.mac']}"
 							style="font-size:1.5em" />
 					</div>
 				</div>
@@ -87,14 +85,15 @@
 							style="width:auto!important; float:right!important; "
 							emptyMessage="#{text['label.emptyResult']}">
 
-							<p:column headerText="Nome report" filterStyleClass="filterClass"
-								width="15%" filterBy="#{repVar.repNome}"
+							<p:column headerText="#{text['report.nome']}"
+								filterStyleClass="filterClass" width="15%"
+								filterBy="#{repVar.repNome}"
 								style=" font-size:1.3em; color:#4f4f4f!important;"
 								sortBy="#{repVar.repNome}">
 								<h:outputText value="#{repVar.repNome}" />
 							</p:column>
 
-							<p:column headerText="Descrizione report"
+							<p:column headerText="#{text['report.descrizione']}"
 								filterStyleClass="filterClass" width="75%"
 								filterBy="#{repVar.repDescrizione}"
 								style="font-size:1.3em; color:#4f4f4f!important;"
@@ -146,7 +145,7 @@
 								</h:commandLink> -->
 
 								<p:tooltip for="expPdf" rendered="#{allarmiMB.dtRendering != 3}"
-									value="Esporta la tabella in formato PDF" position="bottom" />
+									value="#{text['tooltip.export.pdf']}" position="bottom" />
 								<h:commandLink id="expPdf"
 									rendered="#{allarmiMB.dtRendering != 3}">
 									<p:graphicImage name="images\export\pdf-square-icon.png"
@@ -160,7 +159,7 @@
 								<p:rowToggler />
 							</p:column>
 
-							<p:column headerText="Numero Matricola"
+							<p:column headerText="#{text['column.header.numero.mat']}"
 								filterStyleClass="filterClass"
 								filterBy="#{esitoVar.anag.anaNumMatricola}"
 								style="font-size:1.3em; color:#4f4f4f!important;"
@@ -168,7 +167,7 @@
 								<h:outputText value="#{esitoVar.anag.anaNumMatricola}" />
 							</p:column>
 
-							<p:column headerText="Num. Matricola Madre"
+							<p:column headerText="#{text['column.header.numero.mat.madre']}"
 								filterStyleClass="filterClass"
 								filterBy="#{esitoVar.anag.anaNumMatricolaMadre}"
 								style="font-size:1.3em; color:#4f4f4f!important;"
@@ -176,7 +175,7 @@
 								<h:outputText value="#{esitoVar.anag.anaNumMatricolaMadre}" />
 							</p:column>
 
-							<p:column headerText="Num. Matricola Padre"
+							<p:column headerText="#{text['column.header.numero.mat.padre']}"
 								filterStyleClass="filterClass"
 								filterBy="#{esitoVar.anag.anaNumMatricolaPadre}"
 								style="font-size:1.3em; color:#4f4f4f!important;"
@@ -184,7 +183,7 @@
 								<h:outputText value="#{esitoVar.anag.anaNumMatricolaPadre}" />
 							</p:column>
 
-							<p:column headerText="Età ( mesi )"
+							<p:column headerText="#{text['column.header.eta']}"
 								filterStyleClass="filterClass" filterBy="#{esitoVar.mesiEta}"
 								rendered="#{allarmiMB.dtRendering == 125}"
 								style="font-size:1.3em; color:#4f4f4f!important;"
@@ -192,8 +191,8 @@
 								<h:outputText value="#{esitoVar.mesiEta}" />
 							</p:column>
 
-							<p:column headerText="Resa ( % )" filterStyleClass="filterClass"
-								filterBy="#{esitoVar.indice}"
+							<p:column headerText="#{text['column.header.resa']}"
+								filterStyleClass="filterClass" filterBy="#{esitoVar.indice}"
 								rendered="#{allarmiMB.dtRendering == 67}"
 								style="font-size:1.3em; color:#4f4f4f!important;"
 								sortBy="#{esitoVar.indice}">
@@ -202,7 +201,7 @@
 								</h:outputText>
 							</p:column>
 
-							<p:column headerText="Classificazione ( SEUROP )"
+							<p:column headerText="#{text['column.header.class.seurop']}"
 								filterStyleClass="filterClass"
 								filterBy="#{esitoVar.seuropString}"
 								rendered="#{allarmiMB.dtRendering == 8}"
@@ -211,7 +210,7 @@
 								<h:outputText value="#{esitoVar.seuropString}" />
 							</p:column>
 
-							<p:column headerText="Indice ( SEUROP )"
+							<p:column headerText="#{text['column.header.indice.seurop']}"
 								filterStyleClass="filterClass"
 								filterBy="#{esitoVar.seuropIndice}"
 								rendered="#{allarmiMB.dtRendering == 9}"
@@ -247,8 +246,8 @@
 												fileName="#{allarmiMB.repNome}" />
 										</h:commandLink> -->
 
-										<p:tooltip for="expPdf"
-											value="Esporta la tabella in formato PDF" position="bottom" />
+										<p:tooltip for="expPdf" value="#{text['tooltip.export.pdf']}"
+											position="bottom" />
 										<h:commandLink id="expPdf">
 											<p:graphicImage name="images\export\pdf-square-icon.png"
 												width="24" />
@@ -257,7 +256,7 @@
 										</h:commandLink>
 									</f:facet>
 
-									<p:column headerText="Numero Matricola"
+									<p:column headerText="#{text['column.header.numero.mat']}"
 										filterStyleClass="filterClass"
 										filterBy="#{inter.anag.anaNumMatricola}"
 										style="font-size:1.3em; color:#4f4f4f!important;"
@@ -265,7 +264,8 @@
 										<h:outputText value="#{inter.anag.anaNumMatricola}" />
 									</p:column>
 
-									<p:column headerText="Num. Matricola Madre"
+									<p:column
+										headerText="#{text['column.header.numero.mat.madre']}"
 										filterStyleClass="filterClass" width="15%"
 										filterBy="#{inter.anag.anaNumMatricolaMadre}"
 										style="font-size:1.3em; color:#4f4f4f!important;"
@@ -273,7 +273,8 @@
 										<h:outputText value="#{inter.anag.anaNumMatricolaMadre}" />
 									</p:column>
 
-									<p:column headerText="Num. Matricola Padre"
+									<p:column
+										headerText="#{text['column.header.numero.mat.padre']}"
 										filterStyleClass="filterClass"
 										filterBy="#{inter.anag.anaNumMatricolaPadre}"
 										style=" font-size:1.3em; color:#4f4f4f!important;"
@@ -281,7 +282,7 @@
 										<h:outputText value="#{inter.anag.anaNumMatricolaPadre}" />
 									</p:column>
 
-									<p:column headerText="Data Nascita"
+									<p:column headerText="#{text['column.header.data.nasc']}"
 										filterStyleClass="filterClass"
 										filterBy="#{inter.anag.anaDataNascita}"
 										style="font-size:1.3em; color:#4f4f4f!important;"
@@ -291,7 +292,7 @@
 										</h:outputText>
 									</p:column>
 
-									<p:column headerText="Interparto ( gg )"
+									<p:column headerText="#{text['column.header.interparto']}"
 										filterStyleClass="filterClass"
 										filterBy="#{inter.giorniInterparto}"
 										rendered="#{allarmiMB.dtRendering == 3}"
@@ -300,16 +301,11 @@
 										<h:outputText value="#{inter.giorniInterparto}" />
 									</p:column>
 								</p:dataTable>
-
 							</p:rowExpansion>
 						</p:dataTable>
 					</div>
-
-
 				</div>
 			</div>
 		</p:panel>
-
-
 	</ui:define>
 </ui:composition>

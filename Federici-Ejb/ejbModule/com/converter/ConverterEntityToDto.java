@@ -180,6 +180,7 @@ public class ConverterEntityToDto {
 		uteDTO.setUtePwd(ute.getUtePwd());
 		uteDTO.setUteUsername(ute.getUteUsername());
 		uteDTO.setUteRifId(ute.getUteRifId());
+		uteDTO.setUteUltimoAcc(ute.getUteUltimoAcc());
 		if (ute.getUteCognome() != null)
 			uteDTO.setUteCognome(ute.getUteCognome());
 		if (ute.getUteNome() != null)

@@ -5,3 +5,4 @@ RemoteSystemsTempFiles/
 *.jsfdia
 Federici-Ejb/build/*
 Federici-Web/WebContent/WEB-INF/classes/*
+Federici-Data/bin/*

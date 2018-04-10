@@ -1,5 +1,6 @@
 package com.dto;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class UtenteDTO {
@@ -8,6 +9,7 @@ public class UtenteDTO {
 	private String uteNome;
 	private String utePwd;
 	private String uteUsername;
+	private Timestamp uteUltimoAcc;
 	private List<AnagraficaDTO> anagraficas;
 	private List<StoricoAccrescFiniDTO> storicoAccrescFinis;
 	private List<StoricoGruppiMontaDTO> storicoGruppiMontas;
@@ -92,5 +94,13 @@ public class UtenteDTO {
 
 	public void setUteRifId(int uteRifId) {
 		this.uteRifId = uteRifId;
+	}
+
+	public Timestamp getUteUltimoAcc() {
+		return uteUltimoAcc;
+	}
+
+	public void setUteUltimoAcc(Timestamp uteUltimoAcc) {
+		this.uteUltimoAcc = uteUltimoAcc;
 	}
 }
