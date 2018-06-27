@@ -6,3 +6,7 @@ RemoteSystemsTempFiles/
 Federici-Ejb/build/*
 Federici-Web/WebContent/WEB-INF/classes/*
 Federici-Data/bin/*
+Federici-Data/.*
+Federici-Ejb/.*
+Federici-Ear/.*
+Federici-Web/.*

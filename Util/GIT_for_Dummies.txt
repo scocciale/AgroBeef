@@ -1,0 +1,103 @@
+GIT for Dummies
+
+- Scarica l'ultima versione di Git dal sito 'https://git-scm.com/downloads'
+
+- Apri la Git Bash e impostare:
+	- nome e cognome 
+		$ git config --global user.name "Nome Cognome"
+	- email
+		$ git config --global user.email "email@email.it"
+	- applicazione utilizzata per mergiare i files
+		$ git config --global merge.tool <nome_eseguibile_no_estensione>
+		$ git config --global merge.tool.path <percorso_dell_eseguibile>
+
+- Modificare il file di configuarazione di git
+	$ git config --global -e
+		- per entrare in modalità di modificare premere 'i'
+		- per terminare la modifica premere 'esc'
+		- per chiudere e salvare premere ':wq' (w = save, q = quit)
+		- per savare premere ':w'
+		- per il discard delle modifiche e chiudere premere ':q!'
+
+- Prendere il progetto già presente su una repo remota
+	$ git clone <link_alla_repository>
+
+- Cambiare branch
+	$ git checkout <nome_branch>
+
+- Eseguire il tool settato per i merge
+	$ git mergetool
+
+- Mergiare branch corrente con un altro
+	$ git merge <nome_branch_dal_quale_mergiare>
+
+- Prendere le ultime modifiche dal branch remoto
+	$ git fetch 
+	$ git merge (in caso di conflitti eseguire il mergetool)
+
+- Prendere le ultime modifiche dal branch remoto + merge
+	$ git pull
+
+- Creare un nuovo branch
+	$ git checkout -b <nome_nuovo_branch>
+
+- Discard dei cambiamenti effettuati su un file
+	$ git checkout -- <nome_file>
+	$ git checkout -- . (su tutti i files)
+	Con il file in stato 'staged'
+		$ git reset HEAD <nome_file>
+
+- Pushare tutte le modifiche fatte fino ad ora
+	Per pushare le modifiche nella repo remota è necessario prima committarle nella repo locale 
+		- Eliminare eventuali files con estensioni presenti sul .gitignore (sempre buona norma farlo prima di ogni commit)
+			$ git clean -i
+			$ git c
+		- Aggiungere i file da committare (1) oppure aggiungere TUTTI i files contemporaneamente (2)
+			(1) $ git add <nome_file>
+			(2) $ git add .
+		- Committare sulla repo locale
+			$ git commit -m 'Commento al commmit'
+		- Prendere le ultime modifiche dal branch master se sono state fatte eventuali push
+			$ git checkout <nome_branch_master>
+			$ git pull
+			$ git checkout <nome_branch_da_cui_pushare>
+			$ git merge <nome_branch_master>
+		- Pushare le modifiche sulla repo remota
+			$ git push
+
+- Pushare nuovo branch sulla repo remota
+	$ git push -u origin <nome_nuovo_branch>
+
+- Creare un tag
+	$ git tag -a <nome_tag> -m "Commento al tag"
+
+- Tag an older commit in Git?
+	$ git tag -a v1.2 9fceb02 -m "Message here"
+	Where 9fceb02 is the beginning part of the commit id.
+	You can then push them up using git push --tags
+
+- Pushare un tag
+	$ git push origin <nome_tag>
+
+- Eliminare un tag
+	$ git tag -d <nome_tag> 
+
+- Lista di tutti i tag 
+	$ git tag
+
+- Lista di tutti i branch 
+	- Remoti
+		$ git branch -r
+	- Locali 
+		$ git branch
+	- Locali + remoti
+		$ git branch -a 
+
+- Export e merge di commit SENZA repository remoto
+	(per esportare)
+	- $ git log nomeBranch
+	identificare commit da mergiare
+		- $ git format-patch -1 hashCommit
+		crea un file (.patch) con il nome del commit nel folder di PortaleUnicoAccesso
+	(per importare e mergiare)
+	- $ git am < nomeCompletoFile.patc

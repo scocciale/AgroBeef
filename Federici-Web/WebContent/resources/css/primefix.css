@@ -571,7 +571,7 @@ div.ui-datatable table th.ui-state-hover, div.ui-datatable table th.ui-state-act
 
 .ui-datatable-odd {
 	transition: all 0.2s ease-out 0s;
-	background: #ffffff !important;
+	background: #f4f4f4 !important;
 }
 
 .ui-datatable-odd:hover {
@@ -579,7 +579,7 @@ div.ui-datatable table th.ui-state-hover, div.ui-datatable table th.ui-state-act
 }
 
 .ui-expanded-row {
-	background: #ececec !important;
+	background: #cfcfcf !important;
 }
 
 .ui-datatable-odd.ui-datatable-selectable.ui-state-highlight {

@@ -44,6 +44,9 @@ public class GruppiDiAccrMB extends BaseMB {
 	private String animaliAggiunti;
 	private String valueAna;
 	private Set<AnagraficaDTO> animaliEditAggiuntiView;
+
+	private String animaleRemover;
+	private String animaleEditRemover;
 	// // private StoricoGruppiMontaDTO storicoGruppoMontaAggiuntaAnimali;
 	//
 
@@ -145,6 +148,8 @@ public class GruppiDiAccrMB extends BaseMB {
 		// federiciService.getAllMatricoleDisponibili(userMB.getUtente().getUteRifId(),paramRicerca);
 
 		animaliDisponibiliFinal = new ArrayList<>();
+		animaleRemover = new String();
+		animaleEditRemover = new String();
 
 		animaliDisponibiliFinalSelected = new ArrayList<>();
 		val = new AnagraficaDTO();
@@ -241,6 +246,9 @@ public class GruppiDiAccrMB extends BaseMB {
 			gruppiDiAccrList.add(nuovoStoricoGruppoAccr);
 			animaliAggiuntiView.clear();
 			valueAna = "";
+			animaliAggiunti = new String();
+			animaliAggiuntiView = new LinkedHashSet<>();
+			animaleRemover = new String();
 			return "ok";
 		} else
 			return "ko";
@@ -307,7 +315,46 @@ public class GruppiDiAccrMB extends BaseMB {
 			animaliEditAggiuntiView.clear();
 			valueAna = "";
 		}
+		animaleEditRemover = new String();
+		animaliEditAggiuntiView = new LinkedHashSet<>();
+		animaliAggiunti = new String();
 		System.out.println("Aggiunta anagrafica in gruppo di accr/finiss ? " + saved);
+	}
+
+	public void removeAnagraficaFromSelectedEditList() {
+
+		if (animaliEditAggiuntiView.isEmpty()) {
+			// errore lista vuota
+		} else {
+			if (animaleEditRemover == null) {
+				// nessun animale selzionato
+			} else {
+				for (AnagraficaDTO a : animaliEditAggiuntiView) {
+					if (a.getAnaNumMatricola().equals(animaleEditRemover)) {
+						animaliEditAggiuntiView.remove(a);
+						animaliAggiunti = animaliAggiunti.replace(animaleEditRemover, "");
+					}
+				}
+			}
+		}
+	}
+
+	public void removeAnagraficaFromSelectedList() {
+
+		if (animaliAggiuntiView.isEmpty()) {
+			// errore lista vuota
+		} else {
+			if (animaleRemover == null) {
+				// nessun animale selzionato
+			} else {
+				for (AnagraficaDTO a : animaliAggiuntiView) {
+					if (a.getAnaNumMatricola().equals(animaleRemover)) {
+						animaliAggiuntiView.remove(a);
+						animaliAggiunti = animaliAggiunti.replace(animaleRemover, "");
+					}
+				}
+			}
+		}
 	}
 
 	public void showDialogAddAnimali(StoricoAccrescFiniDTO saccrVar) {
@@ -520,6 +567,22 @@ public class GruppiDiAccrMB extends BaseMB {
 
 	public void setAnimaliEditAggiuntiView(Set<AnagraficaDTO> animaliEditAggiuntiView) {
 		this.animaliEditAggiuntiView = animaliEditAggiuntiView;
+	}
+
+	public String getAnimaleEditRemover() {
+		return animaleEditRemover;
+	}
+
+	public void setAnimaleEditRemover(String animaleEditRemover) {
+		this.animaleEditRemover = animaleEditRemover;
+	}
+
+	public String getAnimaleRemover() {
+		return animaleRemover;
+	}
+
+	public void setAnimaleRemover(String animaleRemover) {
+		this.animaleRemover = animaleRemover;
 	}
 
 }

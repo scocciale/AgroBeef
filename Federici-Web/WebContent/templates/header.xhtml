@@ -1,17 +1,19 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:f="http://java.sun.com/jsf/core">
-
+	xmlns:p="http://primefaces.org/ui">
 	<nav>
 		<div class="nav-wrapper">
 			<div style="width: 10% !important">
 				<ul id="nav-mobile" class="left">
-					<li><a id="open-menu" onclick="toggleMenu('show')"><i
-							class="fa fa-bars fa-2x color_rosso_cdr" aria-hidden="true"></i></a></li>
-					<li><a id="close-menu" onclick="toggleMenu('hide')"><i
-							class="fa fa-bars fa-2x color_rosso_cdr" aria-hidden="true"></i></a></li>
+					<li><a id="open-menu" onclick="toggleMenu('show')"> <i
+							class="fa fa-bars fa-2x color_rosso_cdr" aria-hidden="true" />
+					</a></li>
+					<li><a id="close-menu" onclick="toggleMenu('hide')"> <i
+							class="fa fa-bars fa-2x color_rosso_cdr" aria-hidden="true" />
+					</a></li>
 				</ul>
 			</div>
 			<div class="ui-g">
@@ -24,43 +26,58 @@
 						value="#{resource['images/agroDesk_logo.png']}" />
 				</div>
 			</div>
-
 		</div>
 	</nav>
 	<ul id="slide-out" class="side-nav">
 		<ul class="collapsible collapsible-accordion"
 			style="padding-top: 10px !important; padding-bottom: 10px !important;">
-			<li><a class="collapsible-header"><i
-					class="fa fa-user-circle" aria-hidden="true"></i>#{userMB.username}</a>
+			<li><a class="collapsible-header"> <i
+					class="fa fa-user-circle" aria-hidden="true" /> #{userMB.username}
+			</a>
 				<div class="collapsible-body" style="display: block;">
 					<ul>
 						<li><p:commandLink action="#{userMB.logOut}">
-								<i class="fa fa-power-off" aria-hidden="true"></i>
-								Logout</p:commandLink></li>
+								<i class="fa fa-power-off" aria-hidden="true" />
+								Logout
+							</p:commandLink></li>
 					</ul>
 				</div></li>
 		</ul>
-		<li><div class="divider"></div></li>
+		<li>
+			<div class="divider" />
+		</li>
 		<li class="bold"><p:commandLink
 				action="#{homeMB.navigateTo('HOME')}">
-				<i class="fa fa-home " aria-hidden="true"></i> #{text['menu.home']}</p:commandLink></li>
+				<i class="fa fa-home " aria-hidden="true" />
+				#{text['menu.home']}
+			</p:commandLink></li>
 		<li class="bold"><p:commandLink
 				action="#{homeMB.navigateTo('ANAGRAFICA')}">
-				<i class="fa fa-id-card" aria-hidden="true"></i> #{text['menu.anagrafica']}</p:commandLink></li>
+				<i class="fa fa-id-card" aria-hidden="true" />
+				#{text['menu.anagrafica']}
+			</p:commandLink></li>
 		<li class="bold"><p:commandLink
 				action="#{homeMB.navigateTo('GRUPPI_MONTA')}">
-				<i class="fa fa-cubes" aria-hidden="true"></i> #{text['menu.gdm']}</p:commandLink></li>
+				<i class="fa fa-cubes" aria-hidden="true" />
+				#{text['menu.gdm']}
+			</p:commandLink></li>
 		<li class="bold"><p:commandLink
 				action="#{homeMB.navigateTo('GRUPPI_ACCRESCIMENTO')}">
-				<i class="fa fa-line-chart" aria-hidden="true"></i>
-				#{text['menu.gda']}</p:commandLink></li>
+				<i class="fa fa-line-chart" aria-hidden="true" />
+				#{text['menu.gda']}
+			</p:commandLink></li>
 		<li class="bold"><p:commandLink
 				action="#{homeMB.navigateTo('VETERINARIA')}">
-				<i class="fa fa-heartbeat" aria-hidden="true"></i> #{text['menu.veterinaria']}</p:commandLink></li>
+				<i class="fa fa-heartbeat" aria-hidden="true" />
+				#{text['menu.veterinaria']}
+			</p:commandLink></li>
 		<li class="bold"><p:commandLink
 				action="#{homeMB.navigateTo('PESATA_COMMERCIALE')}">
-				<i class="fa fa-balance-scale " aria-hidden="true"></i> #{text['menu.pesata.comm']}</p:commandLink></li>
+				<i class="fa fa-balance-scale " aria-hidden="true" />
+				#{text['menu.pesata.comm']}
+			</p:commandLink></li>
 	</ul>
 	<a style="display: none;" href="#" data-activates="slide-out"
-		class="button-collapse"><i class="material-icons">menu</i></a>
+		class="button-collapse"> <i class="material-icons">menu</i>
+	</a>
 </ui:composition>

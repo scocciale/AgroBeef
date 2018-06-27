@@ -1,8 +1,9 @@
 package com.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
+
+import javax.persistence.*;
 
 /**
  * The persistent class for the anagr_accr_finis database table.

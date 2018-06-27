@@ -7,7 +7,10 @@
 
 <h:head>
 	<title><h:outputText value="AgroBeef" /></title>
-
+	<f:facet name="first">
+		<link rel="shortcut icon" type="image/png"
+			href="#{request.contextPath}/resources/images/agroDesk_logo_tabIcon.png" />
+	</f:facet>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8;" />
 	<!-- CUSTOM STYLE CSS -->
@@ -61,7 +64,7 @@
 			<label class="font-14"><h:outputText
 					value="#{text['label.loader']}" /></label>
 		</p>
-		<p:graphicImage name="/images/icons/loader.gif" />
+		<p:graphicImage name="/images/icons/Infinity_loader.gif" />
 	</p:dialog>
 
 	<p:ajaxStatus onstart="PF('statusDialog').show()"
@@ -70,14 +73,6 @@
 	<h:outputScript name="Materialize/js/materialize.min.js"></h:outputScript>
 	<h:outputScript name="script/primefix.js"></h:outputScript>
 	<h:outputScript name="script/navigation.js"></h:outputScript>
-	<script>
-	$('document').load((function() {
-		var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-		link.type = 'image/png';
-		link.rel = 'shortcut icon';
-		link.href = '/AgroBeef/resources/images/agroDesk_logo_tabIcon.png';
-		document.getElementsByTagName('head')[0].appendChild(link);
-	})())
-	</script>
+
 </h:body>
 </html>

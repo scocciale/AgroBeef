@@ -989,3 +989,29 @@ a.ui-state-default.ui-state-highlight.ui-state-active {
 	-webkit-box-shadow: inset 0 0 0 !important;
 	box-shadow: inset 0 0 0 !important;
 }
+
+.customDialogWidth{
+	width:400px !important;
+}
+
+.ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item.ui-state-highlight{
+	background: #4BA99C !important;
+	border-bottom-right-radius: 3px !important;
+	border-top-right-radius: 3px !important;
+	border-bottom-left-radius: 3px !important;
+	border-top-left-radius: 3px !important;
+	color: #FFF;
+}
+
+.ui-selectlistbox-item.ui-corner-all {
+    padding-left: 5px;
+}
+
+.customSelectOneListbox{
+	width: 100% !important;
+}
+
+.ui-selectlistbox-item.ui-corner-all.ui-state-hover {
+    background: #4CA79A !important;
+    box-shadow: none !important;
+}

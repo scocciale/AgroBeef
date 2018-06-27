@@ -1,11 +1,10 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui" template="/templates/layout.xhtml"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-
+	xmlns:p="http://primefaces.org/ui" template="/templates/layout.xhtml">
 	<ui:define name="title">
 		<h:outputText value="#{text['title.gruppi.monta']}" />
 	</ui:define>
@@ -13,15 +12,12 @@
 		<h:outputText value="" />
 	</ui:define>
 	<ui:define name="content">
-
 		<p:panel header="#{text['title.gruppi.monta']}" closable="false"
 			toggleable="false" widgetVar="gdmWidgetVar" id="gruppiDiMonta"
 			style="margin-left: 10px ; margin-right: 10px">
-
 			<div class="ui-g">
 				<div class="ui-g-12 ui-md-6 ui-lg-6"
 					style="border-right: solid 1px #ECECEC;">
-
 					<div class="row">
 						<div class="center-block center">
 							<h:outputLabel value="#{text['label.gdm.nuovo']}"
@@ -29,19 +25,16 @@
 								styleClass="center-block" />
 						</div>
 					</div>
-
 					<div class="ui-g-8">
 						<div class="input-field">
 							<p:inputText value="#{gdmMB.nuovoStoricoGruppoMonta.sgmNome}"
 								onkeypress="if (event.keyCode == 13) return false;"
-								maxlength="100" id="nomeNuovoStoricoGruppoMonta">
-							</p:inputText>
+								maxlength="100" id="nomeNuovoStoricoGruppoMonta" />
 							<label class="left-align" for="nomeNuovoStoricoGruppoMonta">
 								<h:outputText value="#{text['label.gdm.nome']}" />
 							</label>
 						</div>
 					</div>
-
 					<div class="ui-g-4">
 						<div class="input-field">
 							<p:outputLabel for="dataApertura"
@@ -54,47 +47,51 @@
 							</p:calendar>
 						</div>
 					</div>
-
 					<div class="ui-g-12">
 						<div class="input-field">
 							<p:autoComplete id="acAnimali"
+								onkeypress="if (event.keyCode == 13) return false;"
 								completeMethod="#{gdmMB.findFromParms}"
 								value="#{gdmMB.valueAna}">
-								<p:ajax update="showListAddedAnimal contForm:dlgAnimaleAddedYet"
+								<p:ajax
+									update="showListAddedAnimal contForm:dlgAnimaleAddedYet rimuoviAnimale"
 									event="itemSelect" listener="#{gdmMB.addToGruppoDiMonta()}" />
 							</p:autoComplete>
-
 							<p:outputLabel value="#{text['label.animali.disp']}"
 								styleClass="left-align" for="acAnimali"
 								style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
-
-							<p:selectOneListbox id="showListAddedAnimal">
+							<p:selectOneListbox id="showListAddedAnimal"
+								value="#{gdmMB.animaleRemover}"
+								styleClass="customSelectOneListbox">
 								<f:selectItems itemLabel="#{animale.anaNumMatricola}"
-									itemValue="#{animale}" value="#{gdmMB.animaliAggiuntiView}"
-									var="animale" />
+									itemValue="#{animale.anaNumMatricola}"
+									value="#{gdmMB.animaliAggiuntiView}" var="animale" />
 							</p:selectOneListbox>
 						</div>
-
 						<p:outputLabel value="#{text['mandatory']}: #{text['label.toro']}"
 							styleClass="left-align"
 							style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
 					</div>
-
 					<div class="row center-block center">
+						<p:commandButton value="#{text['button.rimuovi.lista']}"
+							style="float:left!important;margin-top: 6%!important;"
+							actionListener="#{gdmMB.removeAnagraficaFromSelectedList()}"
+							id="rimuoviAnimale"
+							disabled="#{gdmMB.animaliAggiuntiView.size() eq 0}"
+							styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+							update="showListAddedAnimal rimuoviAnimale" />
 						<p:commandButton value="#{text['button.salva']}"
 							style="float:right!important;margin-top: 6%!important;"
 							actionListener="#{gdmMB.salvaGruppoDiMonta()}"
 							id="salvaNewGruppo"
 							rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
-							styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+							styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 							update="contForm:gruppiDiMonta " />
 						<p:tooltip for="salvaNewGruppo" value="#{text['tooltip.salva']}"
 							position="top" />
 					</div>
 				</div>
-
 				<div class="ui-g-12 ui-md-6 ui-lg-6">
-
 					<div class="row">
 						<p:dataTable id="gruppiDiMontaDt" var="sgdmVar"
 							value="#{gdmMB.gruppiDiMontaList}"
@@ -104,17 +101,15 @@
 							rows="15" paginator="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
-
 							<p:column width="5%">
 								<p:rowToggler rendered="#{sgdmVar.sgmDataChiusura==null}" />
 							</p:column>
-
 							<p:column styleClass="center-align" width="26%"
-								style="font-size: 1.2em!important" headerText="Nome">
+								style="font-size: 1.2em!important"
+								headerText="#{text['column.header.nome']}">
 								<h:outputText value="#{sgdmVar.sgmNome}" styleClass="left"
 									style="font-size: 1.2em!important" />
 							</p:column>
-
 							<p:column styleClass="center-align"
 								headerText="#{text['column.header.data.apertura']}" width="26%"
 								style="font-size: 1.2em!important">
@@ -123,7 +118,6 @@
 									<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
 								</h:outputText>
 							</p:column>
-
 							<p:column styleClass="center-align"
 								headerText="#{text['column.header.data.chiusura']}" width="26%"
 								style="font-size: 1.2em!important">
@@ -132,7 +126,6 @@
 									<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
 								</h:outputText>
 							</p:column>
-
 							<p:column styleClass="center-align">
 								<p:commandButton value="#{text['button.aggiungi.animale']}"
 									style="float:right!important;font-size: 1.1em!important"
@@ -140,17 +133,16 @@
 									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 									disabled="#{sgdmVar.sgmDataChiusura!=null}"
 									action="#{gdmMB.showDialogAddAnimali(sgdmVar)}"
-									styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+									styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 									update="contForm:addAnimaliInGruppo" />
-
 								<p:tooltip for="modificaGruppoDiMonta"
 									value="#{text['tooltip.aggiungi.nuovo.animale']} o #{text['tooltip.chiudi.gruppo']}"
 									position="top" />
 								<p:commandLink action="#{gdmMB.chiusuraGruppoMonta(sgdmVar)}"
 									rendered="#{sgdmVar.sgmDataChiusura eq null and !userMB.utente.profilo.proNome.equals('lettura')}"
 									update="gruppiDiMontaDt ">
-									<p:graphicImage name="images/icons/delete_icon.png"
-										style="height: 23px; width: 23px;" />
+									<p:graphicImage name="images/icons/delete_icon.png" 
+										style="margin-top: 6px;" />
 								</p:commandLink>
 							</p:column>
 							<p:rowExpansion>
@@ -158,7 +150,6 @@
 									value="#{sgdmVar.gruppoMontas}"
 									style="width:auto!important; float:right!important; "
 									emptyMessage="#{text['label.emptyResult']}">
-
 									<p:column styleClass="center-align"
 										headerText="#{text['column.header.numero.mat']}"
 										style="font-size: 1.2em!important"
@@ -166,7 +157,6 @@
 										<h:outputText value="#{gm.anagrafica.anaNumMatricola}"
 											styleClass="left" style="font-size: 1.2em!important" />
 									</p:column>
-
 									<p:column styleClass="center-align"
 										style="font-size: 1.2em!important"
 										sortBy="#{gm.gmoDataInserimento}"
@@ -176,14 +166,12 @@
 											<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
 										</h:outputText>
 									</p:column>
-
 									<p:column styleClass="center-align"
 										headerText="#{text['column.header.toro']}"
 										style="font-size: 1.2em!important">
 										<h:outputText rendered="#{gm.anagrafica.anaFlagToro eq 1}"
 											styleClass="fa fa-check" />
 									</p:column>
-
 									<p:column styleClass="center-align">
 										<p:commandButton value="#{text['button.elimina.animale']}"
 											style="float:right!important;"
@@ -192,7 +180,6 @@
 											action="#{gdmMB.modificaAnimaleInGruppoDiMonta(sgdmVar,gm.gmoId)}"
 											styleClass="width-100 waves-effect waves-light btn giallo_cdr"
 											update="gruppiDiMontasottoDt " />
-										<!-- contForm:pickListAnimali -->
 										<p:tooltip for="modificaAnimaleGruppoDiMonta"
 											value="#{text['tooltip.modifica.animale.gruppo']}"
 											position="top" />
@@ -204,11 +191,9 @@
 				</div>
 			</div>
 		</p:panel>
-
 		<p:dialog resizable="false" widgetVar="dlgAnimaleAddedYet" width="35%"
 			id="dlgAnimaleAddedYet" closable="true" styleClass="dialogClass"
 			style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
-
 			<div class="ui-g-12">
 				<div class="row">
 					<p:panelGrid columns="1" layout="grid">
@@ -216,21 +201,18 @@
 					</p:panelGrid>
 				</div>
 			</div>
-
 		</p:dialog>
-
 		<p:dialog id="confirmDialog" widgetVar="dlgEliminaToro"
 			styleClass="dialogClass" minWidth="60" closable="true" modal="true"
 			draggable="false" resizable="false">
 			<f:facet name="header">
 				<div class="row" style="margin-top: 2px !important;">
 					<i class="fa fa-exclamation-triangle" aria-hidden="true"
-						style="margin-right: 10px !important;"></i>
+						style="margin-right: 10px !important;" />
 					<p:outputLabel value="#{text['message.warning']}"
 						style="font-size: 16px !important;" />
 				</div>
 			</f:facet>
-
 			<div class="row">
 				<p:panelGrid columns="1" layout="grid">
 					<h:outputText value="#{text['message.info.eliminazine.toro.gdm']}" />
@@ -252,49 +234,50 @@
 				</p:panelGrid>
 			</div>
 		</p:dialog>
-
-		<p:dialog id="addAnimaliInGruppo" styleClass="dialogClass"
-			widgetVar="dlg2" minWidth="60" closable="true" modal="true"
-			draggable="false" resizable="false">
-
+		<p:dialog id="addAnimaliInGruppo"
+			styleClass="dialogClass customDialogWidth" widgetVar="dlg2"
+			closable="true" modal="true" draggable="false" resizable="false">
 			<div class="ui-g-12">
 				<div class="input-field">
 					<p:autoComplete id="acAnimaliEdit"
+						onkeypress="if (event.keyCode == 13) return false;"
 						completeMethod="#{gdmMB.findFromParms}" value="#{gdmMB.valueAna}">
 						<p:ajax
-							update="showListAddedAnimalEdit contForm:dlgAnimaleAddedYet"
+							update="showListAddedAnimalEdit contForm:dlgAnimaleAddedYet rimuoviAnimaleEdit"
 							event="itemSelect" listener="#{gdmMB.addToEditGruppoDiMonta()}" />
 					</p:autoComplete>
-
 					<p:outputLabel value="#{text['label.animali.disp']}"
 						styleClass="left-align" for="acAnimaliEdit"
 						style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
-
-					<p:selectOneListbox id="showListAddedAnimalEdit">
-						<f:selectItems itemLabel="#{animale.anaNumMatricola}"
-							itemValue="#{animale}" value="#{gdmMB.animaliEditAggiuntiView}"
-							var="animale" />
+					<p:selectOneListbox id="showListAddedAnimalEdit"
+						value="#{gdmMB.animaleEditRemover}"
+						styleClass="customSelectOneListbox">
+						<f:selectItems value="#{gdmMB.animaliEditAggiuntiView}"
+							itemValue="#{animale.anaNumMatricola}"
+							itemLabel="#{animale.anaNumMatricola}" var="animale" />
 					</p:selectOneListbox>
 				</div>
 				<p:outputLabel value="#{text['mandatory']}: #{text['label.toro']}"
 					styleClass="left-align"
 					style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
 			</div>
-
-			<div class="row center-block center">
-
+			<div class="row center-block">
+				<p:commandButton value="#{text['button.rimuovi.lista']}"
+					style="float:left!important;margin-top: 6%!important;"
+					actionListener="#{gdmMB.removeAnagraficaFromSelectedEditList()}"
+					id="rimuoviAnimaleEdit"
+					disabled="#{gdmMB.animaliEditAggiuntiView.size() eq 0}"
+					styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+					update="showListAddedAnimalEdit rimuoviAnimaleEdit" />
 				<p:commandButton value="#{text['button.salva']}"
 					style="float:right!important;margin-top: 6%!important;"
 					actionListener="#{gdmMB.modificaGruppoDiMonta()}"
 					id="aggiornaGruppo"
-					styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 					update="contForm:gruppiDiMonta" oncomplete="PF('dlg2').hide();" />
-
 				<p:tooltip for="aggiornaGruppo" value="#{text['tooltip.salva']}"
 					position="top" />
 			</div>
-
 		</p:dialog>
-
 	</ui:define>
 </ui:composition>

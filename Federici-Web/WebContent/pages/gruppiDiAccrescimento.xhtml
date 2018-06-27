@@ -1,11 +1,10 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui" template="/templates/layout.xhtml"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-
+	xmlns:p="http://primefaces.org/ui" template="/templates/layout.xhtml">
 	<ui:define name="title">
 		<h:outputText value="#{text['title.gruppi.accr']}" />
 	</ui:define>
@@ -13,16 +12,12 @@
 		<h:outputText value="" />
 	</ui:define>
 	<ui:define name="content">
-
 		<p:panel header="#{text['panel.gruppi.accr']}" closable="false"
 			toggleable="false" widgetVar="accrWidgetVar" id="gruppiDiAccr"
 			style="margin-left: 10px ; margin-right: 10px">
-
 			<div class="ui-g">
-
 				<div class="ui-g-12 ui-md-6 ui-lg-6"
 					style="border-right: solid 1px #ECECEC;">
-
 					<div class="row">
 						<div class="center-block center">
 							<h:outputLabel value="#{text['label.gda.nuovo']}"
@@ -30,20 +25,17 @@
 								styleClass="center-block" />
 						</div>
 					</div>
-
 					<div class="ui-g-4">
 						<div class="input-field">
 							<p:inputText
 								value="#{accrMB.nuovoStoricoGruppoAccr.safNumAppezzamento}"
 								onkeypress="if (event.keyCode == 13) return false;"
-								maxlength="100" id="nomeNuovoStoricoGruppoAccr">
-							</p:inputText>
+								maxlength="100" id="nomeNuovoStoricoGruppoAccr" />
 							<label class="left-align" for="nomeNuovoStoricoGruppoAccr">
 								<h:outputText value="#{text['label.gda.numero.appezzamento']}" />
 							</label>
 						</div>
 					</div>
-
 					<div class="ui-g-4">
 						<div class="input-field">
 							<p:outputLabel for="dataApertura"
@@ -56,7 +48,6 @@
 							</p:calendar>
 						</div>
 					</div>
-
 					<div class="ui-g-4">
 						<div class="input-field">
 							<p:selectOneMenu id="scopoNuovoStoricoGruppoAccr"
@@ -72,51 +63,52 @@
 							</p:selectOneMenu>
 						</div>
 					</div>
-
 					<div class="ui-g-12">
 						<div class="input-field">
 							<p:autoComplete id="acAnimali"
+								onkeypress="if (event.keyCode == 13) return false;"
 								completeMethod="#{accrMB.findFromParms}"
 								value="#{accrMB.valueAna}">
-								<p:ajax update="showListAddedAnimal contForm:dlgAnimaleAddedYet"
+								<p:ajax
+									update="showListAddedAnimal contForm:dlgAnimaleAddedYet rimuoviAnimale"
 									event="itemSelect" listener="#{accrMB.addToGruppoDiAccr()}" />
 							</p:autoComplete>
-
 							<p:outputLabel value="#{text['label.animali.disp']}"
 								styleClass="left-align" for="acAnimali"
 								style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
-
-							<p:selectOneListbox id="showListAddedAnimal">
+							<p:selectOneListbox id="showListAddedAnimal"
+								value="#{accrMB.animaleRemover}"
+								styleClass="customSelectOneListbox">
 								<f:selectItems itemLabel="#{animale.anaNumMatricola}"
-									itemValue="#{animale}" value="#{accrMB.animaliAggiuntiView}"
-									var="animale" />
+									itemValue="#{animale.anaNumMatricola}"
+									value="#{accrMB.animaliAggiuntiView}" var="animale" />
 							</p:selectOneListbox>
-
 						</div>
-
 						<p:outputLabel value="#{text['mandatory']}: #{text['label.toro']}"
 							styleClass="left-align"
 							style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
 					</div>
-
 					<div class="row center-block center">
-
+						<p:commandButton value="#{text['button.rimuovi.lista']}"
+							style="float:left!important;margin-top: 6%!important;"
+							actionListener="#{accrMB.removeAnagraficaFromSelectedList()}"
+							id="rimuoviAnimale"
+							disabled="#{accrMB.animaliAggiuntiView.size() eq 0}"
+							styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+							update="showListAddedAnimal rimuoviAnimale" />
 						<p:commandButton value="#{text['button.salva']}"
 							style="float:right!important;margin-top: 6%!important;"
 							actionListener="#{accrMB.salvaGruppoDiAccr()}"
 							id="salvaNewGruppo"
 							onkeypress="if (event.keyCode == 13) return false;"
 							rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
-							styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+							styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 							update="contForm:gruppiDiAccr " />
-
 						<p:tooltip for="salvaNewGruppo" value="#{text['tooltip.salva']}"
 							position="top" />
 					</div>
 				</div>
-
 				<div class="ui-g-12 ui-md-6 ui-lg-6">
-
 					<div class="row">
 						<p:dataTable id="gruppiDiAccrDt" var="saccrVar"
 							value="#{accrMB.gruppiDiAccrList}"
@@ -126,25 +118,21 @@
 							rows="15" paginator="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
-
 							<p:column width="5%">
 								<p:rowToggler rendered="#{saccrVar.safDataFine==null}" />
 							</p:column>
-
 							<p:column styleClass="center-align" width="19%"
 								style="font-size: 1.2em!important"
 								headerText="#{text['column.header.scopo.gruppo']}">
 								<h:outputText value="#{saccrVar.safScopo}" styleClass="left"
 									style="font-size: 1.2em!important" />
 							</p:column>
-
 							<p:column styleClass="center-align" width="19%"
 								style="font-size: 1.2em!important"
 								headerText="#{text['column.header.num.appezz']}">
 								<h:outputText value="#{saccrVar.safNumAppezzamento}"
 									styleClass="left" style="font-size: 1.2em!important" />
 							</p:column>
-
 							<p:column styleClass="center-align"
 								headerText="#{text['column.header.data.apertura']}" width="19%"
 								style="font-size: 1.2em!important">
@@ -153,7 +141,6 @@
 									<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
 								</h:outputText>
 							</p:column>
-
 							<p:column styleClass="center-align"
 								headerText="#{text['column.header.data.chiusura']}" width="19%"
 								style="font-size: 1.2em!important">
@@ -169,9 +156,8 @@
 									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 									disabled="#{saccrVar.safDataFine !=null}"
 									action="#{accrMB.showDialogAddAnimali(saccrVar)}"
-									styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+									styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 									update="contForm:addAnimaliInGruppoAccr" />
-
 								<p:tooltip for="modificaGruppoDiAccr"
 									value="#{text['tooltip.aggiungi.nuovo.animale']} o #{text['tooltip.chiudi.gruppo']}"
 									position="top" />
@@ -179,16 +165,14 @@
 									rendered="#{saccrVar.safDataFine eq null and !userMB.utente.profilo.proNome.equals('lettura')}"
 									update="gruppiDiAccrDt ">
 									<p:graphicImage name="images/icons/delete_icon.png"
-										style="height: 23px; width: 23px;" />
+										style="margin-top: 6px;" />
 								</p:commandLink>
 							</p:column>
-
 							<p:rowExpansion>
 								<p:dataTable id="gruppiDiAccrsottoDt" var="ga"
 									value="#{saccrVar.anagrAccrFinis}"
 									style="width:auto!important; float:right!important; "
 									emptyMessage="#{text['label.emptyResult']}">
-
 									<p:column styleClass="center-align"
 										headerText="#{text['column.header.numero.mat']}"
 										style="font-size: 1.2em!important"
@@ -211,7 +195,6 @@
 										<h:outputText rendered="#{ga.anagrafica.anaFlagToro eq 1}"
 											styleClass="fa fa-check" />
 									</p:column>
-
 									<p:column styleClass="center-align">
 										<p:commandButton value="#{text['button.elimina.animale']}"
 											style="float:right!important;"
@@ -225,9 +208,7 @@
 											position="top" />
 									</p:column>
 								</p:dataTable>
-
 							</p:rowExpansion>
-
 						</p:dataTable>
 					</div>
 				</div>
@@ -236,7 +217,6 @@
 		<p:dialog resizable="false" widgetVar="dlgAnimaleAddedYet" width="35%"
 			id="dlgAnimaleAddedYet" closable="true" styleClass="dialogClass"
 			style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
-
 			<div class="ui-g-12">
 				<div class="row">
 					<p:panelGrid columns="1" layout="grid">
@@ -244,50 +224,51 @@
 					</p:panelGrid>
 				</div>
 			</div>
-
 		</p:dialog>
-
-		<p:dialog id="addAnimaliInGruppoAccr" styleClass="dialogClass"
+		<p:dialog id="addAnimaliInGruppoAccr"
+			styleClass="dialogClass customDialogWidth"
 			widgetVar="dlgAggiuntaAnimaliInGruppoAccr" minWidth="60"
 			closable="true" modal="true" draggable="false" resizable="false">
 			<div class="ui-g-12">
 				<div class="input-field">
-
 					<p:autoComplete id="acAnimaliEdit"
+						onkeypress="if (event.keyCode == 13) return false;"
 						completeMethod="#{accrMB.findFromParms}"
 						value="#{accrMB.valueAna}">
 						<p:ajax
-							update="showListAddedAnimalEdit contForm:dlgAnimaleAddedYet"
+							update="showListAddedAnimalEdit contForm:dlgAnimaleAddedYet rimuoviAnimaleEdit"
 							event="itemSelect" listener="#{accrMB.addToEditGruppoDiAccr()}" />
 					</p:autoComplete>
-
-					<p:outputLabel value="Animali Disponibili" styleClass="left-align"
-						for="acAnimaliEdit"
+					<p:outputLabel value="#{text['label.animali.disp']}"
+						styleClass="left-align" for="acAnimaliEdit"
 						style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
-
-					<p:selectOneListbox id="showListAddedAnimalEdit">
+					<p:selectOneListbox id="showListAddedAnimalEdit"
+						value="#{accrMB.animaleEditRemover}"
+						styleClass="customSelectOneListbox">
 						<f:selectItems itemLabel="#{animale.anaNumMatricola}"
-							itemValue="#{animale}" value="#{accrMB.animaliEditAggiuntiView}"
-							var="animale" />
+							itemValue="#{animale.anaNumMatricola}"
+							value="#{accrMB.animaliEditAggiuntiView}" var="animale" />
 					</p:selectOneListbox>
-
 				</div>
-
 				<p:outputLabel value="#{text['mandatory']}: #{text['label.toro']}"
 					styleClass="left-align"
 					style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
-
 			</div>
 			<div class="row center-block center">
-
+				<p:commandButton value="#{text['button.rimuovi.lista']}"
+					style="float:left!important;margin-top: 6%!important;"
+					actionListener="#{accrMB.removeAnagraficaFromSelectedEditList()}"
+					id="rimuoviAnimaleEdit"
+					disabled="#{accrMB.animaliEditAggiuntiView.size() eq 0}"
+					styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+					update="showListAddedAnimalEdit rimuoviAnimaleEdit" />
 				<p:commandButton value="#{text['button.salva']}"
 					onkeypress="if (event.keyCode == 13) return false;"
 					style="float:right!important;margin-top: 6%!important;"
 					actionListener="#{accrMB.modificaGruppoDiAcrr}" id="aggiornaGruppo"
-					styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 					update="contForm:gruppiDiAccr "
 					oncomplete="PF('dlgAggiuntaAnimaliInGruppoAccr').hide();" />
-
 				<p:tooltip for="aggiornaGruppo" value="#{text['button.salva']}"
 					position="top" />
 			</div>
