@@ -31,9 +31,19 @@
 
 7) allarmi																													- 	aggiungere dialog per errori sulle query se manca qualche campo valorizzato
 
+ 
+8) implementare cambio password																								+ inserire vecchia pwd
+ 																															+ inserire nuova pwd
+ 																															+ confermare nuova pwd
+ 																															+ bottone salva
+ 																															+ bottone annulla
+
+9) inserire "ultimo accesso" su utente 																															
+ 
+
 -----------DOING-----------
 
- + inserire "ultimo accesso" su utente
+ aggiungere la voce "svezzati" nella pagina dei gruppi di accr/finis
 
  aggiungere log																												+ Anagrafica
  																															- Veterinaria
@@ -44,10 +54,10 @@
  
  gestire errori nei catch se transazione va male
  
- implementare cambio password																								- inserire vecchia pwd
- 																															- inserire nuova pwd
- 																															- confermare nuova pwd
- 																															- bottone salva
- 																															- bottone annulla
- 
+ aggiungere dialog al logon																									- leggere file di change log
+ 																															- aggiungere spunta per non aprire piu
+ 																																- alla spunta e alla chiusura del dialog aggiornare flg su db a 0
+ 																															- creare update sql da lanciare per aggiornare il flg ogni volta che ci sta un rilascio
+ 																															
+
  
