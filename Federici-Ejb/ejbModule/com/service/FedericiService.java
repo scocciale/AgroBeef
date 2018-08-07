@@ -17,6 +17,12 @@ import com.dto.VeterinariaDTO;
 
 public interface FedericiService {
 
+	// UTENTE
+
+	public UtenteDTO logIn(String username, String pwd);
+
+	public boolean modifyPwd(UtenteDTO user);
+	
 	// REPORT
 
 	public List<ReportDTO> getAllReportDisponibili();
@@ -32,8 +38,6 @@ public interface FedericiService {
 	public List<ReportResultDTO> getReportResultIndiceSeurop(String query) throws Exception;
 
 	public List<ReportResultDTO> getReportResultNoVal(String query);
-
-	public UtenteDTO logIn(String username, String pwd);
 
 	// ANIMALI
 

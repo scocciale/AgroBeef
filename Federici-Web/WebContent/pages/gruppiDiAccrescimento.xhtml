@@ -65,7 +65,7 @@
 					</div>
 					<div class="ui-g-12">
 						<div class="input-field">
-							<p:autoComplete id="acAnimali"
+							<p:autoComplete id="acAnimali" queryDelay="600"
 								onkeypress="if (event.keyCode == 13) return false;"
 								completeMethod="#{accrMB.findFromParms}"
 								value="#{accrMB.valueAna}">
@@ -231,7 +231,7 @@
 			closable="true" modal="true" draggable="false" resizable="false">
 			<div class="ui-g-12">
 				<div class="input-field">
-					<p:autoComplete id="acAnimaliEdit"
+					<p:autoComplete id="acAnimaliEdit" queryDelay="600"
 						onkeypress="if (event.keyCode == 13) return false;"
 						completeMethod="#{accrMB.findFromParms}"
 						value="#{accrMB.valueAna}">

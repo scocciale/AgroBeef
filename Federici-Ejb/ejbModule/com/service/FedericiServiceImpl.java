@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -50,6 +51,8 @@ import com.util.BCrypt;
 @Local(FedericiService.class)
 public class FedericiServiceImpl extends BaseService implements FedericiService {
 
+	Logger logger = Logger.getLogger(FedericiServiceImpl.class.getName());
+
 	// final static String animaliDisponibiliQueryWithParams = "SELECT a.ana_id,
 	// a.ana_num_matricola, a.ana_num_matricola_madre,
 	// a.ana_num_matricola_padre, a.ana_flag_toro, a.ana_sesso,
@@ -80,13 +83,35 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		try {
 			ute = (Utente) getSession(em).createCriteria(Utente.class).add(Restrictions.eq("uteUsername", username))
 					.uniqueResult();
-			if (ute != null && BCrypt.checkpw(pwd, ute.getUtePwd()))
-				return ConverterEntityToDto.utenteEntityToUtenteDTO(ute);
+			if (ute != null) {
+				if (BCrypt.checkpw(pwd, ute.getUtePwd())) {
+					return ConverterEntityToDto.utenteEntityToUtenteDTO(ute);
+				} else {
+					logger.info("L'utente ha inserito una password errata");
+				}
+			} else {
+				logger.info("L'utente con userId: '" + username + "' non esiste.");
+			}
 		} catch (Exception e) {
+			logger.info("Errore nel prendere da DB l'utente '" + username + "'.");
 			e.printStackTrace();
 		}
 		return null;
 
+	}
+
+	public boolean modifyPwd(UtenteDTO user) {
+		Utente ute = new Utente();
+		ute = ConverterDtoToEntity.utenteDTOToUtente(user);
+		try {
+			getSession(em).update(ute);
+			getSession(em).flush();
+			return true;
+		} catch (Exception e) {
+			logger.info("Errore nel modificare la pwd per l'utente con userId= " + ute.getUteId() + ".");
+			e.getMessage();
+		}
+		return false;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -172,11 +197,14 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		try {
 			getSession(em).saveOrUpdate(na);
 			getSession(em).flush();
+
+			logger.info("Salvato nuovo animale con matricola '" + na.getAnaNumMatricola() + "'.");
 			nuovoAnimale = new AnagraficaDTO();
 			nuovoAnimale = ConverterEntityToDto.anagraficaEntityToAngraficaDTO(na);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info("Impossibile salvare nuovo animale con matricola '" + na.getAnaNumMatricola() + "'.");
+			e.getMessage();
 			return false;
 		}
 
@@ -204,9 +232,12 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		try {
 			getSession(em).update(na);
 			getSession(em).flush();
+
+			logger.info("Modficato animale con matricola '" + na.getAnaNumMatricola() + "'.");
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info("Impossibile salvare modifiche animale con matricola '" + na.getAnaNumMatricola() + "'.");
+			e.getMessage();
 			return false;
 		}
 	}
@@ -214,16 +245,13 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	public boolean salvaNuovaVetEPesata(VeterinariaDTO nuovoIntVeterinario, PesataDTO pesataDto) {
 		Veterinaria vet = new Veterinaria();
 		Pesata pes = new Pesata();
-		System.out.println("convert");
 		vet = ConverterDtoToEntity.veterinariaDtoToVeterinariaEntity(nuovoIntVeterinario);
 		pes = ConverterDtoToEntity.pesataDtoToPesataEntity(pesataDto);
 		try {
 			getSession(em).saveOrUpdate(vet);
 			getSession(em).flush();
-			System.out.println(" ############ salvata vet");
 			getSession(em).saveOrUpdate(pes);
 			getSession(em).flush();
-			System.out.println(" ############ salvata pes");
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -255,42 +283,55 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	public boolean getLastGruppiAccrFini(int anaId) {
 
 		List<AnagrAccrFini> anagraficaEntity = new ArrayList<>();
-		// anagraficaEntity = (List<GruppoMonta>)
-		// getSession(em).createSQLQuery("SELECT * FROM GRUPPO_MONTA GM ORDER BY
-		// GM.GMO_DATA_INSERIMENTO DESC").list();
-		anagraficaEntity = (List<AnagrAccrFini>) getSession(em).createCriteria(AnagrAccrFini.class)
-				.add(Restrictions.eq("aafAnaId", anaId)).addOrder(Order.desc("aafDataEntrata")).list();
-		// .add(Restrictions.eq("gmoAnaId",anaId)).setProjection(Projections.max("gmoDataInserimento")).uniqueResult();
-		// .add(Restrictions.isNull("gmoDataUscita"))
+		try {
+			// anagraficaEntity = (List<GruppoMonta>)
+			// getSession(em).createSQLQuery("SELECT * FROM GRUPPO_MONTA GM
+			// ORDER BY
+			// GM.GMO_DATA_INSERIMENTO DESC").list();
+			anagraficaEntity = (List<AnagrAccrFini>) getSession(em).createCriteria(AnagrAccrFini.class)
+					.add(Restrictions.eq("aafAnaId", anaId)).addOrder(Order.desc("aafDataEntrata")).list();
+			// .add(Restrictions.eq("gmoAnaId",anaId)).setProjection(Projections.max("gmoDataInserimento")).uniqueResult();
+			// .add(Restrictions.isNull("gmoDataUscita"))
 
+		} catch (Exception e) {
+			e.getMessage();
+			return false;
+		}
 		if (anagraficaEntity == null || anagraficaEntity.size() == 0
 				|| (anagraficaEntity != null && anagraficaEntity.size() > 0
 						&& (anagraficaEntity.get(0).getAafDataUscita() != null && anagraficaEntity.get(0)
-								.getAafDataUscita().after(anagraficaEntity.get(0).getAafDataEntrata()))))
+								.getAafDataUscita().after(anagraficaEntity.get(0).getAafDataEntrata())))) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public boolean getLastGruppoMonta(int anaId) {
 
 		List<GruppoMonta> anagraficaEntity = new ArrayList<>();
-		// anagraficaEntity = (List<GruppoMonta>)
-		// getSession(em).createSQLQuery("SELECT * FROM GRUPPO_MONTA GM ORDER BY
-		// GM.GMO_DATA_INSERIMENTO DESC").list();
-		anagraficaEntity = (List<GruppoMonta>) getSession(em).createCriteria(GruppoMonta.class)
-				.add(Restrictions.eq("gmoAnaId", anaId)).addOrder(Order.desc("gmoDataInserimento")).list();
-		// .add(Restrictions.eq("gmoAnaId",anaId)).setProjection(Projections.max("gmoDataInserimento")).uniqueResult();
-		// .add(Restrictions.isNull("gmoDataUscita"))
-
+		try {
+			// anagraficaEntity = (List<GruppoMonta>)
+			// getSession(em).createSQLQuery("SELECT * FROM GRUPPO_MONTA GM
+			// ORDER BY
+			// GM.GMO_DATA_INSERIMENTO DESC").list();
+			anagraficaEntity = (List<GruppoMonta>) getSession(em).createCriteria(GruppoMonta.class)
+					.add(Restrictions.eq("gmoAnaId", anaId)).addOrder(Order.desc("gmoDataInserimento")).list();
+			// .add(Restrictions.eq("gmoAnaId",anaId)).setProjection(Projections.max("gmoDataInserimento")).uniqueResult();
+			// .add(Restrictions.isNull("gmoDataUscita"))
+		} catch (Exception e) {
+			e.getMessage();
+			return false;
+		}
 		if (anagraficaEntity == null || anagraficaEntity.size() == 0
 				|| (anagraficaEntity != null && anagraficaEntity.size() > 0
 						&& (anagraficaEntity.get(0).getGmoDataUscita() != null && anagraficaEntity.get(0)
-								.getGmoDataUscita().after(anagraficaEntity.get(0).getGmoDataInserimento()))))
+								.getGmoDataUscita().after(anagraficaEntity.get(0).getGmoDataInserimento())))) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -900,8 +941,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		return Integer.parseInt(l.toString());
 
 	}
-	
-	public boolean updateLastAccess(UtenteDTO utente){
+
+	public boolean updateLastAccess(UtenteDTO utente) {
 		Utente ute = new Utente();
 
 		ute = ConverterDtoToEntity.utenteDTOToUtente(utente);

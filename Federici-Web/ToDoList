@@ -26,12 +26,28 @@
 5) (PESATA COMMERCIALE)	cosa da fare in pesata commerciale: 																+ 	creare interfaccia che mi determina i campi e i valori scritti sul foglio excel con un 																																form tipo anagrafica
 																															+ 	Modificare query per adeguare a uscita valutazione (non piu utilizzabile per gdm e 		gda)
 
-6) inserire "ultimo accesso" su utente
-
-7) profilazione																												+ 	profilazione prima del rilascio degli allarmi
+6) profilazione																												+ 	profilazione prima del rilascio degli allarmi
 																															- 	profilazione allarmi 
 
-8) allarmi																													- 	aggiungere dialog per errori sulle query se manca qualche campo valorizzato
+7) allarmi																													- 	aggiungere dialog per errori sulle query se manca qualche campo valorizzato
 
+-----------DOING-----------
 
+ + inserire "ultimo accesso" su utente
 
+ aggiungere log																												+ Anagrafica
+ 																															- Veterinaria
+ 																															- Allarmi
+ 																															- Gruppi Accr
+ 																															- Gruppi Monta
+ 																															- Pesata commerciale
+ 
+ gestire errori nei catch se transazione va male
+ 
+ implementare cambio password																								- inserire vecchia pwd
+ 																															- inserire nuova pwd
+ 																															- confermare nuova pwd
+ 																															- bottone salva
+ 																															- bottone annulla
+ 
+ 

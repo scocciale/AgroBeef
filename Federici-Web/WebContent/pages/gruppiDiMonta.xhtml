@@ -49,7 +49,7 @@
 					</div>
 					<div class="ui-g-12">
 						<div class="input-field">
-							<p:autoComplete id="acAnimali"
+							<p:autoComplete id="acAnimali" queryDelay="600"
 								onkeypress="if (event.keyCode == 13) return false;"
 								completeMethod="#{gdmMB.findFromParms}"
 								value="#{gdmMB.valueAna}">
@@ -141,7 +141,7 @@
 								<p:commandLink action="#{gdmMB.chiusuraGruppoMonta(sgdmVar)}"
 									rendered="#{sgdmVar.sgmDataChiusura eq null and !userMB.utente.profilo.proNome.equals('lettura')}"
 									update="gruppiDiMontaDt ">
-									<p:graphicImage name="images/icons/delete_icon.png" 
+									<p:graphicImage name="images/icons/delete_icon.png"
 										style="margin-top: 6px;" />
 								</p:commandLink>
 							</p:column>
@@ -239,7 +239,7 @@
 			closable="true" modal="true" draggable="false" resizable="false">
 			<div class="ui-g-12">
 				<div class="input-field">
-					<p:autoComplete id="acAnimaliEdit"
+					<p:autoComplete id="acAnimaliEdit" queryDelay="600"
 						onkeypress="if (event.keyCode == 13) return false;"
 						completeMethod="#{gdmMB.findFromParms}" value="#{gdmMB.valueAna}">
 						<p:ajax

@@ -187,4 +187,12 @@ public class Utente implements Serializable {
 		this.uteUltimoAcc = uteUltimoAcc;
 	}
 
+	@Override
+	public String toString() {
+		return "Utente [uteId=" + uteId + ", uteCognome=" + uteCognome + ", uteNome=" + uteNome + ", utePwd=" + utePwd
+				+ ", uteUsername=" + uteUsername + ", uteRifId=" + uteRifId + ", uteUltimoAcc=" + uteUltimoAcc
+				+ ", anagraficas=" + anagraficas + ", storicoAccrescFinis=" + storicoAccrescFinis
+				+ ", storicoGruppiMontas=" + storicoGruppiMontas + ", profilo=" + profilo + "]";
+	}
+
 }

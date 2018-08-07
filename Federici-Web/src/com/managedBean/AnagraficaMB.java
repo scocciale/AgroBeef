@@ -2,6 +2,7 @@ package com.managedBean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -21,8 +22,10 @@ import com.service.FedericiService;
 @ViewScoped
 public class AnagraficaMB extends BaseMB {
 
+	Logger logger = Logger.getLogger(AnagraficaMB.class.getName());
+	
 	private static final long serialVersionUID = 1L;
-
+	
 	@ManagedProperty(value = "#{userMB}")
 	private UserMB userMB;
 
@@ -74,7 +77,6 @@ public class AnagraficaMB extends BaseMB {
 
 		if (nuovoAnimale == null) {
 			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "message.fatal.error.login");
-			System.out.println("nuovo animale");
 			return null;
 		} else {
 			if (nuovoAnimale.getAnaNumMatricola() == null || nuovoAnimale.getAnaNumMatricola().equals("")) {
@@ -135,7 +137,6 @@ public class AnagraficaMB extends BaseMB {
 	public String updateDatiAnag() {
 		if (animaleEdit == null) {
 			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "message.fatal.error.login");
-			System.out.println("nuovo animale");
 			return null;
 		} else {
 			if (animaleEdit.getAnaNumMatricola() == null || animaleEdit.getAnaNumMatricola().equals("")) {

@@ -36,6 +36,11 @@
 			</a>
 				<div class="collapsible-body" style="display: block;">
 					<ul>
+						<li><p:commandLink onclick="PF('dlgChangePwd').show();"
+								oncomplete="toggleMenu('hide')">
+								<i class="fa fa-key" aria-hidden="true" />
+								Modifica Password
+							</p:commandLink></li>
 						<li><p:commandLink action="#{userMB.logOut}">
 								<i class="fa fa-power-off" aria-hidden="true" />
 								Logout
@@ -80,4 +85,78 @@
 	<a style="display: none;" href="#" data-activates="slide-out"
 		class="button-collapse"> <i class="material-icons">menu</i>
 	</a>
+
+	<p:dialog resizable="false" widgetVar="dlgChangePwd" width="30%"
+		id="dlgChangePwd" closable="false" styleClass="dialogClass"
+		style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
+		<h:form id="pwdForm">
+
+			<div class="row center">
+				<h:outputText value="#{text['title.cambio.pwd']}"
+					styleClass="text-al-cen"
+					style="font-weight: bold !important; font-size:1.5em" />
+			</div>
+			<div class="row">
+				<h:panelGrid id="gridChangePwd" styleClass="companyHeaderGrid">
+					<p:row>
+						<p:column colspan="1">
+							<div class="input-field">
+								<p:inputText id="oldPwd" styleClass="validate"
+									onkeypress="if (event.keyCode == 13) return false;"
+									value="#{userMB.oldPwd}">
+								</p:inputText>
+
+								<label class="left-align" for="oldPwd"><h:outputText
+										value="#{text['label.old.pwd']}" /></label>
+							</div>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="1">
+							<div class="input-field row">
+								<h:inputSecret id="newPwd" styleClass="validate"
+									onkeypress="if (event.keyCode == 13) return false;"
+									value="#{userMB.newPwd}">
+								</h:inputSecret>
+								<label class="left-align" for="newPwd"><h:outputText
+										value="#{text['label.new.pwd']}" /></label>
+							</div>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="1">
+							<div class="input-field row">
+								<h:inputSecret id="confirmPwd" styleClass="validate"
+									onkeypress="if (event.keyCode == 13) return false;"
+									value="#{userMB.confirmNewPwd}">
+								</h:inputSecret>
+								<label class="left-align" for="confirmPwd"><h:outputText
+										value="#{text['label.conferma.pwd']}" /></label>
+							</div>
+						</p:column>
+					</p:row>
+
+				</h:panelGrid>
+			</div>
+			<div class="row">
+				<p:commandButton id="annullaModPwd"
+					value="#{text['button.annulla']}"
+					styleClass="width-100 waves-effect waves-light btn giallo_cdr"
+					style="width:auto; float:left;"
+					oncomplete="PF('dlgChangePwd').hide();" update="dlgChangePwd" />
+				<p:tooltip for="annullaModPwd" value="#{text['button.annulla']}"
+					position="top" />
+
+				<p:commandButton id="salvaPwd" value="#{text['tooltip.modifica']}"
+					actionListener="#{userMB.checkPwd()}" update="pwdMessage"
+					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
+					style="width:auto; float:right;" />
+				<p:tooltip for="salvaPwd" value="#{text['tooltip.modifica']}"
+					position="top" />
+			</div>
+		</h:form>
+	</p:dialog>
+
+	<p:messages id="pwdMessage" autoUpdate="true" showDetail="true"
+		closable="true" />
 </ui:composition>

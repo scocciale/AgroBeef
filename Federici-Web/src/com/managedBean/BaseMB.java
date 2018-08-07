@@ -78,11 +78,15 @@ public class BaseMB implements Serializable {
 	 *            replace placeholders in the message.
 	 */
 	protected void addMessage(String elemMessage, final Severity severity, String titleMessage, String keyMessage) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		ResourceBundle backendText = context.getApplication().getResourceBundle(context, "text");
-		String valueMessage = backendText.getString(keyMessage);
-		FacesMessage message = new FacesMessage(severity, titleMessage, valueMessage);
-		context.addMessage(elemMessage, message);
+		FacesMessage message = new FacesMessage(severity, titleMessage, getTextFromProp(keyMessage));
+		FacesContext.getCurrentInstance().addMessage(elemMessage, message);
+	}
+
+	public static String getTextFromProp(String value) {
+		ResourceBundle bundle = FacesContext.getCurrentInstance().getApplication()
+				.getResourceBundle(FacesContext.getCurrentInstance(), "text");
+		return bundle.getString(value);
+
 	}
 
 	public FacesMessage getErrorFacesMessage(String messaggio, String dettaglio) {
