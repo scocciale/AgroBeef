@@ -4,8 +4,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core">
 
-	<h:form>
-		<!-- NAVIGATION -->
+	<!-- <h:form>
+		NAVIGATION
 		<ul id="slide-out" class="side-nav fixed">
 			<li class="no-padding header-menu"><br />
 				<ul class="collapsible collapsible-accordion mr-top-30">
@@ -36,9 +36,9 @@
 		<a href="#" data-activates="slide-out" class="button-collapse"><i
 			class="mdi-navigation-menu"></i></a>
 
-		<!-- END OF NAVIGATION -->
+		END OF NAVIGATION
 
-		<!-- CAMBIO PASSWORD -->
+		CAMBIO PASSWORD
 		<div id="changePsw" class="modal">
 			<div class="modal-content padding-container">
 
@@ -67,14 +67,14 @@
 				</div>
 				<br /> <br />
 				<div class="modal-footer">
-					<p:commandButton value="#{text['save']}" update="@this"
-						actionListener="#{userMB.changePassword}"
+					<p:commandButton value="#{text['button.salva']}" update="@this"
+						actionListener="#{userMB.checkPwd}"
 						styleClass="waves-effect waves-light btn rosso_cdr" />
 					<br /> <br />
 				</div>
 
 			</div>
 		</div>
-	</h:form>
+	</h:form> -->
 
 </ui:composition>

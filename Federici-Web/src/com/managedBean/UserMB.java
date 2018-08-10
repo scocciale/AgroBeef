@@ -75,7 +75,7 @@ public class UserMB extends BaseMB {
 	}
 
 	public void checkPwd() {
-		
+	
 		if (oldPwd != null && BCrypt.checkpw(oldPwd, utente.getUtePwd())) {
 			if (newPwd != null && confirmNewPwd != null && newPwd.equals(confirmNewPwd)) {
 				if (!BCrypt.checkpw(newPwd, utente.getUtePwd())) {
@@ -84,7 +84,7 @@ public class UserMB extends BaseMB {
 					Pattern r = Pattern.compile(BaseMB.getTextFromProp("pattern.pwd"));
 					Matcher m = r.matcher(newPwd);
 					if(!m.find()){
-						addMessage("pwdMessage", FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
+						addMessage("messages", FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
 								"message.pwd.pattern.not.respected");
 					}else{
 					utente.setUtePwd(BCrypt.hashpw(newPwd, BCrypt.gensalt()));
@@ -92,23 +92,23 @@ public class UserMB extends BaseMB {
 
 					if (!edit) {
 						utente.setUtePwd(backupPwd);
-						addMessage("pwdMessage", FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
+						addMessage("messages", FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
 								"message.system.error");
 					}else{
 						logger.info("L'utente '" + username + "' ha eseguito il cambio password.");
 					}
 					RequestContext context = RequestContext.getCurrentInstance();
-					context.execute("PF('dlgChangePwd').hide();");}
+					context.execute("PF('dlgChangePwdWv').hide();");}
 				} else {
 					addMessage(null, FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
 							"message.pwd.old.new.equals");
 				}
 			} else {
-				addMessage("pwdMessage", FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
+				addMessage("messages", FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
 						"message.new.pwd.confirm.pwd.wrong");
 			}
 		} else {
-			addMessage("pwdMessage", FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
+			addMessage("messages", FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
 					"message.pwd.old.wrong");
 		}
 	}

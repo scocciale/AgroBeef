@@ -22,7 +22,7 @@ public interface FedericiService {
 	public UtenteDTO logIn(String username, String pwd);
 
 	public boolean modifyPwd(UtenteDTO user);
-	
+
 	// REPORT
 
 	public List<ReportDTO> getAllReportDisponibili();
@@ -81,6 +81,8 @@ public interface FedericiService {
 	public boolean getLastGruppiAccrFini(int anaId);
 
 	public boolean salvaNuovaVetEPesata(VeterinariaDTO nuovoIntVeterinario, PesataDTO pesataDto);
+
+	public boolean salvaNuovaPesata(PesataDTO pesataDto);
 
 	public boolean updateCambiamentiAnimale(AnagraficaDTO animaleEdited);
 

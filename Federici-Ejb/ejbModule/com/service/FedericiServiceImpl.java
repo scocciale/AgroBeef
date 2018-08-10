@@ -12,6 +12,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -246,18 +247,36 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		Veterinaria vet = new Veterinaria();
 		Pesata pes = new Pesata();
 		vet = ConverterDtoToEntity.veterinariaDtoToVeterinariaEntity(nuovoIntVeterinario);
-		pes = ConverterDtoToEntity.pesataDtoToPesataEntity(pesataDto);
+		if (pesataDto != null) {
+			pes = ConverterDtoToEntity.pesataDtoToPesataEntity(pesataDto);
+		}
 		try {
 			getSession(em).saveOrUpdate(vet);
 			getSession(em).flush();
-			getSession(em).saveOrUpdate(pes);
-			getSession(em).flush();
+			if (pes != null) {
+				getSession(em).saveOrUpdate(pes);
+				getSession(em).flush();
+			}
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
 
+	}
+
+	public boolean salvaNuovaPesata(PesataDTO pesataDto) {
+
+		Pesata pes = new Pesata();
+		pes = ConverterDtoToEntity.pesataDtoToPesataEntity(pesataDto);
+		try {
+			getSession(em).save(pes);
+			getSession(em).flush();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public String getRazza(String anaNumMatricola, int uteId) {

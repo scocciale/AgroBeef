@@ -9,7 +9,8 @@ public enum Navigation {
 	ALLARMI("/pages/allarmi.xhtml"),
 	GRUPPI_MONTA("/pages/gruppiDiMonta.xhtml"),
 	GRUPPI_ACCRESCIMENTO("/pages/gruppiDiAccrescimento.xhtml"),
-	PESATA_COMMERCIALE("/pages/pesataCommerciale.xhtml");
+	PESATA_COMMERCIALE("/pages/pesataCommerciale.xhtml"),
+	PESATA_ANAGRAFICA("/pages/pesataAnagrafica.xhtml");
 	
 	private String pageUrl;
 	

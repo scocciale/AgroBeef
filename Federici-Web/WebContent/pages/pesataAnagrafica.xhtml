@@ -1,0 +1,213 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="/templates/layout.xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:define name="title">
+		<h:outputText value="#{text['title.pesata.anagrafica']}" />
+	</ui:define>
+	<ui:define name="title-desc">
+		<h:outputText value="" />
+	</ui:define>
+	<ui:define name="content">
+		<p:panel header="#{text['panel.pesata.anag']}" closable="false"
+			toggleable="false" widgetVar="resultPanelWdg"
+			style="margin-left: 10px ; margin-right: 10px">
+			<div class="row">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<p:dataTable id="pesAnagrafica" var="ana" widgetVar="templateWdg"
+							emptyMessage="#{text['label.emptyResult']}"
+							value="#{pesataMB.lazyModel}" paginatorPosition="bottom"
+							filteredValue="#{pesataMB.anagraficaFilteredList}"
+							currentPageReportTemplate="({currentPage} Di {totalPages})"
+							rows="10" paginator="true" dynamic="true" lazy="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+
+							<p:column width="2%">
+								<p:rowToggler rendered="#{ana.pesatas.size() gt 0}" />
+							</p:column>
+
+							<p:column headerText="#{text['column.header.numero.mat']}"
+								filterStyleClass="filterClass" width="10%"
+								filterBy="#{ana.anaNumMatricola}" filterMatchMode="contains"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaNumMatricola}">
+								<h:outputText value="#{ana.anaNumMatricola}" />
+							</p:column>
+
+							<p:column headerText="#{text['column.header.sesso']}"
+								filterStyleClass="filterClass" width="4%"
+								filterBy="#{ana.anaSesso}"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaSesso}">
+								<h:outputText value="#{ana.anaSesso}" />
+							</p:column>
+
+							<p:column headerText="#{text['column.header.toro']}"
+								filterStyleClass="filterClass" width="4%"
+								filterBy="#{ana.anaFlagToro}"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaFlagToro}">
+								<h:outputText rendered="#{ana.anaFlagToro eq 1}"
+									styleClass="fa fa-check" />
+							</p:column>
+
+							<p:column headerText="#{text['column.header.razza']}"
+								style="text-align: center; font-size:1.3em;" width="10%"
+								sortBy="#{ana.anaRazza}">
+								<h:outputText value="#{ana.anaRazza}" />
+							</p:column>
+
+							<p:column headerText="#{text['column.header.data.nasc']}"
+								width="15%" style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaDataNascita}">
+								<h:outputText value="#{ana.anaDataNascita}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column width="3%" styleClass="center">
+								
+								<p:commandButton id="id2" value="#{text['button.aggiungi.simbolo']}"
+									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}" 
+									style="font-size:1.3em;width:60%!important;" process="@this"
+									actionListener="#{pesataMB.openDialogPes(ana)}"
+									styleClass="waves-effect waves-light btn rosso_cdr"
+									update="contForm:dialogNuovoPes"/> 
+
+							</p:column>
+
+							<p:rowExpansion>
+								<p:dataTable id="vetForAnagDt" var="pes" value="#{ana.pesatas}"
+									style="width:auto!important; float:left!important; "
+									emptyMessage="#{text['label.emptyResult']}">
+
+									<p:column headerText="#{text['column.header.data.pesata']}"
+										style="text-align: center; font-size:1.3em;" width="10%"
+										sortBy="#{pes.pesData}">
+										<h:outputText value="#{pes.pesData}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+
+									<p:column headerText="#{text['column.header.peso']}"
+										style="text-align: center; font-size:1.3em;" width="10%"
+										sortBy="#{pes.pesPeso}">
+										<h:outputText value="#{pes.pesPeso}" />
+									</p:column>
+
+									<p:column headerText="#{text['column.header.fase.peso']}"
+										style="text-align: center; font-size:1.3em;" width="10%"
+										sortBy="#{pes.pesFase}">
+										<h:outputText value="#{pes.pesFase}" />
+									</p:column>
+
+									<p:column headerText="#{text['column.header.delta.peso.prec']}"
+										style="text-align: center;font-size:1.3em;">
+										<h:outputText
+											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}'
+											styleClass="fa fa-caret-up" style="color:green" />
+										<h:outputText value=" #{pes.deltaPeso}" style="color:green"
+											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}' />
+										<h:outputText
+											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq -1}'
+											styleClass="fa fa-caret-down" style="color:red" />
+										<h:outputText value=" #{pes.deltaPeso}" style="color:red"
+											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq -1}' />
+										<h:outputText
+											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 0}'
+											styleClass="fa fa-minus" style="color:grey" />
+										<h:outputText value=" #{pes.deltaPeso}" style="color:grey"
+											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 0}' />
+									</p:column>
+
+								</p:dataTable>
+								
+								
+							</p:rowExpansion>
+
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</p:panel>
+
+		<p:dialog resizable="false" widgetVar="dlgNuovoPeso" width="40%"
+			id="dialogNuovoPes" closable="true" styleClass="dialogClass"
+			style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
+			<div class="row center">
+				<h:outputText value="#{text['label.nuovo.peso']}"
+					styleClass="text-al-cen"
+					style="font-weight: bold !important; font-size:1.5em" />
+			</div>
+			<div class="row">
+				<p:panelGrid id="gridDettagliAnag" styleClass="companyHeaderGrid">
+					<p:row>
+						<p:column>
+							<div class="row">
+								<p:outputLabel value="#{text['column.header.numero.mat']}: "
+									styleClass="left" for="matricola"
+									style="font-size: 0.9rem !important;color: #888888;!important">
+									<h:outputText id="matricola"
+										style="font-size:2em;font-weight:bold;"
+										value="#{pesataMB.nuovaPesata.anagrafica.anaNumMatricola}" />
+								</p:outputLabel>
+							</div>
+						</p:column>
+						<p:column >
+							<div class="input-field ">
+								<p:outputLabel for="dataPeso" value="#{text['label.data.peso']}"
+									styleClass="left-align"
+									style="font-size: 0.9rem !important;color: #888888;!important" />
+								<p:calendar id="dataPeso"
+									value="#{pesataMB.nuovaPesata.pesData}" locale="it"
+									navigator="true" styleClass="validate">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:calendar>
+							</div>
+						</p:column>
+	
+						<p:column >
+							<div class="input-field">
+								<p:inputText id="peso" styleClass="validate"
+									onkeypress="if (event.keyCode == 13) return false;"
+									value="#{pesataMB.nuovaPesata.pesPeso}">
+									<f:convertNumber pattern="#,##0.0" />
+								</p:inputText>
+								<label class="left-align" for="peso"><h:outputText
+										value="#{text['label.peso']}" /></label>
+
+							</div>
+						</p:column>
+
+						<p:column >
+							<div class="input-field">
+								<p:inputText id="fasePeso" styleClass="validate"
+									onkeypress="if (event.keyCode == 13) return false;"
+									value="#{pesataMB.nuovaPesata.pesFase}">
+								</p:inputText>
+								<label class="left-align" for="fasePeso"><h:outputText
+										value="#{text['label.fase.peso']}" /></label>
+
+							</div>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</div>
+			<div class="row">
+				<h:commandButton id="salvaPes" value="#{text['button.salva']}" 
+					action="#{pesataMB.savePes()}"
+					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
+					style="width:auto; float:right;" />
+				<p:tooltip for="salvaPes" value="#{text['button.salva']}"
+					position="top" /> 
+			</div>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

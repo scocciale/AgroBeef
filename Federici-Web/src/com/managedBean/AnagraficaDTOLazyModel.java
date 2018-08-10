@@ -27,17 +27,17 @@ public class AnagraficaDTOLazyModel extends LazyDataModel<AnagraficaDTO> {
 	}
 
 	public AnagraficaDTOLazyModel(UserMB userMB, FedericiService federiciService) {
-		
+
 		setUserMB(userMB);
 		setFedericiService(federiciService);
-		
+
 		rowCount = Integer.parseInt(federiciService.countAllAnagrafica(userMB.getUtente().getUteRifId()).toString());
 	}
 
 	@Override
 	public List<AnagraficaDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder,
 			Map<String, Object> filters) {
-		
+
 		String sortOrderToStr = "";
 		list = new ArrayList<>();
 

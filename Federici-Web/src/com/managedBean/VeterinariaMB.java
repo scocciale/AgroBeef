@@ -57,33 +57,27 @@ public class VeterinariaMB extends BaseMB {
 
 	public void saveDataVet() {
 
-		System.out.println("entrato");
-
 		if (nuovoIntVeterinario == null) {
 			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "errore.tecnico");
-			System.out.println("nuovo animale");
 			return;
 		} else {
-			System.out.println("nell'else");
+
 			if (nuovoIntVeterinario.getVetDataVisita() == null) {
 				addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "data.visita.mancante");
-				System.out.println("Inserire la data della visita");
 				return;
 			}
 			if (motivoVisita == null || motivoVisita.isEmpty()) {
 				addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "motivo.visita.mancante");
-				System.out.println("Inserire la motivo della visita");
 				return;
 			}
 			if (nuovoIntVeterinario.getVetDataDiagnosiGrav() != null
 					&& nuovoIntVeterinario.getVetDataDiagnosiGrav().after(new Date())) {
 				addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "data.gravidanza.nonvalida");
-				System.out.println("data della presunta gravidanza non può essere nel futuro");
 				return;
 			}
 			nuovoIntVeterinario.setVetMotivoVisita(motivoVisita);
-			pesataDto.setPesData(nuovoIntVeterinario.getVetDataVisita());
-			pesataDto.setPesAnaId(nuovoIntVeterinario.getVetAnaId());
+			// pesataDto.setPesData(nuovoIntVeterinario.getVetDataVisita());
+			// pesataDto.setPesAnaId(nuovoIntVeterinario.getVetAnaId());
 			boolean saved = federiciService.salvaNuovaVetEPesata(nuovoIntVeterinario, pesataDto);
 			if (saved) {
 				if (nuovoIntVeterinario.getAnagrafica().getVeterinarias() == null) {
@@ -91,21 +85,24 @@ public class VeterinariaMB extends BaseMB {
 					List<VeterinariaDTO> listaVet = new ArrayList<>();
 					listaVet.add(nuovoIntVeterinario);
 					nuovoIntVeterinario.getAnagrafica().setVeterinarias(listaVet);
-				} else
+				} else {
 					nuovoIntVeterinario.getAnagrafica().getVeterinarias().add(nuovoIntVeterinario);
-				if (nuovoIntVeterinario.getAnagrafica().getPesatas() == null) {
-					System.out.println("lista pes a null");
-					List<PesataDTO> listaPes = new ArrayList<>();
-					listaPes.add(pesataDto);
-					nuovoIntVeterinario.getAnagrafica().setPesatas(listaPes);
-				} else
-					nuovoIntVeterinario.getAnagrafica().getPesatas().add(pesataDto);
+				}
+				// if (nuovoIntVeterinario.getAnagrafica().getPesatas() == null)
+				// {
+				// System.out.println("lista pes a null");
+				// List<PesataDTO> listaPes = new ArrayList<>();
+				// listaPes.add(pesataDto);
+				// nuovoIntVeterinario.getAnagrafica().setPesatas(listaPes);
+				// } else {
+				// nuovoIntVeterinario.getAnagrafica().getPesatas().add(pesataDto);
+				// }
 				nuovoIntVeterinario = new VeterinariaDTO();
-				pesataDto = new PesataDTO();
+				// pesataDto = new PesataDTO();
 				motivoVisita = "";
 				RequestContext.getCurrentInstance().update("@all");
 			} else {
-				System.out.println("false");
+				// log
 			}
 
 			return;

@@ -1,6 +1,8 @@
 package com.converter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.dto.AnagrAccrFiniDTO;
@@ -53,10 +55,29 @@ public class ConverterEntityToDto {
 
 		if (anagrafica.getPesatas() != null && anagrafica.getPesatas().size() > 0) {
 			List<PesataDTO> list = new ArrayList<>();
+			PesataDTO pes = new PesataDTO();
+
 			for (Pesata obj : anagrafica.getPesatas()) {
-				list.add(pesataEntityToPesataDTO(obj));
+				pes = new PesataDTO();
+				pes = pesataEntityToPesataDTO(obj);
+				if (anagrafica.getPesatas().indexOf(obj) > 0) {
+					pes.setDeltaPeso(pes.getPesPeso()
+							- anagrafica.getPesatas().get((anagrafica.getPesatas().indexOf(obj) - 1)).getPesPeso());
+				}
+				list.add(pes);
 			}
+
+			// creo on the fly un comparator custom per ordinare la mia lista in
+			// base alle date
+			Collections.sort(list, new Comparator<PesataDTO>() {
+				public int compare(PesataDTO p1, PesataDTO p2) {
+					// ordina dalla più vecchia alla più recente
+					return p1.getPesData().compareTo(p2.getPesData());
+				}
+			});
+
 			anagraficaDTO.setPesatas(list);
+
 		}
 		if (anagrafica.getVeterinarias() != null && anagrafica.getVeterinarias().size() > 0) {
 			List<VeterinariaDTO> list = new ArrayList<>();
