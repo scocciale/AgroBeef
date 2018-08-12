@@ -72,17 +72,18 @@
 							</p:column>
 
 							<p:column width="3%" styleClass="center">
-								
-								<p:commandButton id="id2" value="#{text['button.aggiungi.simbolo']}"
-									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}" 
+
+								<p:commandButton id="id2"
+									value="#{text['button.aggiungi.simbolo']}"
+									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 									style="font-size:1.3em;width:60%!important;" process="@this"
 									actionListener="#{pesataMB.openDialogPes(ana)}"
 									styleClass="waves-effect waves-light btn rosso_cdr"
-									update="contForm:dialogNuovoPes"/> 
+									update="contForm:dialogNuovoPes" />
 
 							</p:column>
 
-							<p:rowExpansion>
+							<p:rowExpansion id="rowExp">
 								<p:dataTable id="vetForAnagDt" var="pes" value="#{ana.pesatas}"
 									style="width:auto!important; float:left!important; "
 									emptyMessage="#{text['label.emptyResult']}">
@@ -109,6 +110,7 @@
 
 									<p:column headerText="#{text['column.header.delta.peso.prec']}"
 										style="text-align: center;font-size:1.3em;">
+
 										<h:outputText
 											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}'
 											styleClass="fa fa-caret-up" style="color:green" />
@@ -127,8 +129,15 @@
 									</p:column>
 
 								</p:dataTable>
-								
-								
+
+								<p:commandButton id="id3"
+									value="#{text['button.visualizza.grafico']}"
+									actionListener="#{pesataMB.createLineModels(ana)}"
+									styleClass="waves-effect waves-light btn rosso_cdr right-align"
+									update="rowExp" />
+
+								<p:chart type="line" model="#{pesataMB.lineModelAndamento}"
+									rendered="#{pesataMB.graficoRendered}" />
 							</p:rowExpansion>
 
 						</p:dataTable>
@@ -159,7 +168,7 @@
 								</p:outputLabel>
 							</div>
 						</p:column>
-						<p:column >
+						<p:column>
 							<div class="input-field ">
 								<p:outputLabel for="dataPeso" value="#{text['label.data.peso']}"
 									styleClass="left-align"
@@ -171,8 +180,8 @@
 								</p:calendar>
 							</div>
 						</p:column>
-	
-						<p:column >
+
+						<p:column>
 							<div class="input-field">
 								<p:inputText id="peso" styleClass="validate"
 									onkeypress="if (event.keyCode == 13) return false;"
@@ -185,7 +194,7 @@
 							</div>
 						</p:column>
 
-						<p:column >
+						<p:column>
 							<div class="input-field">
 								<p:inputText id="fasePeso" styleClass="validate"
 									onkeypress="if (event.keyCode == 13) return false;"
@@ -200,12 +209,12 @@
 				</p:panelGrid>
 			</div>
 			<div class="row">
-				<h:commandButton id="salvaPes" value="#{text['button.salva']}" 
+				<h:commandButton id="salvaPes" value="#{text['button.salva']}"
 					action="#{pesataMB.savePes()}"
 					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 					style="width:auto; float:right;" />
 				<p:tooltip for="salvaPes" value="#{text['button.salva']}"
-					position="top" /> 
+					position="top" />
 			</div>
 		</p:dialog>
 

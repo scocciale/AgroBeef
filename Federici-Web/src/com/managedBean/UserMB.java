@@ -74,8 +74,14 @@ public class UserMB extends BaseMB {
 		}
 	}
 
+	public void openDialogPwd() {
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.execute("PF('dlgChangePwdWv').show();");
+
+	}
+
 	public void checkPwd() {
-	
+
 		if (oldPwd != null && BCrypt.checkpw(oldPwd, utente.getUtePwd())) {
 			if (newPwd != null && confirmNewPwd != null && newPwd.equals(confirmNewPwd)) {
 				if (!BCrypt.checkpw(newPwd, utente.getUtePwd())) {
@@ -83,22 +89,23 @@ public class UserMB extends BaseMB {
 
 					Pattern r = Pattern.compile(BaseMB.getTextFromProp("pattern.pwd"));
 					Matcher m = r.matcher(newPwd);
-					if(!m.find()){
+					if (!m.find()) {
 						addMessage("messages", FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
 								"message.pwd.pattern.not.respected");
-					}else{
-					utente.setUtePwd(BCrypt.hashpw(newPwd, BCrypt.gensalt()));
-					boolean edit = federiciService.modifyPwd(utente);
+					} else {
+						utente.setUtePwd(BCrypt.hashpw(newPwd, BCrypt.gensalt()));
+						boolean edit = federiciService.modifyPwd(utente);
 
-					if (!edit) {
-						utente.setUtePwd(backupPwd);
-						addMessage("messages", FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
-								"message.system.error");
-					}else{
-						logger.info("L'utente '" + username + "' ha eseguito il cambio password.");
+						if (!edit) {
+							utente.setUtePwd(backupPwd);
+							addMessage("messages", FacesMessage.SEVERITY_ERROR,
+									BaseMB.getTextFromProp("message.warning"), "message.system.error");
+						} else {
+							logger.info("L'utente '" + username + "' ha eseguito il cambio password.");
+						}
+						RequestContext context = RequestContext.getCurrentInstance();
+						context.execute("PF('dlgChangePwdWv').hide();");
 					}
-					RequestContext context = RequestContext.getCurrentInstance();
-					context.execute("PF('dlgChangePwdWv').hide();");}
 				} else {
 					addMessage(null, FacesMessage.SEVERITY_ERROR, BaseMB.getTextFromProp("message.warning"),
 							"message.pwd.old.new.equals");

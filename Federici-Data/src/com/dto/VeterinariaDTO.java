@@ -14,6 +14,9 @@ public class VeterinariaDTO {
 	private String vetFarmaciUtilizzati;
 	private String vetMotivoVisita;
 	private Date vetDataVisita;
+	private String vetCommento;
+	
+	private int commentoColumnLen=255;
 
 	public int getVetId() {
 		return vetId;
@@ -77,6 +80,22 @@ public class VeterinariaDTO {
 
 	public void setVetDataVisita(Date vetDataVisita) {
 		this.vetDataVisita = vetDataVisita;
+	}
+
+	public String getVetCommento() {
+		return vetCommento;
+	}
+
+	public void setVetCommento(String vetCommento) {
+		this.vetCommento = vetCommento;
+	}
+
+	public int getCommentoColumnLen() {
+		return commentoColumnLen;
+	}
+
+	public void setCommentoColumnLen(int commentoColumnLen) {
+		this.commentoColumnLen = commentoColumnLen;
 	}
 
 }

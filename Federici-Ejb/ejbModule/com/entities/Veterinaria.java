@@ -36,6 +36,9 @@ public class Veterinaria implements Serializable {
 	@Column(name = "vet_motivo_visita")
 	private String vetMotivoVisita;
 
+	@Column(name = "vet_commento", length = 255)
+	private String vetCommento;
+
 	@Column(name = "vet_ana_id")
 	private int vetAnaId;
 
@@ -109,6 +112,14 @@ public class Veterinaria implements Serializable {
 
 	public void setVetDataVisita(Date vetDataVisita) {
 		this.vetDataVisita = vetDataVisita;
+	}
+
+	public String getVetCommento() {
+		return vetCommento;
+	}
+
+	public void setVetCommento(String vetCommento) {
+		this.vetCommento = vetCommento;
 	}
 
 }

@@ -81,6 +81,8 @@ public interface FedericiService {
 	public boolean getLastGruppiAccrFini(int anaId);
 
 	public boolean salvaNuovaVetEPesata(VeterinariaDTO nuovoIntVeterinario, PesataDTO pesataDto);
+	
+	public boolean salvaNuovaVet(VeterinariaDTO nuovoIntVeterinario);
 
 	public boolean salvaNuovaPesata(PesataDTO pesataDto);
 

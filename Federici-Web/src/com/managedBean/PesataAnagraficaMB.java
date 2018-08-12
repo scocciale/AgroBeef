@@ -12,6 +12,10 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.LineChartSeries;
 
 import com.dto.AnagraficaDTO;
 import com.dto.PesataDTO;
@@ -29,6 +33,9 @@ public class PesataAnagraficaMB extends BaseMB {
 	private AnagraficaDTOLazyModel lazyModel;
 	private List<AnagraficaDTO> anagraficaFilteredList;
 	private PesataDTO nuovaPesata;
+	private LineChartModel lineModelAndamento;
+
+	boolean graficoRendered = false;
 
 	int indexOfanimale = 0;
 
@@ -39,6 +46,8 @@ public class PesataAnagraficaMB extends BaseMB {
 	public void init() {
 
 		setLazyModel(new AnagraficaDTOLazyModel(userMB, federiciService));
+
+		nuovaPesata = new PesataDTO();
 	}
 
 	public void openDialogPes(AnagraficaDTO ana) {
@@ -91,20 +100,48 @@ public class PesataAnagraficaMB extends BaseMB {
 				if (nuovaPesata.getAnagrafica().getPesatas() != null
 						&& nuovaPesata.getAnagrafica().getPesatas().size() > 0) {
 					pesatas = nuovaPesata.getAnagrafica().getPesatas();
-					nuovaPesata.setDeltaPeso(
-							nuovaPesata.getPesPeso() - pesatas.get((pesatas.size())-1).getPesPeso());
+					nuovaPesata.setDeltaPeso(nuovaPesata.getPesPeso() - pesatas.get((pesatas.size()) - 1).getPesPeso());
 					pesatas.add(nuovaPesata);
 				} else {
 					pesatas.add(nuovaPesata);
 				}
 				nuovaPesata.getAnagrafica().setPesatas(pesatas);
 
+				nuovaPesata = new PesataDTO();
+				RequestContext.getCurrentInstance().update("@all");
+			} else {
+				// log
 			}
-			RequestContext.getCurrentInstance().update("@all");
 		} else {
 			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "errore.tecnico");
 			return;
 		}
+	}
+
+	public void createLineModels(AnagraficaDTO ana) {
+		lineModelAndamento = initLinearModel(ana);
+		lineModelAndamento.setTitle("Linear Chart");
+		lineModelAndamento.setLegendPosition("e");
+		Axis yAxis = lineModelAndamento.getAxis(AxisType.Y);
+		yAxis.setMin(ana.getPesatas().get(0).getPesData());
+		yAxis.setMax(ana.getPesatas().get((ana.getPesatas().size()) - 1).getPesData());
+
+		graficoRendered = true;
+	}
+
+	private LineChartModel initLinearModel(AnagraficaDTO ana) {
+		LineChartModel model = new LineChartModel();
+
+		LineChartSeries series = new LineChartSeries();
+		series.setLabel("Andamento pesate");
+
+		for (PesataDTO pes : ana.getPesatas()) {
+			series.set(pes.getPesData(), pes.getPesPeso());
+		}
+
+		model.addSeries(series);
+
+		return model;
 	}
 
 	public AnagraficaDTOLazyModel getLazyModel() {
@@ -137,6 +174,22 @@ public class PesataAnagraficaMB extends BaseMB {
 
 	public void setNuovaPesata(PesataDTO nuovaPesata) {
 		this.nuovaPesata = nuovaPesata;
+	}
+
+	public LineChartModel getLineModelAndamento() {
+		return lineModelAndamento;
+	}
+
+	public void setLineModelAndamento(LineChartModel lineModelAndamento) {
+		this.lineModelAndamento = lineModelAndamento;
+	}
+
+	public boolean isGraficoRendered() {
+		return graficoRendered;
+	}
+
+	public void setGraficoRendered(boolean graficoRendered) {
+		this.graficoRendered = graficoRendered;
 	}
 
 }

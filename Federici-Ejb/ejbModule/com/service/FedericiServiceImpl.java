@@ -265,6 +265,20 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 	}
 
+	public boolean salvaNuovaVet(VeterinariaDTO nuovoIntVeterinario) {
+
+		Veterinaria vet = new Veterinaria();
+		vet = ConverterDtoToEntity.veterinariaDtoToVeterinariaEntity(nuovoIntVeterinario);
+		try {
+			getSession(em).saveOrUpdate(vet);
+			getSession(em).flush();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	public boolean salvaNuovaPesata(PesataDTO pesataDto) {
 
 		Pesata pes = new Pesata();

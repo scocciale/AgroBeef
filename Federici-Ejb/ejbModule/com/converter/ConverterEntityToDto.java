@@ -57,6 +57,15 @@ public class ConverterEntityToDto {
 			List<PesataDTO> list = new ArrayList<>();
 			PesataDTO pes = new PesataDTO();
 
+			// creo on the fly un comparator custom per ordinare la mia lista in
+			// base alle date
+			Collections.sort(anagrafica.getPesatas(), new Comparator<Pesata>() {
+				public int compare(Pesata p1, Pesata p2) {
+					// ordina dalla più vecchia alla più recente
+					return p1.getPesData().compareTo(p2.getPesData());
+				}
+			});
+
 			for (Pesata obj : anagrafica.getPesatas()) {
 				pes = new PesataDTO();
 				pes = pesataEntityToPesataDTO(obj);
@@ -67,15 +76,17 @@ public class ConverterEntityToDto {
 				list.add(pes);
 			}
 
-			// creo on the fly un comparator custom per ordinare la mia lista in
-			// base alle date
-			Collections.sort(list, new Comparator<PesataDTO>() {
-				public int compare(PesataDTO p1, PesataDTO p2) {
-					// ordina dalla più vecchia alla più recente
-					return p1.getPesData().compareTo(p2.getPesData());
-				}
-			});
-
+			// if (list != null && list.size() > 0) {
+			// for (PesataDTO pes1 : list) {
+			// System.out.println("pes.setDeltaPeso: " + pes1.getDeltaPeso()
+			// + " ||||| pes.getPesPeso() -
+			// anagrafica.getPesatas().get((anagrafica.getPesatas().indexOf(obj)
+			// - 1)).getPesPeso(): "
+			// + (pes1.getPesPeso() -
+			// list.get((anagrafica.getPesatas().indexOf(pes1) -
+			// 1)).getPesPeso()));
+			// }
+			// }
 			anagraficaDTO.setPesatas(list);
 
 		}

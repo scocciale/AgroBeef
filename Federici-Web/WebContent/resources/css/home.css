@@ -44,11 +44,11 @@
 }
 
 #home-container .color-verdino {
-	background-color: rgba(46, 204, 113, 1) !important;
+	background-color: #41ABA2 !important;
 }
 
 #home-container  .color_green {
-	background-color: rgba(156, 156, 156, 1) !important;
+	background-color: #7aacac !important;
 }
 
 #home-container  .color_celestino {
@@ -56,28 +56,31 @@
 }
 
 #home-container  .color_red {
-	/* background-color: rgb(229, 57, 53) !important; */
-	background-color: #118113 !important;
+	background-color: #d5654d !important;
 }
 
 #home-container  .color_azzurro {
-	background-color: rgb(30, 63, 136) !important;
+	background-color: #1e3f88 !important;
 }
 
 #home-container  .color_verde_petrolio {
-	background-color: rgb(0, 136, 122) !important;
+	background-color: #6093ac !important;
 }
 
 #home-container  .color_orange {
-	background-color: rgb(248, 167, 36) !important;
+	background-color: #eb9c52 !important;
+}
+
+#home-container  .color_verdino_pesata {
+	background-color: #2ABA67 !important;
 }
 
 #home-container .color_rosso_oscuro {
-	background-color: #8DC63F !important;
+	background-color: #b9ceac !important;
 }
 
 #home-container .color_verde {
-	background-color: rgb(248, 143, 84) !important;
+	background-color: #f88f54 !important;
 }
 
 #home-container .panel-heading .row {

@@ -34,7 +34,6 @@ public class VeterinariaMB extends BaseMB {
 	private boolean flagGemello = false;
 	private String motivoVisita = "";
 	private String anaNumMatricola = "";
-	int indexOfanimale = 0;
 
 	private AnagraficaDTOLazyModel lazyModel;
 	private List<AnagraficaDTO> anagraficaFilteredList;
@@ -46,7 +45,6 @@ public class VeterinariaMB extends BaseMB {
 	public void init() {
 		nuovoIntVeterinario = new VeterinariaDTO();
 		pesataDto = new PesataDTO();
-		indexOfanimale = 0;
 		motivoVisita = null;
 
 		lazyModel = new AnagraficaDTOLazyModel(userMB, federiciService);
@@ -78,7 +76,7 @@ public class VeterinariaMB extends BaseMB {
 			nuovoIntVeterinario.setVetMotivoVisita(motivoVisita);
 			// pesataDto.setPesData(nuovoIntVeterinario.getVetDataVisita());
 			// pesataDto.setPesAnaId(nuovoIntVeterinario.getVetAnaId());
-			boolean saved = federiciService.salvaNuovaVetEPesata(nuovoIntVeterinario, pesataDto);
+			boolean saved = federiciService.salvaNuovaVet(nuovoIntVeterinario);
 			if (saved) {
 				if (nuovoIntVeterinario.getAnagrafica().getVeterinarias() == null) {
 					System.out.println("lista vet a null");
@@ -110,13 +108,14 @@ public class VeterinariaMB extends BaseMB {
 	}
 
 	public void openDialogVet(AnagraficaDTO ana) {
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.execute("PF('dlgNuovoVet').show();");
-		// setIndexOfanimale(indexOfAna);
+
 		nuovoIntVeterinario = new VeterinariaDTO();
 		nuovoIntVeterinario.setAnagrafica(ana);
 		nuovoIntVeterinario.setVetAnaId(ana.getAnaId());
 		nuovoIntVeterinario.setVetDataVisita(new Date());
+
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.execute("PF('dlgNuovoVet').show();");
 	}
 
 	public void checkRazza() {
@@ -190,14 +189,6 @@ public class VeterinariaMB extends BaseMB {
 
 	public void setPesataDto(PesataDTO pesataDto) {
 		this.pesataDto = pesataDto;
-	}
-
-	public int getIndexOfanimale() {
-		return indexOfanimale;
-	}
-
-	public void setIndexOfanimale(int indexOfanimale) {
-		this.indexOfanimale = indexOfanimale;
 	}
 
 	public String getMotivoVisita() {

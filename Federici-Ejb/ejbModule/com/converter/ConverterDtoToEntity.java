@@ -3,6 +3,8 @@ package com.converter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+
 import com.dto.AnagrAccrFiniDTO;
 import com.dto.AnagraficaDTO;
 import com.dto.GruppoMontaDTO;
@@ -110,21 +112,34 @@ public class ConverterDtoToEntity {
 	public static Veterinaria veterinariaDtoToVeterinariaEntity(VeterinariaDTO vet) {
 		Veterinaria vetEntity = new Veterinaria();
 
-		if (vet.getVetAnaId() != 0)
+		if (vet.getVetAnaId() != 0) {
 			vetEntity.setVetAnaId(vet.getVetAnaId());
-		if (vet.getVetDataDiagnosiGrav() != null)
+		}
+		if (vet.getVetDataDiagnosiGrav() != null) {
 			vetEntity.setVetDataDiagnosiGrav(vet.getVetDataDiagnosiGrav());
-		if (vet.getVetDataVisita() != null)
+		}
+		if (vet.getVetDataVisita() != null) {
 			vetEntity.setVetDataVisita(vet.getVetDataVisita());
-		if (vet.getVetEsitoGrav() != null)
+		}
+		if (vet.getVetEsitoGrav() != null) {
 			vetEntity.setVetEsitoGrav(vet.getVetEsitoGrav());
-		if (vet.getVetFarmaciUtilizzati() != null)
+		}
+		if (vet.getVetFarmaciUtilizzati() != null) {
 			vetEntity.setVetFarmaciUtilizzati(vet.getVetFarmaciUtilizzati());
-		if (vet.getVetMotivoVisita() != null)
+		}
+		if (vet.getVetMotivoVisita() != null) {
 			vetEntity.setVetMotivoVisita(vet.getVetMotivoVisita());
-		if (vet.getVetId() != 0)
+		}
+		if (vet.getVetId() != 0) {
 			vetEntity.setVetId(vet.getVetId());
-		System.out.println("convertito vet");
+		}
+		if (vet.getVetCommento() != null) {
+			vetEntity.setVetCommento(vet.getVetCommento());
+		}
+		if (vet.getVetCommento() != null && !vet.getVetCommento().trim().equals("")) {
+			vetEntity.setVetCommento(vet.getVetCommento());
+		}
+
 		return vetEntity;
 	}
 
@@ -306,7 +321,6 @@ public class ConverterDtoToEntity {
 			pes.setPesId(pesDto.getPesId());
 		if (pesDto.getPesPeso() != null)
 			pes.setPesPeso(pesDto.getPesPeso());
-		System.out.println("pesDto.getPesPeso()    " + pesDto.getPesPeso());
 		return pes;
 	}
 
