@@ -1,10 +1,12 @@
 package com.managedBean;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -179,7 +181,7 @@ public class GruppiDiMontaMB extends BaseMB {
 				gmDTO = new GruppoMontaDTO();
 				gmDTO.setAnagrafica(ana);
 				gmDTO.setGmoAnaId(ana.getAnaId());
-				gmDTO.setGmoDataInserimento(new Date());
+				gmDTO.setGmoDataInserimento(Calendar.getInstance(Locale.ITALY).getTime());
 				gmDTO.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
 				gmDTO.getAnagrafica().setAnaFlagDisponibile("0");
 				storicoGruppoMontaAppoggio.getGruppoMontas().add(gmDTO);
@@ -219,7 +221,7 @@ public class GruppiDiMontaMB extends BaseMB {
 					RequestContext.getCurrentInstance().update("");
 					return "toro";
 				} else {
-					gm.setGmoDataUscita(new Date());
+					gm.setGmoDataUscita(Calendar.getInstance(Locale.ITALY).getTime());
 					gm.getAnagrafica().setAnaFlagDisponibile("1");
 					saved = federiciService.updateStoricoGruppoMonta(sgm, sgm.getGruppoMontas().indexOf(gm));
 					if (saved) {
@@ -235,13 +237,13 @@ public class GruppiDiMontaMB extends BaseMB {
 		if (storicoGruppoMontaAppoggio.getGruppoMontas() != null
 				&& storicoGruppoMontaAppoggio.getGruppoMontas().size() > 0) {
 			for (GruppoMontaDTO gm : storicoGruppoMontaAppoggio.getGruppoMontas()) {
-				gm.setGmoDataUscita(new Date());
+				gm.setGmoDataUscita(Calendar.getInstance(Locale.ITALY).getTime());
 				gm.getAnagrafica().setAnaFlagDisponibile("1");
 				gm.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
 				federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
 						storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gm));
 			}
-			storicoGruppoMontaAppoggio.setSgmDataChiusura(new Date());
+			storicoGruppoMontaAppoggio.setSgmDataChiusura(Calendar.getInstance(Locale.ITALY).getTime());
 			storicoGruppoMontaAppoggio.setGruppoMontas(new ArrayList<GruppoMontaDTO>());
 			federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio);
 		}
@@ -252,20 +254,20 @@ public class GruppiDiMontaMB extends BaseMB {
 		if (storicoGruppoMontaAppoggio.getGruppoMontas() != null
 				&& storicoGruppoMontaAppoggio.getGruppoMontas().size() > 0) {
 			for (GruppoMontaDTO gm : storicoGruppoMontaAppoggio.getGruppoMontas()) {
-				gm.setGmoDataUscita(new Date());
+				gm.setGmoDataUscita(Calendar.getInstance(Locale.ITALY).getTime());
 				gm.getAnagrafica().setAnaFlagDisponibile("1");
 				gm.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
 				federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
 						storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gm));
 			}
-			storicoGruppoMontaAppoggio.setSgmDataChiusura(new Date());
+			storicoGruppoMontaAppoggio.setSgmDataChiusura(Calendar.getInstance(Locale.ITALY).getTime());
 			storicoGruppoMontaAppoggio.setGruppoMontas(new ArrayList<GruppoMontaDTO>());
 			federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio);
 		}
 	}
 
 	public String salvaGruppoDiMonta() {
-		Date date = new Date();
+		Date date = Calendar.getInstance(Locale.ITALY).getTime();
 		boolean saved = false;
 		List<GruppoMontaDTO> nuoviGruppiMontaDTOList = new ArrayList<>();
 		boolean toro = false;

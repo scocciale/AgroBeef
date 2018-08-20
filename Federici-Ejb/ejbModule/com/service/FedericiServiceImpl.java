@@ -12,7 +12,6 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -72,7 +71,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	// gmo.gmo_ana_id = ana.ana_id ) AND a.ana_num_matricola LIKE '%{3}%' AND
 	// (a.ana_uscita_causa LIKE '' OR a.ana_uscita_causa IS NULL)";
 
-	final static String animaliDisponibiliQueryWithParams = "SELECT a.ana_id, a.ana_num_matricola, a.ana_num_matricola_madre, a.ana_num_matricola_padre, a.ana_flag_toro, a.ana_sesso, a.ana_data_nascita, a.ana_raz_id, a.ana_razza, a.ana_flag_gemello, a.ana_data_acquisto, a.ana_num_parto, a.ana_difficolta_parto, a.ana_ute_id, a.ana_uscita_causa, a.ana_data_uscita, a.ana_flag_disponibile FROM Anagrafica a WHERE a.ana_ute_id = {0} AND a.ana_flag_disponibile = '1' AND a.ana_num_matricola LIKE '%{1}%' AND (a.ana_uscita_causa LIKE '' OR a.ana_uscita_causa IS NULL)";
+	final static String animaliDisponibiliQueryWithParams = "SELECT a.ana_id, a.ana_num_matricola, a.ana_num_matricola_madre, a.ana_num_matricola_padre, a.ana_flag_toro, a.ana_sesso, a.ana_data_nascita, a.ana_raz_id, a.ana_razza, a.ana_flag_gemello, a.ana_data_acquisto, a.ana_num_parto, a.ana_difficolta_parto, a.ana_ute_id, a.ana_uscita_causa, a.ana_data_uscita, a.ana_flag_disponibile FROM Anagrafica a WHERE a.ana_ute_id = {0} AND a.ana_flag_disponibile = '1' AND UPPER(a.ana_num_matricola) LIKE '%{1}%' AND (a.ana_uscita_causa LIKE '' OR a.ana_uscita_causa IS NULL)";
 
 	final static String countRowInAnagraficaFromUte = "SELECT count(*) FROM Anagrafica a WHERE a.ana_ute_id = {0}";
 
@@ -110,7 +109,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			return true;
 		} catch (Exception e) {
 			logger.info("Errore nel modificare la pwd per l'utente con userId= " + ute.getUteId() + ".");
-			e.getMessage();
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -205,7 +204,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			return true;
 		} catch (Exception e) {
 			logger.info("Impossibile salvare nuovo animale con matricola '" + na.getAnaNumMatricola() + "'.");
-			e.getMessage();
+			e.printStackTrace();
 			return false;
 		}
 
@@ -238,7 +237,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			return true;
 		} catch (Exception e) {
 			logger.info("Impossibile salvare modifiche animale con matricola '" + na.getAnaNumMatricola() + "'.");
-			e.getMessage();
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -327,7 +326,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			// .add(Restrictions.isNull("gmoDataUscita"))
 
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
 			return false;
 		}
 		if (anagraficaEntity == null || anagraficaEntity.size() == 0
@@ -354,7 +353,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			// .add(Restrictions.eq("gmoAnaId",anaId)).setProjection(Projections.max("gmoDataInserimento")).uniqueResult();
 			// .add(Restrictions.isNull("gmoDataUscita"))
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
 			return false;
 		}
 		if (anagraficaEntity == null || anagraficaEntity.size() == 0
@@ -879,7 +878,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			// .replace("{3}", queryParams);
 
 			String query = animaliDisponibiliQueryWithParams.replace("{0}", new Integer(uteRifId).toString())
-					.replace("{1}", queryParams);
+					.replace("{1}", queryParams.toUpperCase());
 
 			List<Anagrafica> list = (List<Anagrafica>) getSession(em).createSQLQuery(query).addEntity(Anagrafica.class)
 					.list();

@@ -1,10 +1,12 @@
 package com.managedBean;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -204,7 +206,7 @@ public class GruppiDiAccrMB extends BaseMB {
 	}
 
 	public String salvaGruppoDiAccr() {
-		Date date = new Date();
+		Date date = Calendar.getInstance(Locale.ITALY).getTime();
 		boolean saved = false;
 		List<AnagrAccrFiniDTO> nuoviGruppiAccrDTOList = new ArrayList<>();
 
@@ -260,13 +262,13 @@ public class GruppiDiAccrMB extends BaseMB {
 		if (storicoGruppoAccrAppoggio.getAnagrAccrFinis() != null
 				&& storicoGruppoAccrAppoggio.getAnagrAccrFinis().size() > 0) {
 			for (AnagrAccrFiniDTO accr : storicoGruppoAccrAppoggio.getAnagrAccrFinis()) {
-				accr.setAafDataUscita(new Date());
+				accr.setAafDataUscita(Calendar.getInstance(Locale.ITALY).getTime());
 				accr.getAnagrafica().setAnaFlagDisponibile("1");
 				accr.setAafSafId(storicoGruppoAccrAppoggio.getSafId());
 				federiciService.updateStoricoAccrFinis(storicoGruppoAccrAppoggio,
 						storicoGruppoAccrAppoggio.getAnagrAccrFinis().indexOf(accr));
 			}
-			storicoGruppoAccrAppoggio.setSafDataFine(new Date());
+			storicoGruppoAccrAppoggio.setSafDataFine(Calendar.getInstance(Locale.ITALY).getTime());
 			storicoGruppoAccrAppoggio.setAnagrAccrFinis(new ArrayList<AnagrAccrFiniDTO>());
 			federiciService.updateStoricoAccrFiniss(storicoGruppoAccrAppoggio);
 		}
@@ -280,7 +282,7 @@ public class GruppiDiAccrMB extends BaseMB {
 		while (iter.hasNext()) {
 			AnagrAccrFiniDTO accr = iter.next();
 			if (accr.getAafId() == agaId) {
-				accr.setAafDataUscita(new Date());
+				accr.setAafDataUscita(Calendar.getInstance(Locale.ITALY).getTime());
 				accr.getAnagrafica().setAnaFlagDisponibile("1");
 				saved = federiciService.updateStoricoAccrFinis(saccrVar, saccrVar.getAnagrAccrFinis().indexOf(accr));
 				if (saved) {
@@ -300,7 +302,7 @@ public class GruppiDiAccrMB extends BaseMB {
 				accrDTO = new AnagrAccrFiniDTO();
 				accrDTO.setAnagrafica(ana);
 				accrDTO.setAafAnaId(ana.getAnaId());
-				accrDTO.setAafDataEntrata(new Date());
+				accrDTO.setAafDataEntrata(Calendar.getInstance(Locale.ITALY).getTime());
 				accrDTO.setAafSafId(storicoGruppoAccrAppoggio.getSafId());
 				accrDTO.getAnagrafica().setAnaFlagDisponibile("0");
 				storicoGruppoAccrAppoggio.getAnagrAccrFinis().add(accrDTO);

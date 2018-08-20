@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -13,7 +14,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -62,7 +62,7 @@ public class PesataAnagraficaMB extends BaseMB {
 
 		nuovaPesata.setAnagrafica(ana);
 		nuovaPesata.setPesAnaId(ana.getAnaId());
-		nuovaPesata.setPesData(new Date());
+		nuovaPesata.setPesData(Calendar.getInstance(Locale.ITALY).getTime());
 
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("PF('dlgNuovoPeso').show();");
@@ -92,7 +92,7 @@ public class PesataAnagraficaMB extends BaseMB {
 
 		if (nuovaPesata != null) {
 
-			if (nuovaPesata.getPesData() == null || nuovaPesata.getPesData().after(new Date())) {
+			if (nuovaPesata.getPesData() == null || nuovaPesata.getPesData().after(Calendar.getInstance(Locale.ITALY).getTime())) {
 				addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "data.pesata.mancante");
 				return;
 			}

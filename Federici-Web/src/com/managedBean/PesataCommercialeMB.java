@@ -148,7 +148,7 @@ public class PesataCommercialeMB extends BaseMB {
 	// gmDTO = new GruppoMontaDTO();
 	// gmDTO.setAnagrafica(ana);
 	// gmDTO.setGmoAnaId(ana.getAnaId());
-	// gmDTO.setGmoDataInserimento(new Date());
+	// gmDTO.setGmoDataInserimento(Calendar.getInstance(Locale.ITALY).getTime());
 	// gmDTO.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
 	// storicoGruppoMontaAppoggio.getGruppoMontas().add(gmDTO);
 	// saved =
@@ -200,7 +200,7 @@ public class PesataCommercialeMB extends BaseMB {
 	// RequestContext.getCurrentInstance().update("");
 	// return "toro";
 	// } else {
-	// gm.setGmoDataUscita(new Date());
+	// gm.setGmoDataUscita(Calendar.getInstance(Locale.ITALY).getTime());
 	// saved = federiciService.updateStoricoGruppoMonta(sgm,
 	// sgm.getGruppoMontas().indexOf(gm));
 	// if (saved) {
@@ -222,7 +222,7 @@ public class PesataCommercialeMB extends BaseMB {
 	// if (storicoGruppoMontaAppoggio.getGruppoMontas() != null
 	// && storicoGruppoMontaAppoggio.getGruppoMontas().size() > 0) {
 	// for (GruppoMontaDTO gm : storicoGruppoMontaAppoggio.getGruppoMontas()) {
-	// gm.setGmoDataUscita(new Date());
+	// gm.setGmoDataUscita(Calendar.getInstance(Locale.ITALY).getTime());
 	// gm.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
 	// federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
 	// storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gm));
@@ -232,7 +232,7 @@ public class PesataCommercialeMB extends BaseMB {
 	// else
 	// animaliDisponibili.getSource().add(gm.getAnagrafica().getAnaNumMatricola());
 	// }
-	// storicoGruppoMontaAppoggio.setSgmDataChiusura(new Date());
+	// storicoGruppoMontaAppoggio.setSgmDataChiusura(Calendar.getInstance(Locale.ITALY).getTime());
 	// storicoGruppoMontaAppoggio.setGruppoMontas(new
 	// ArrayList<GruppoMontaDTO>());
 	// federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio);
@@ -244,7 +244,7 @@ public class PesataCommercialeMB extends BaseMB {
 	// if (storicoGruppoMontaAppoggio.getGruppoMontas() != null
 	// && storicoGruppoMontaAppoggio.getGruppoMontas().size() > 0) {
 	// for (GruppoMontaDTO gm : storicoGruppoMontaAppoggio.getGruppoMontas()) {
-	// gm.setGmoDataUscita(new Date());
+	// gm.setGmoDataUscita(Calendar.getInstance(Locale.ITALY).getTime());
 	// gm.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
 	// federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
 	// storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gm));
@@ -254,7 +254,7 @@ public class PesataCommercialeMB extends BaseMB {
 	// else
 	// animaliDisponibili.getSource().add(gm.getAnagrafica().getAnaNumMatricola());
 	// }
-	// storicoGruppoMontaAppoggio.setSgmDataChiusura(new Date());
+	// storicoGruppoMontaAppoggio.setSgmDataChiusura(Calendar.getInstance(Locale.ITALY).getTime());
 	// storicoGruppoMontaAppoggio.setGruppoMontas(new
 	// ArrayList<GruppoMontaDTO>());
 	// federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio);
@@ -262,7 +262,7 @@ public class PesataCommercialeMB extends BaseMB {
 	// }
 	//
 	// public String salvaGruppoDiMonta() {
-	// Date date = new Date();
+	// Date date = Calendar.getInstance(Locale.ITALY).getTime();
 	// boolean saved = false;
 	//
 	// if (nuovoStoricoGruppoMonta != null) {

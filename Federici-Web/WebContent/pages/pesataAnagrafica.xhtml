@@ -180,10 +180,9 @@
 								<p:outputLabel for="dataPeso" value="#{text['label.data.peso']}"
 									styleClass="left-align"
 									style="font-size: 0.9rem !important;color: #888888;!important" />
-								<p:calendar id="dataPeso"
-									value="#{pesataMB.nuovaPesata.pesData}" locale="it"
+								<p:calendar id="dataPeso" effect="slideDown"
+									value="#{pesataMB.nuovaPesata.pesData}" pattern="dd/MM/yyyy"
 									navigator="true" styleClass="validate">
-									<f:convertDateTime pattern="dd/MM/yyyy" />
 								</p:calendar>
 							</div>
 						</p:column>

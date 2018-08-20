@@ -1,8 +1,10 @@
 package com.managedBean;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -70,7 +72,7 @@ public class VeterinariaMB extends BaseMB {
 				return;
 			}
 			if (nuovoIntVeterinario.getVetDataDiagnosiGrav() != null
-					&& nuovoIntVeterinario.getVetDataDiagnosiGrav().after(new Date())) {
+					&& nuovoIntVeterinario.getVetDataDiagnosiGrav().after(Calendar.getInstance(Locale.ITALY).getTime())) {
 				addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "data.gravidanza.nonvalida");
 				return;
 			}
@@ -113,7 +115,7 @@ public class VeterinariaMB extends BaseMB {
 		nuovoIntVeterinario = new VeterinariaDTO();
 		nuovoIntVeterinario.setAnagrafica(ana);
 		nuovoIntVeterinario.setVetAnaId(ana.getAnaId());
-		nuovoIntVeterinario.setVetDataVisita(new Date());
+		nuovoIntVeterinario.setVetDataVisita(Calendar.getInstance(Locale.ITALY).getTime());
 
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("PF('dlgNuovoVet').show();");
