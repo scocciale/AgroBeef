@@ -34,6 +34,7 @@ public class VeterinariaMB extends BaseMB {
 	private boolean flagGemello = false;
 	private String motivoVisita = "";
 	private String anaNumMatricola = "";
+	private String commentoVeterinario = "";
 
 	private AnagraficaDTOLazyModel lazyModel;
 	private List<AnagraficaDTO> anagraficaFilteredList;
@@ -116,6 +117,15 @@ public class VeterinariaMB extends BaseMB {
 
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("PF('dlgNuovoVet').show();");
+	}
+
+	public void openDialogCommento(VeterinariaDTO vet) {
+		
+		
+		setCommentoVeterinario(vet.getVetCommento());
+
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.execute("PF('commentDialog').show();");
 	}
 
 	public void checkRazza() {
@@ -213,6 +223,14 @@ public class VeterinariaMB extends BaseMB {
 
 	public void setAnagraficaFilteredList(List<AnagraficaDTO> anagraficaFilteredList) {
 		this.anagraficaFilteredList = anagraficaFilteredList;
+	}
+
+	public String getCommentoVeterinario() {
+		return commentoVeterinario;
+	}
+
+	public void setCommentoVeterinario(String commentoVeterinario) {
+		this.commentoVeterinario = commentoVeterinario;
 	}
 
 }

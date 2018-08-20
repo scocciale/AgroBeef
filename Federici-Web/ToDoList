@@ -1,3 +1,5 @@
+																			
+0) + (TUTTO) Segnare campi obbligatori con *	
 
 1) (ANAGRAFICA) controllare che nell inserimento di un nuovo animale le matricole della madre e del padre siano:			+ 	esistenti
 																															+ 	M e F 
@@ -20,9 +22,6 @@
 																															- 	rendere il nome del gruppo creato con il seguente formato: "Gruppo di monta 	     	 PROGRESSIVO"
 																															+ 	correggere query
 
-																															
-0) + (TUTTO) Segnare campi obbligatori con *																									
-
 5) (PESATA COMMERCIALE)	cosa da fare in pesata commerciale: 																+ 	creare interfaccia che mi determina i campi e i valori scritti sul foglio excel con un 																																form tipo anagrafica
 																															+ 	Modificare query per adeguare a uscita valutazione (non piu utilizzabile per gdm e 		gda)
 
@@ -38,7 +37,15 @@
  																															+ bottone salva
  																															+ bottone annulla
 
-9) inserire "ultimo accesso" su utente 																															
+9) inserire "ultimo accesso" su utente
+
+10) creare pagina Pesata Anagrafica																							+ tutta la lista delle anagrafiche 
+																															+ inserire i pesi nelle rowExpansion
+																															+ aggiungere il delta tra i pesi 
+																															+ aggiungere il grafico sui delta
+
+11) modificare Veterinaria per essere coerente con Pesata Anagrafica														+ eliminta la possibilità di aggiunger una pesata all'animale
+																															+ aggiunta del commento nella creazione di un intervento veterinario																																																																										
  
 
 -----------DOING-----------

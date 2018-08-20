@@ -133,9 +133,6 @@ public class ConverterDtoToEntity {
 		if (vet.getVetId() != 0) {
 			vetEntity.setVetId(vet.getVetId());
 		}
-		if (vet.getVetCommento() != null) {
-			vetEntity.setVetCommento(vet.getVetCommento());
-		}
 		if (vet.getVetCommento() != null && !vet.getVetCommento().trim().equals("")) {
 			vetEntity.setVetCommento(vet.getVetCommento());
 		}

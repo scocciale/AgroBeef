@@ -21,12 +21,15 @@
 					<div class="ui-g-12">
 						<p:dataTable id="pesAnagrafica" var="ana" widgetVar="templateWdg"
 							emptyMessage="#{text['label.emptyResult']}"
-							value="#{pesataMB.lazyModel}" paginatorPosition="bottom"
+							rowExpandMode="single" value="#{pesataMB.lazyModel}"
+							paginatorPosition="bottom"
 							filteredValue="#{pesataMB.anagraficaFilteredList}"
 							currentPageReportTemplate="({currentPage} Di {totalPages})"
 							rows="10" paginator="true" dynamic="true" lazy="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15">
+
+							<p:ajax event="rowToggle" listener="#{pesataMB.cleanVars}" />
 
 							<p:column width="2%">
 								<p:rowToggler rendered="#{ana.pesatas.size() gt 0}" />
@@ -84,60 +87,64 @@
 							</p:column>
 
 							<p:rowExpansion id="rowExp">
-								<p:dataTable id="vetForAnagDt" var="pes" value="#{ana.pesatas}"
-									style="width:auto!important; float:left!important; "
-									emptyMessage="#{text['label.emptyResult']}">
+								<p:panelGrid id="panelRow" columns="1">
+									<p:dataTable id="vetForAnagDt" var="pes" value="#{ana.pesatas}"
+										style="width:auto!important; float:left!important; "
+										emptyMessage="#{text['label.emptyResult']}">
 
-									<p:column headerText="#{text['column.header.data.pesata']}"
+										<p:column headerText="#{text['column.header.data.pesata']}"
+											style="text-align: center; font-size:1.3em;" width="10%"
+											sortBy="#{pes.pesData}">
+											<h:outputText value="#{pes.pesData}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+
+										<p:column headerText="#{text['column.header.peso']}"
+											style="text-align: center; font-size:1.3em;" width="10%"
+											sortBy="#{pes.pesPeso}">
+											<h:outputText value="#{pes.pesPeso}" />
+										</p:column>
+
+										<p:column headerText="#{text['column.header.fase.peso']}"
+											style="text-align: center; font-size:1.3em;" width="10%"
+											sortBy="#{pes.pesFase}">
+											<h:outputText value="#{pes.pesFase}" />
+										</p:column>
+
+										<p:column
+											headerText="#{text['column.header.delta.peso.prec']}"
+											style="text-align: center;font-size:1.3em;">
+
+											<h:outputText
+												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}'
+												styleClass="fa fa-caret-up" style="color:green" />
+											<h:outputText value=" #{pes.deltaPeso}" style="color:green"
+												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}' />
+											<h:outputText
+												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq -1}'
+												styleClass="fa fa-caret-down" style="color:red" />
+											<h:outputText value=" #{pes.deltaPeso}" style="color:red"
+												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq -1}' />
+											<h:outputText
+												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 0}'
+												styleClass="fa fa-minus" style="color:grey" />
+											<h:outputText value=" #{pes.deltaPeso}" style="color:grey"
+												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 0}' />
+										</p:column>
+
+									</p:dataTable>
+
+
+									<p:chart type="line" id="chart"
+										model="#{pesataMB.lineModelAndamento}"
+										rendered="#{pesataMB.graficoRendered and ana.pesatas.size() ge 2}" />
+
+
+									<h:outputText rendered="#{ana.pesatas.size() lt 2}"
 										style="text-align: center; font-size:1.3em;" width="10%"
-										sortBy="#{pes.pesData}">
-										<h:outputText value="#{pes.pesData}">
-											<f:convertDateTime pattern="dd/MM/yyyy" />
-										</h:outputText>
-									</p:column>
-
-									<p:column headerText="#{text['column.header.peso']}"
-										style="text-align: center; font-size:1.3em;" width="10%"
-										sortBy="#{pes.pesPeso}">
-										<h:outputText value="#{pes.pesPeso}" />
-									</p:column>
-
-									<p:column headerText="#{text['column.header.fase.peso']}"
-										style="text-align: center; font-size:1.3em;" width="10%"
-										sortBy="#{pes.pesFase}">
-										<h:outputText value="#{pes.pesFase}" />
-									</p:column>
-
-									<p:column headerText="#{text['column.header.delta.peso.prec']}"
-										style="text-align: center;font-size:1.3em;">
-
-										<h:outputText
-											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}'
-											styleClass="fa fa-caret-up" style="color:green" />
-										<h:outputText value=" #{pes.deltaPeso}" style="color:green"
-											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}' />
-										<h:outputText
-											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq -1}'
-											styleClass="fa fa-caret-down" style="color:red" />
-										<h:outputText value=" #{pes.deltaPeso}" style="color:red"
-											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq -1}' />
-										<h:outputText
-											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 0}'
-											styleClass="fa fa-minus" style="color:grey" />
-										<h:outputText value=" #{pes.deltaPeso}" style="color:grey"
-											rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 0}' />
-									</p:column>
-
-								</p:dataTable>
-
-								<p:commandButton id="id3"
-									value="#{text['button.visualizza.grafico']}"
-									actionListener="#{pesataMB.createLineModels(ana)}"
-									styleClass="waves-effect waves-light btn rosso_cdr right-align"
-									update="rowExp" />
-
-								<p:chart type="line" model="#{pesataMB.lineModelAndamento}"
-									rendered="#{pesataMB.graficoRendered}" />
+										value="#{text['message.grafico.non.visibile']}" />
+								</p:panelGrid>
 							</p:rowExpansion>
 
 						</p:dataTable>

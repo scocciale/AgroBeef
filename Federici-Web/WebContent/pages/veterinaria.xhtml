@@ -126,13 +126,25 @@
 										sortBy="#{vet.vetEsitoGrav}">
 										<h:outputText value="#{vet.vetEsitoGrav}" />
 									</p:column>
-									<!-- <p:column headerText="Ultimo peso"
-										style="text-align: center; font-size:1.3em;" width="10%"
-										sortBy="#{ana.pesatas.get(0).pesPeso}">
-										<h:outputText value="#{vet.vetEsitoGrav}">
-											<f:convertNumber pattern="#.##0,00" />
-										</h:outputText>
-									</p:column> -->
+
+									<p:column
+										headerText="#{text['column.header.visualizza.commento']}"
+										style="text-align: center; font-size:1.3em;" width="10%">
+										<p:commandButton rendered="#{vet.vetCommento ne null}"
+											id="readDialog" icon="fa fa-comment-o"
+											actionListener="#{veteMB.openDialogCommento(vet)}"
+											styleClass="waves-effect waves-light btn rosso_cdr"
+											update="contForm:commentDialog" />
+										<p:tooltip for="readDialog"
+											rendered="#{vet.vetCommento ne null}"
+											value="#{text['tooltip.visualizza.commento.vet']}"
+											position="top" />
+
+										<h:outputText
+											value="#{text['tooltip.visualizza.commento.vet.inesistente']}"
+											rendered="#{vet.vetCommento eq null}" />
+
+									</p:column>
 
 								</p:dataTable>
 							</p:rowExpansion>
@@ -288,6 +300,18 @@
 					style="width:auto; float:right;" />
 				<p:tooltip for="salvaAnag" value="#{text['button.salva']}"
 					position="top" />
+			</div>
+		</p:dialog>
+		<p:dialog resizable="false" widgetVar="commentDialog" width="30%"
+			id="commentDialog" closable="true" styleClass="dialogClass"
+			style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
+
+			<div class="row">
+				<p:panelGrid id="gridCommento" styleClass="companyHeaderGrid">
+					<p:row>
+						<h:outputText value="#{veteMB.commentoVeterinario}" />
+					</p:row>
+				</p:panelGrid>
 			</div>
 		</p:dialog>
 	</ui:define>

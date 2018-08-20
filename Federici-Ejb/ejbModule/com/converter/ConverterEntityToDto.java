@@ -172,6 +172,8 @@ public class ConverterEntityToDto {
 			vetDTO.setVetFarmaciUtilizzati(vet.getVetFarmaciUtilizzati());
 		if (vet.getVetMotivoVisita() != null)
 			vetDTO.setVetMotivoVisita(vet.getVetMotivoVisita());
+		if (vet.getVetCommento() != null)
+			vetDTO.setVetCommento(vet.getVetCommento());
 
 		return vetDTO;
 	}

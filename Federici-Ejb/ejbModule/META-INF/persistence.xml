@@ -30,7 +30,7 @@
 
 			<!-- per sviluppare in locale utilizzare questi parametri -->
 			<property name="hibernate.default_schema" value="federicidb" />
-			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.show_sql" value="false" />
 
 
 			<property name="hibernate.connection.characterEncoding"

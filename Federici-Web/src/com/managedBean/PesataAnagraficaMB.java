@@ -1,6 +1,7 @@
 package com.managedBean;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +13,11 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.DateAxis;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
@@ -26,6 +30,8 @@ import com.service.FedericiService;
 public class PesataAnagraficaMB extends BaseMB {
 
 	private static final long serialVersionUID = 1L;
+
+	private final int margineGrafico = 10;
 
 	@ManagedProperty(value = "#{userMB}")
 	private UserMB userMB;
@@ -120,13 +126,42 @@ public class PesataAnagraficaMB extends BaseMB {
 
 	public void createLineModels(AnagraficaDTO ana) {
 		lineModelAndamento = initLinearModel(ana);
-		lineModelAndamento.setTitle("Linear Chart");
-		lineModelAndamento.setLegendPosition("e");
+		lineModelAndamento.setTitle("Andamento pesate");
+		lineModelAndamento.setAnimate(true);
+
+		Double min = new Double(ana.getPesatas().get(0).getPesPeso());
+		Double max = new Double(ana.getPesatas().get(0).getPesPeso());
+		for (PesataDTO pes : ana.getPesatas()) {
+			if (pes.getPesPeso() < min) {
+				min = new Double(pes.getPesPeso());
+			} else if (pes.getPesPeso() > max) {
+				max = new Double(pes.getPesPeso());
+			}
+		}
 		Axis yAxis = lineModelAndamento.getAxis(AxisType.Y);
-		yAxis.setMin(ana.getPesatas().get(0).getPesData());
-		yAxis.setMax(ana.getPesatas().get((ana.getPesatas().size()) - 1).getPesData());
+		yAxis.setMin(min - ((min / 100) * margineGrafico));
+		yAxis.setMax(calcoloMaxY(max + ((max / 100) * margineGrafico)));
+		yAxis.setTickFormat("%#.2f");
+
+		Calendar margineDataMin = Calendar.getInstance();
+		Calendar margineDataMax = Calendar.getInstance();
+		margineDataMin.setTime(new Date((ana.getPesatas().get(0).getPesData().getTime()) + 10000));
+		margineDataMax.setTime(
+				new Date((ana.getPesatas().get((ana.getPesatas().size()) - 1).getPesData().getTime()) + 10000));
+		margineDataMin.add(Calendar.DATE, -(margineGrafico));
+		margineDataMax.add(Calendar.DATE, margineGrafico);
+
+		DateAxis xAxis = new DateAxis();
+		xAxis.setTickAngle(-50);
+		xAxis.setMin(margineDataMin.getTimeInMillis());
+		xAxis.setMax(margineDataMax.getTimeInMillis());
+		xAxis.setTickFormat("%#d/%#m/%y");
+
+		lineModelAndamento.getAxes().put(AxisType.X, xAxis);
+		lineModelAndamento.getAxes().put(AxisType.Y, yAxis);
 
 		graficoRendered = true;
+
 	}
 
 	private LineChartModel initLinearModel(AnagraficaDTO ana) {
@@ -136,12 +171,32 @@ public class PesataAnagraficaMB extends BaseMB {
 		series.setLabel("Andamento pesate");
 
 		for (PesataDTO pes : ana.getPesatas()) {
-			series.set(pes.getPesData(), pes.getPesPeso());
+			series.set(pes.getPesData().getTime(), pes.getPesPeso());
 		}
 
 		model.addSeries(series);
 
 		return model;
+	}
+
+	// questo metodo arrotonda il massimo alla cifra tonda piu vicina
+	public Double calcoloMaxY(Double max) {
+		String y = new Long(max.longValue()).toString();
+		char[] primoNum = { y.charAt(0) };
+		Integer primaCifra = new Integer(new String(primoNum));
+		primaCifra++;
+		char[] cifreSuccessive = y.substring(1).toCharArray();
+		for (int i = 0; i < cifreSuccessive.length; i++)
+			cifreSuccessive[i] = '0';
+		String ultimeCifre = new String(cifreSuccessive);
+		Double valY = new Double(primaCifra.toString().concat(ultimeCifre.toString()));
+		return valY;
+	}
+
+	public void cleanVars(ToggleEvent event) {
+
+		createLineModels((AnagraficaDTO) event.getData());
+
 	}
 
 	public AnagraficaDTOLazyModel getLazyModel() {
