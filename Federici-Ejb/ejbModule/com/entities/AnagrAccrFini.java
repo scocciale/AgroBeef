@@ -3,14 +3,23 @@ package com.entities;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.NamedQuery;
 
 /**
  * The persistent class for the anagr_accr_finis database table.
  * 
  */
 @Entity
-@Table(name = "anagr_accr_finis")
 @NamedQuery(name = "AnagrAccrFini.findAll", query = "SELECT a FROM AnagrAccrFini a")
 public class AnagrAccrFini implements Serializable {
 	private static final long serialVersionUID = 1L;

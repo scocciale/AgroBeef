@@ -29,6 +29,7 @@ public class Anagrafica implements Serializable {
 	@Column(name = "ana_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int anaId;
+	
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "ana_data_acquisto")

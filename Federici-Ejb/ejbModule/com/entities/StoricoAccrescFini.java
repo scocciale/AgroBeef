@@ -14,7 +14,7 @@ import java.util.List;
 @NamedQuery(name = "StoricoAccrescFini.findAll", query = "SELECT s FROM StoricoAccrescFini s")
 public class StoricoAccrescFini implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+ 
 	@Id
 	@Column(name = "saf_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
