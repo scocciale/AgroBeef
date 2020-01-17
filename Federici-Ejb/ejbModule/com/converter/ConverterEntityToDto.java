@@ -72,8 +72,7 @@ public class ConverterEntityToDto {
 				pes = new PesataDTO();
 				pes = pesataEntityToPesataDTO(obj);
 				if (anagrafica.getPesatas().indexOf(obj) > 0) {
-					pes.setDeltaPeso(pes.getPesPeso()
-							- anagrafica.getPesatas().get((anagrafica.getPesatas().indexOf(obj) - 1)).getPesPeso());
+					pes.setDeltaPeso(pes.getPesPeso() - anagrafica.getPesatas().get((anagrafica.getPesatas().indexOf(obj) - 1)).getPesPeso());
 				}
 				list.add(pes);
 			}
@@ -370,4 +369,11 @@ public class ConverterEntityToDto {
 		return r;
 	}
 
+	public static List<AnagraficaDTO> anagraficaListEntityToAnagraficaListDto(List<Anagrafica> anaList) {
+		List<AnagraficaDTO> dtoList = new ArrayList<>();
+		for (Anagrafica anagrafica : anaList) {
+			dtoList.add(anagraficaEntityToAngraficaDTO(anagrafica));
+		}
+		return dtoList;
+	}
 }

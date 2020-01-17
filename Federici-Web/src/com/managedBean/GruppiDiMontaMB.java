@@ -39,9 +39,12 @@ public class GruppiDiMontaMB extends BaseMB {
 	private StoricoGruppiMontaDTO storicoGruppoMontaAppoggio;
 
 	private List<AnagraficaDTO> animaliDisponibiliFinal;
+	private List<AnagraficaDTO> toriDisponibiliFinal;
+	private List<String> toriDisponibiliFinalString;
 	private Set<AnagraficaDTO> animaliAggiuntiView;
 	private String animaliAggiunti;
 	private String valueAna;
+	private String valueAnaToro;
 	private Set<AnagraficaDTO> animaliEditAggiuntiView;
 	private String animaleRemover;
 	private String animaleEditRemover;
@@ -60,6 +63,7 @@ public class GruppiDiMontaMB extends BaseMB {
 	public void init() {
 
 		gruppiDiMontaList = new ArrayList<>();
+		toriDisponibiliFinal = new ArrayList<>();
 		nuovoStoricoGruppoMonta = new StoricoGruppiMontaDTO();
 		storicoGruppoMontaAppoggio = new StoricoGruppiMontaDTO();
 		animaleRemover = new String();
@@ -75,15 +79,20 @@ public class GruppiDiMontaMB extends BaseMB {
 		animaliEditAggiuntiView = new LinkedHashSet<>();
 
 		gruppiDiMontaList = federiciService.getAllGruppiDiMontaOpen(userMB.getUtente().getUteRifId());
+		toriDisponibiliFinal = federiciService.getAllToriDisponibili(userMB.getUtente().getUteRifId());
+
+		toriDisponibiliFinalString = new ArrayList<>();
+		for (AnagraficaDTO toro : toriDisponibiliFinal) {
+			toriDisponibiliFinalString.add(toro.getAnaNumMatricola());
+		}
+
 	}
 
 	public List<String> findFromParms(String valParam) {
 		List<String> listaStringAnimali = new ArrayList<>();
-		animaliDisponibiliFinal = federiciService.getAllMatricoleDisponibili(userMB.getUtente().getUteRifId(),
-				valParam);
+		animaliDisponibiliFinal = federiciService.getAllMatricoleDisponibili(userMB.getUtente().getUteRifId(), valParam);
 		for (AnagraficaDTO anagraficaDTO : animaliDisponibiliFinal) {
-			listaStringAnimali.add((anagraficaDTO.getAnaFlagToro() == 1)
-					? anagraficaDTO.getAnaNumMatricola().concat(" *") : anagraficaDTO.getAnaNumMatricola());
+			listaStringAnimali.add((anagraficaDTO.getAnaFlagToro() == 1) ? anagraficaDTO.getAnaNumMatricola().concat(" *") : anagraficaDTO.getAnaNumMatricola());
 		}
 
 		return listaStringAnimali;
@@ -185,8 +194,7 @@ public class GruppiDiMontaMB extends BaseMB {
 				gmDTO.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
 				gmDTO.getAnagrafica().setAnaFlagDisponibile("0");
 				storicoGruppoMontaAppoggio.getGruppoMontas().add(gmDTO);
-				saved = federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
-						storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gmDTO));
+				saved = federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio, storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gmDTO));
 			}
 		} else {
 			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "nessun.animale.selezionato");
@@ -214,8 +222,7 @@ public class GruppiDiMontaMB extends BaseMB {
 		while (iter.hasNext()) {
 			GruppoMontaDTO gm = iter.next();
 			if (gm.getGmoId() == gmId) {
-				if (gm.getAnagrafica().getAnaFlagToro() == 1
-						&& gm.getAnagrafica().getAnaSesso().equalsIgnoreCase("M")) {
+				if (gm.getAnagrafica().getAnaFlagToro() == 1 && gm.getAnagrafica().getAnaSesso().equalsIgnoreCase("M")) {
 					// eliminazione toro, quindi chiusura gruppo con dialog
 					showDialogFromName("dlgEliminaToro");
 					RequestContext.getCurrentInstance().update("");
@@ -234,14 +241,12 @@ public class GruppiDiMontaMB extends BaseMB {
 	}
 
 	public void chiusuraGruppoMonta() {
-		if (storicoGruppoMontaAppoggio.getGruppoMontas() != null
-				&& storicoGruppoMontaAppoggio.getGruppoMontas().size() > 0) {
+		if (storicoGruppoMontaAppoggio.getGruppoMontas() != null && storicoGruppoMontaAppoggio.getGruppoMontas().size() > 0) {
 			for (GruppoMontaDTO gm : storicoGruppoMontaAppoggio.getGruppoMontas()) {
 				gm.setGmoDataUscita(Calendar.getInstance(Locale.ITALY).getTime());
 				gm.getAnagrafica().setAnaFlagDisponibile("1");
 				gm.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
-				federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
-						storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gm));
+				federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio, storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gm));
 			}
 			storicoGruppoMontaAppoggio.setSgmDataChiusura(Calendar.getInstance(Locale.ITALY).getTime());
 			storicoGruppoMontaAppoggio.setGruppoMontas(new ArrayList<GruppoMontaDTO>());
@@ -251,14 +256,12 @@ public class GruppiDiMontaMB extends BaseMB {
 
 	public void chiusuraGruppoMonta(StoricoGruppiMontaDTO sgma) {
 		storicoGruppoMontaAppoggio = sgma;
-		if (storicoGruppoMontaAppoggio.getGruppoMontas() != null
-				&& storicoGruppoMontaAppoggio.getGruppoMontas().size() > 0) {
+		if (storicoGruppoMontaAppoggio.getGruppoMontas() != null && storicoGruppoMontaAppoggio.getGruppoMontas().size() > 0) {
 			for (GruppoMontaDTO gm : storicoGruppoMontaAppoggio.getGruppoMontas()) {
 				gm.setGmoDataUscita(Calendar.getInstance(Locale.ITALY).getTime());
 				gm.getAnagrafica().setAnaFlagDisponibile("1");
 				gm.setGmoSgmId(storicoGruppoMontaAppoggio.getSgmId());
-				federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio,
-						storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gm));
+				federiciService.updateStoricoGruppoMonta(storicoGruppoMontaAppoggio, storicoGruppoMontaAppoggio.getGruppoMontas().indexOf(gm));
 			}
 			storicoGruppoMontaAppoggio.setSgmDataChiusura(Calendar.getInstance(Locale.ITALY).getTime());
 			storicoGruppoMontaAppoggio.setGruppoMontas(new ArrayList<GruppoMontaDTO>());
@@ -273,8 +276,7 @@ public class GruppiDiMontaMB extends BaseMB {
 		boolean toro = false;
 		if (nuovoStoricoGruppoMonta != null) {
 			// è giusto che non è possibile creare gruppi in date future ???
-			if (nuovoStoricoGruppoMonta.getSgmDataApertura().before(date)
-					|| nuovoStoricoGruppoMonta.getSgmDataApertura().equals(date)) {
+			if (nuovoStoricoGruppoMonta.getSgmDataApertura().before(date) || nuovoStoricoGruppoMonta.getSgmDataApertura().equals(date)) {
 				if (animaliAggiuntiView != null && animaliAggiuntiView.size() > 0) {
 					for (AnagraficaDTO ana : animaliAggiuntiView) {
 						GruppoMontaDTO gmDTO;
@@ -429,5 +431,29 @@ public class GruppiDiMontaMB extends BaseMB {
 
 	public void setAnimaleEditRemover(String animaleEditRemover) {
 		this.animaleEditRemover = animaleEditRemover;
+	}
+
+	public String getValueAnaToro() {
+		return valueAnaToro;
+	}
+
+	public void setValueAnaToro(String valueAnaToro) {
+		this.valueAnaToro = valueAnaToro;
+	}
+
+	public List<AnagraficaDTO> getToriDisponibiliFinal() {
+		return toriDisponibiliFinal;
+	}
+
+	public void setToriDisponibiliFinal(List<AnagraficaDTO> toriDisponibiliFinal) {
+		this.toriDisponibiliFinal = toriDisponibiliFinal;
+	}
+
+	public List<String> getToriDisponibiliFinalString() {
+		return toriDisponibiliFinalString;
+	}
+
+	public void setToriDisponibiliFinalString(List<String> toriDisponibiliFinalString) {
+		this.toriDisponibiliFinalString = toriDisponibiliFinalString;
 	}
 }

@@ -45,8 +45,31 @@
 																															+ aggiungere il grafico sui delta
 
 11) modificare Veterinaria per essere coerente con Pesata Anagrafica														+ eliminta la possibilità di aggiunger una pesata all'animale
-																															+ aggiunta del commento nella creazione di un intervento veterinario																																																																										
- 
+																															+ aggiunta del commento nella creazione di un intervento veterinario	
+																															
+-----------EVOLUZIONI 5/12/19-----------	
+
+1. Creazione utenze:																										+ L + S: Saira, Bogdan
+																															+ L Carmela, Anna, Francesca
+																															
+2. Backup dati ogni 7 giorni (domenica)																															
+												
+3. Aggiunta voce “Allarmi” nel menù laterale
+
+4. Modifica del numero di righe tabelle 																					- non più 5, 10, 15 ma 10, 15, 30
+																																																																																							
+5. Anagrafica:																												- Aggiunta campo "Età" vicino a "Data di nascita" calcolandolo in mesi e arrotondarlo per difetto
+	 																														- All’aggiunta di una nuova matricola aggiungere parto alla madre (se presente in anagrafica)
+																															- Aggiunta possibilità di estrarre in PDF
+																															- Rendere modificabili i campi: Data nascita, Sesso, Razza
+																															- Rendere filtrabile, e ordinabile il campo Razza
+																															- Aggiungere campo “Gruppo appartenenza” dove viene mostrato il nome del gruppo di finiss/accr a cui appartiene
+																															- rendere filtrabile e ordinabile campo "Gruppo appartenenza"
+																															
+6. (NUOVO) Sezione Interparto:																								- Creare nuova pagina "Interparto" dove è possibile ricercare per razza e/o per matricola (autocomplete) 
+																															- Intabellare con campi: Matricola, Data nascita, Data ultimo parto, Interparto (differenza in mesi tra Data ultimo parto e data parto precedente)																														
+																															
+																															
 
 -----------DOING-----------
 
@@ -67,4 +90,36 @@
  																															- creare update sql da lanciare per aggiornare il flg ogni volta che ci sta un rilascio
  																															
 
- 
+
+
+
+
+
+																															
+
+
+
+
+
+
+
+
+7. Sezione Veterinaria:
+7.1. Aggiungere delta del peso nella tabella principale es. +50 kg; - 40 kg ( il delta del peso
+viene calcolato con la differenza tra il peso attuale e quello precedente )
+7.2. Indicare in Rosso peso superiore a 700 kg per i maschi e 500 per le femmine
+
+8. Sezione Allarmi:
+8.1. Modificare Allarme 3 da 400 giorni a 480
+
+9. Sezione Gruppi di monta:
+9.1. Modificare inserimento delle matricole:
+
+• Per le femmine inserire almeno 4 caratteri e fare ricerca per trovarle e
+mostrare menu a tendina
+• Per i tori fare menù a tendina disponibile fin dall'inizio
+
+9.2. Rendere modificabile il nome dei gruppi creati
+
+10. Sezione Gruppi di Accr./Finiss:
+10.1. Rendere modificabile il nome dei gruppi creati

@@ -108,4 +108,6 @@ public interface FedericiService {
 	public int countAllAnagraficaFiltered(int uteRifId, Map<String, Object> filters);
 
 	public boolean updateLastAccess(UtenteDTO utente);
+
+	public List<AnagraficaDTO> getAllToriDisponibili(int uteRifId);
 }
