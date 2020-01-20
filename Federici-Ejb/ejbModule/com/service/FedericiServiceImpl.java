@@ -73,6 +73,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 	final static String animaliDisponibiliQueryWithParams = "SELECT a.ana_id, a.ana_num_matricola, a.ana_num_matricola_madre, a.ana_num_matricola_padre, a.ana_flag_toro, a.ana_sesso, a.ana_data_nascita, a.ana_raz_id, a.ana_razza, a.ana_flag_gemello, a.ana_data_acquisto, a.ana_num_parto, a.ana_difficolta_parto, a.ana_ute_id, a.ana_uscita_causa, a.ana_data_uscita, a.ana_flag_disponibile FROM Anagrafica a WHERE a.ana_ute_id = {0} AND a.ana_flag_disponibile = '1' AND UPPER(a.ana_num_matricola) LIKE '%{1}%' AND (a.ana_uscita_causa LIKE '' OR a.ana_uscita_causa IS NULL)";
 
+	final static String animaliDisponibiliFemaleQueryWithParams = "SELECT a.ana_id, a.ana_num_matricola, a.ana_num_matricola_madre, a.ana_num_matricola_padre, a.ana_flag_toro, a.ana_sesso, a.ana_data_nascita, a.ana_raz_id, a.ana_razza, a.ana_flag_gemello, a.ana_data_acquisto, a.ana_num_parto, a.ana_difficolta_parto, a.ana_ute_id, a.ana_uscita_causa, a.ana_data_uscita, a.ana_flag_disponibile FROM Anagrafica a WHERE a.ana_ute_id = {0} AND a.ana_flag_disponibile = '1' AND a.ana_sesso = 'F' AND UPPER(a.ana_num_matricola) LIKE '%{1}%' AND (a.ana_uscita_causa LIKE '' OR a.ana_uscita_causa IS NULL)";
+
 	final static String countRowInAnagraficaFromUte = "SELECT count(*) FROM Anagrafica a WHERE a.ana_ute_id = {0}";
 
 	final static String causaUscita = "Macellazione";
@@ -866,6 +868,28 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<AnagraficaDTO> getAllMatricoleDisponibiliFemale(int uteRifId, String queryParams) {
+		List<AnagraficaDTO> listaAnimaliDisp = new ArrayList<>();
+		try {
+
+			String query = animaliDisponibiliFemaleQueryWithParams.replace("{0}", new Integer(uteRifId).toString()).replace("{1}", queryParams.toUpperCase());
+
+			List<Anagrafica> list = (List<Anagrafica>) getSession(em).createSQLQuery(query).addEntity(Anagrafica.class).list();
+
+			AnagraficaDTO dto;
+			for (Anagrafica anagrafica : list) {
+				dto = new AnagraficaDTO();
+				dto = ConverterEntityToDto.anagraficaEntityToAngraficaDTO(anagrafica);
+				listaAnimaliDisp.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listaAnimaliDisp;
+
+	}
+
 	public BigInteger countAllAnagrafica(int uteRifId) {
 
 		String query = countRowInAnagraficaFromUte.replace("{0}", new Integer(uteRifId).toString());
@@ -960,7 +984,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	public List<AnagraficaDTO> getAllToriDisponibili(int uteRifId) {
 
 		Criteria crit = getSession(em).createCriteria(Anagrafica.class);
-		crit.add(Restrictions.eq("anaUteId", uteRifId)).add(Restrictions.eq("anaSesso", "m").ignoreCase()).add(Restrictions.eq("anaFlagDisponibile", "1"));
+		crit.add(Restrictions.eq("anaUteId", uteRifId)).add(Restrictions.eq("anaSesso", "M")).add(Restrictions.eq("anaFlagDisponibile", "1"));
 		return ConverterEntityToDto.anagraficaListEntityToAnagraficaListDto((List<Anagrafica>) crit.list());
 
 	}

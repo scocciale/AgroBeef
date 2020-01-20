@@ -99,6 +99,8 @@ public interface FedericiService {
 	// public List<AnagraficaDTO> getAllAnimaliDisponibili(int uteId);
 
 	public List<AnagraficaDTO> getAllMatricoleDisponibili(int uteRifId, String queryParams);
+	
+	public List<AnagraficaDTO> getAllMatricoleDisponibiliFemale(int uteRifId, String queryParams);
 
 	public BigInteger countAllAnagrafica(int uteRifId);
 

@@ -49,6 +49,8 @@ public class GruppiDiMontaMB extends BaseMB {
 	private String animaleRemover;
 	private String animaleEditRemover;
 
+	private boolean toroAdded;
+	
 	// private DualListModel<String> animaliDisponibili;
 	// private List<String> animaliSource;
 	// private List<String> animaliTarget;
@@ -77,6 +79,7 @@ public class GruppiDiMontaMB extends BaseMB {
 		animaliAggiunti = "";
 		valueAna = "";
 		animaliEditAggiuntiView = new LinkedHashSet<>();
+		toroAdded = false;
 
 		gruppiDiMontaList = federiciService.getAllGruppiDiMontaOpen(userMB.getUtente().getUteRifId());
 		toriDisponibiliFinal = federiciService.getAllToriDisponibili(userMB.getUtente().getUteRifId());
@@ -90,7 +93,7 @@ public class GruppiDiMontaMB extends BaseMB {
 
 	public List<String> findFromParms(String valParam) {
 		List<String> listaStringAnimali = new ArrayList<>();
-		animaliDisponibiliFinal = federiciService.getAllMatricoleDisponibili(userMB.getUtente().getUteRifId(), valParam);
+		animaliDisponibiliFinal = federiciService.getAllMatricoleDisponibiliFemale(userMB.getUtente().getUteRifId(), valParam);
 		for (AnagraficaDTO anagraficaDTO : animaliDisponibiliFinal) {
 			listaStringAnimali.add((anagraficaDTO.getAnaFlagToro() == 1) ? anagraficaDTO.getAnaNumMatricola().concat(" *") : anagraficaDTO.getAnaNumMatricola());
 		}
@@ -114,14 +117,18 @@ public class GruppiDiMontaMB extends BaseMB {
 
 	public void addToGruppoDiMonta() {
 		int quantitaAnimali = animaliAggiuntiView.size();
-		if (valueAna.contains(" *"))
-			valueAna = valueAna.replace(" *", "");
+//		if (valueAna.contains(" *"))
+//			valueAna = valueAna.replace(" *", "");
 		for (AnagraficaDTO a : animaliDisponibiliFinal) {
 			if (a.getAnaNumMatricola().equals(valueAna) && !animaliAggiunti.contains(valueAna)) {
 				animaliAggiuntiView.add(a);
 				animaliAggiunti = animaliAggiunti.concat(valueAna);
+				if (a.getAnaSesso().equals("M")) {
+					setToroAdded(true);
+				}
 			}
 		}
+		System.out.println("sasasasasasasass");
 		if (animaliAggiuntiView.size() == quantitaAnimali)
 			showDialogFromName("dlgAnimaleAddedYet");
 	}
@@ -455,5 +462,13 @@ public class GruppiDiMontaMB extends BaseMB {
 
 	public void setToriDisponibiliFinalString(List<String> toriDisponibiliFinalString) {
 		this.toriDisponibiliFinalString = toriDisponibiliFinalString;
+	}
+
+	public boolean isToroAdded() {
+		return toroAdded;
+	}
+
+	public void setToroAdded(boolean toroAdded) {
+		this.toroAdded = toroAdded;
 	}
 }

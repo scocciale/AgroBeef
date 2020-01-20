@@ -49,40 +49,41 @@
 					</div>
 					<div class="ui-g-12">
 						<div class="input-field">
-							<p:autoComplete id="acAnimali" queryDelay="1000"
-								onkeypress="if (event.keyCode == 13) return false;"
-								completeMethod="#{gdmMB.findFromParms}"
-								value="#{gdmMB.valueAna}">
-								<p:ajax
-									update="showListAddedAnimal contForm:dlgAnimaleAddedYet rimuoviAnimale"
-									event="itemSelect" listener="#{gdmMB.addToGruppoDiMonta()}" />
-							</p:autoComplete>
+							<div class="row">
+								<div class="ui-g-8">
+									<p:autoComplete id="acAnimali" queryDelay="1000"
+										onkeypress="if (event.keyCode == 13) return false;"
+										completeMethod="#{gdmMB.findFromParms}"
+										value="#{gdmMB.valueAna}">
+										<p:ajax
+											update="showListAddedAnimal contForm:dlgAnimaleAddedYet rimuoviAnimale"
+											event="itemSelect" listener="#{gdmMB.addToGruppoDiMonta()}" />
+									</p:autoComplete>
 
-
-							<label class="left-align" for="toriSom"><h:outputText
-									value="#{text['label.tori']}" /></label>
-							<p:selectOneMenu id="toriSom" widgetVar="toroGdm"
-								value="#{gdmMB.valueAna}"
-								style="width:12px;display: block!important;margin-left: auto !important;margin-right: auto !important;">
-								<f:selectItem itemLabel="#{text['label.selezione.toro']}"
-									itemValue="" />
-								<f:selectItems value="#{gdmMB.toriDisponibiliFinalString}" />
-								<p:ajax
-									update="showListAddedAnimal contForm:dlgAnimaleAddedYet rimuoviAnimale"
-									event="itemSelect" listener="#{gdmMB.addToGruppoDiMonta()}" />
-							</p:selectOneMenu>
-
-
-							<p:outputLabel value="#{text['label.animali.disp']}"
-								styleClass="left-align" for="acAnimali"
-								style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
-							<p:selectOneListbox id="showListAddedAnimal"
-								value="#{gdmMB.animaleRemover}"
-								styleClass="customSelectOneListbox">
-								<f:selectItems itemLabel="#{animale.anaNumMatricola}"
-									itemValue="#{animale.anaNumMatricola}"
-									value="#{gdmMB.animaliAggiuntiView}" var="animale" />
-							</p:selectOneListbox>
+									<p:outputLabel value="#{text['label.animali.disp']}"
+										styleClass="left-align" for="acAnimali"
+										style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
+									<p:selectOneListbox id="showListAddedAnimal"
+										value="#{gdmMB.animaleRemover}"
+										styleClass="customSelectOneListbox">
+										<f:selectItems itemLabel="#{animale.anaNumMatricola}"
+											itemValue="#{animale.anaNumMatricola}"
+											value="#{gdmMB.animaliAggiuntiView}" var="animale" />
+									</p:selectOneListbox>
+								</div>
+								<div class="ui-g-1"></div>
+								<div class="ui-g-3">
+									<p:selectOneMenu id="toriSom" widgetVar="toroGdm"
+										disabled="#{gdmMB.toroAdded}" value="#{gdmMB.valueAna}">
+										<f:selectItem itemLabel="#{text['label.selezione.toro']}"
+											itemValue="" />
+										<f:selectItems value="#{gdmMB.toriDisponibiliFinalString}" />
+										<p:ajax
+											update="showListAddedAnimal contForm:dlgAnimaleAddedYet rimuoviAnimale"
+											event="itemSelect" listener="#{gdmMB.addToGruppoDiMonta()}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
 						</div>
 						<p:outputLabel value="#{text['mandatory']}: #{text['label.toro']}"
 							styleClass="left-align"
