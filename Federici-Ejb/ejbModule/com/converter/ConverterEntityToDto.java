@@ -336,8 +336,10 @@ public class ConverterEntityToDto {
 			dto.setSgmDataApertura(sgdm.getSgmDataApertura());
 		if (sgdm.getSgmDataChiusura() != null)
 			dto.setSgmDataChiusura(sgdm.getSgmDataChiusura());
-		if (sgdm.getSgmNome() != null)
+		if (sgdm.getSgmNome() != null) {
 			dto.setSgmNome(sgdm.getSgmNome());
+			dto.setNomeDuplicato(sgdm.getSgmNome());
+		}
 		if (sgdm.getSgmUteId() != 0)
 			dto.setSgmUteId(sgdm.getSgmUteId());
 		if (sgdm.getSgmId() != 0)

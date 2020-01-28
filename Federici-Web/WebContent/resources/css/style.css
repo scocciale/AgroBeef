@@ -393,6 +393,14 @@ a.dropdown-button:hover {
 	width: 25%;
 }
 
+.width-40 {
+    width: 40%;
+}
+
+.width-50 {
+	width: 50%;
+}
+
 .width-100 {
 	width: 100px;
 }
@@ -1014,4 +1022,9 @@ a.ui-state-default.ui-state-highlight.ui-state-active {
 .ui-selectlistbox-item.ui-corner-all.ui-state-hover {
     background: #4CA79A !important;
     box-shadow: none !important;
+}
+
+.selected-animali{
+    background-color: #dfe6e9 !important;
+    opacity: 0.5;
 }

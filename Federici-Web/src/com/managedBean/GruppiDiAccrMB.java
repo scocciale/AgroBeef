@@ -230,7 +230,7 @@ public class GruppiDiAccrMB extends BaseMB {
 
 					}
 					nuovoStoricoGruppoAccr.setAnagrAccrFinis(nuoviGruppiAccrDTOList);
-					nuovoStoricoGruppoAccr.setSafUteId(userMB.getUtente().getUteId());
+					nuovoStoricoGruppoAccr.setSafUteId(userMB.getUtente().getUteRifId());
 					saved = federiciService.saveNuovoGruppoAccrescimentoEfinissaggio(nuovoStoricoGruppoAccr);
 				} else {
 					addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "nessun.animale.selezionato");

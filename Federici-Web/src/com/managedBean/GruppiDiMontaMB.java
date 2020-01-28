@@ -50,7 +50,7 @@ public class GruppiDiMontaMB extends BaseMB {
 	private String animaleEditRemover;
 
 	private boolean toroAdded;
-	
+
 	// private DualListModel<String> animaliDisponibili;
 	// private List<String> animaliSource;
 	// private List<String> animaliTarget;
@@ -78,6 +78,7 @@ public class GruppiDiMontaMB extends BaseMB {
 		animaliAggiuntiView = new LinkedHashSet<>();
 		animaliAggiunti = "";
 		valueAna = "";
+		valueAnaToro = "";
 		animaliEditAggiuntiView = new LinkedHashSet<>();
 		toroAdded = false;
 
@@ -102,35 +103,48 @@ public class GruppiDiMontaMB extends BaseMB {
 	}
 
 	public void addToEditGruppoDiMonta() {
-		int quantitaAnimali = animaliEditAggiuntiView.size();
+//		int quantitaAnimali = animaliEditAggiuntiView.size();
+		boolean added = false;
 		if (valueAna.contains(" *"))
 			valueAna = valueAna.replace(" *", "");
 		for (AnagraficaDTO a : animaliDisponibiliFinal) {
 			if (a.getAnaNumMatricola().equals(valueAna) && !animaliAggiunti.contains(valueAna)) {
 				animaliEditAggiuntiView.add(a);
+				added = true;
 				animaliAggiunti = animaliAggiunti.concat(valueAna);
 			}
 		}
-		if (animaliEditAggiuntiView.size() == quantitaAnimali)
+//		if (animaliEditAggiuntiView.size() == quantitaAnimali)
+		if (added)
 			showDialogFromName("dlgAnimaleAddedYet");
 	}
 
 	public void addToGruppoDiMonta() {
-		int quantitaAnimali = animaliAggiuntiView.size();
-//		if (valueAna.contains(" *"))
-//			valueAna = valueAna.replace(" *", "");
 		for (AnagraficaDTO a : animaliDisponibiliFinal) {
 			if (a.getAnaNumMatricola().equals(valueAna) && !animaliAggiunti.contains(valueAna)) {
-				animaliAggiuntiView.add(a);
-				animaliAggiunti = animaliAggiunti.concat(valueAna);
-				if (a.getAnaSesso().equals("M")) {
-					setToroAdded(true);
+				if (animaliAggiuntiView.contains(a)) {
+					showDialogFromName("dlgAnimaleAddedYet");
+					System.out.println("sasasasasasasass");
+					return;
+				} else {
+					animaliAggiuntiView.add(a);
+					animaliAggiunti = animaliAggiunti.concat(valueAna);
 				}
 			}
 		}
-		System.out.println("sasasasasasasass");
-		if (animaliAggiuntiView.size() == quantitaAnimali)
-			showDialogFromName("dlgAnimaleAddedYet");
+
+	}
+
+	public void addToroToGruppoDiMonta() {
+		for (AnagraficaDTO a : toriDisponibiliFinal) {
+			if (a.getAnaNumMatricola().equals(valueAnaToro) && !animaliAggiunti.contains(valueAnaToro)) {
+				animaliAggiuntiView.add(a);
+				animaliAggiunti = animaliAggiunti.concat(valueAnaToro);
+
+				setToroAdded(true);
+
+			}
+		}
 	}
 
 	public void removeAnagraficaFromSelectedEditList() {
@@ -302,7 +316,7 @@ public class GruppiDiMontaMB extends BaseMB {
 						return null;
 					}
 					nuovoStoricoGruppoMonta.setGruppoMontas(nuoviGruppiMontaDTOList);
-					nuovoStoricoGruppoMonta.setSgmUteId(userMB.getUtente().getUteId());
+					nuovoStoricoGruppoMonta.setSgmUteId(userMB.getUtente().getUteRifId());
 					saved = federiciService.saveNuovoGruppoMonta(nuovoStoricoGruppoMonta);
 				} else {
 					addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "nessun.animale.selezionato");
@@ -326,6 +340,20 @@ public class GruppiDiMontaMB extends BaseMB {
 			return "ok";
 		} else
 			return "ko";
+	}
+
+	public boolean cambiaNomeGdm(StoricoGruppiMontaDTO sgmDTO, String newName) {
+
+		boolean existingName = federiciService.checkExistingNameInTable(newName, "gdm", userMB.getUtente().getUteRifId());
+		if (existingName) {
+			addMessage("messages", FacesMessage.SEVERITY_FATAL, "Attenzione !", "storico.gruppo.monta.cambio.nome");
+			sgmDTO.setSgmNome(sgmDTO.getNomeDuplicato());
+		} else {
+			sgmDTO.setNomeDuplicato(newName);
+			return federiciService.updateNomeGDM(newName, sgmDTO);
+		}
+
+		return false;
 	}
 
 	public List<StoricoGruppiMontaDTO> getGruppiDiMontaList() {

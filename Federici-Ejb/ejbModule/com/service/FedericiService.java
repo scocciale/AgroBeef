@@ -112,4 +112,8 @@ public interface FedericiService {
 	public boolean updateLastAccess(UtenteDTO utente);
 
 	public List<AnagraficaDTO> getAllToriDisponibili(int uteRifId);
+
+	public boolean checkExistingNameInTable(String newName, String gruppoType, int uteRifId);
+
+	public boolean updateNomeGDM(String newName, StoricoGruppiMontaDTO sgmDTO);
 }

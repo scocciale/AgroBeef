@@ -989,4 +989,39 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 	}
 
+	public boolean checkExistingNameInTable(String newName, String gruppoType, int uteRifId) {
+
+		Criteria crit;
+		crit = getSession(em).createCriteria(StoricoGruppiMonta.class);
+		crit.add(Restrictions.eq("sgmUteId", uteRifId)).add(Restrictions.eq("sgmNome", newName).ignoreCase()).add(Restrictions.isNull("sgmDataChiusura"));
+//		if (gruppoType.equals("gdm")) {
+//			crit = getSession(em).createCriteria(StoricoGruppiMonta.class);
+//			crit.add(Restrictions.eq("sgmNome",newName).ignoreCase()).add(Restrictions.isNull("sgmDataChiusura"));
+//		} 
+//		else if (gruppoType.equals("gda")) {
+//			crit = getSession(em).createCriteria(StoricoAccrescFini.class);
+//			crit.add(Restrictions.eq("sgmNome",newName).ignoreCase());
+//		}
+		// se esiste torna true altrimenti false
+		return ((List<StoricoGruppiMonta>) crit.list()).size() > 0 ? true : false;
+
+	}
+
+	public boolean updateNomeGDM(String newName, StoricoGruppiMontaDTO sgmDTO) {
+		if (sgmDTO != null) {
+			StoricoGruppiMonta sgmEntity = ConverterDtoToEntity.storicoGruppiMontaDTOtoStoricoGruppiMontaEntity(sgmDTO);
+			sgmEntity.setSgmNome(newName);
+			try {
+				getSession(em).update(sgmEntity);
+				getSession(em).flush();
+				return true;
+			} catch (Exception e) {
+				logger.info("Errore nel modificare il nome del gruppo di monta con id " + sgmDTO.getSgmId() + " da " + sgmDTO.getSgmNome() + " a " + newName);
+				e.printStackTrace();
+			}
+			return false;
+		} else
+			return false;
+	}
+
 }

@@ -50,7 +50,7 @@
 					<div class="ui-g-12">
 						<div class="input-field">
 							<div class="row">
-								<div class="ui-g-8">
+								<div class="ui-g-4">
 									<p:autoComplete id="acAnimali" queryDelay="1000"
 										onkeypress="if (event.keyCode == 13) return false;"
 										completeMethod="#{gdmMB.findFromParms}"
@@ -65,23 +65,33 @@
 										style="font-size: 0.9rem !important; float:left!important;color: #888888;!important" />
 									<p:selectOneListbox id="showListAddedAnimal"
 										value="#{gdmMB.animaleRemover}"
-										styleClass="customSelectOneListbox">
-										<f:selectItems itemLabel="#{animale.anaNumMatricola}"
+										styleClass="customSelectOneListbox selected-animali">
+										<f:selectItems
+											itemLabel="#{animale.anaSesso.equals('M') ? animale.anaNumMatricola.concat(' *'):animale.anaNumMatricola}"
 											itemValue="#{animale.anaNumMatricola}"
 											value="#{gdmMB.animaliAggiuntiView}" var="animale" />
 									</p:selectOneListbox>
 								</div>
-								<div class="ui-g-1"></div>
-								<div class="ui-g-3">
+								<div class="ui-g-4"></div>
+								<div class="ui-g-4">
 									<p:selectOneMenu id="toriSom" widgetVar="toroGdm"
-										disabled="#{gdmMB.toroAdded}" value="#{gdmMB.valueAna}">
+										disabled="#{gdmMB.toroAdded}" value="#{gdmMB.valueAnaToro}">
 										<f:selectItem itemLabel="#{text['label.selezione.toro']}"
 											itemValue="" />
 										<f:selectItems value="#{gdmMB.toriDisponibiliFinalString}" />
-										<p:ajax
-											update="showListAddedAnimal contForm:dlgAnimaleAddedYet rimuoviAnimale"
-											event="itemSelect" listener="#{gdmMB.addToGruppoDiMonta()}" />
 									</p:selectOneMenu>
+
+									<p:commandButton value="#{text['button.aggiungi.toro']}"
+										style="float:right!important;margin-top: 4%!important;"
+										disabled="#{gdmMB.toroAdded}"
+										actionListener="#{gdmMB.addToroToGruppoDiMonta()}"
+										id="addToro"
+										rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
+										styleClass="width-40 waves-effect waves-light btn rosso_cdr"
+										update="showListAddedAnimal contForm:dlgAnimaleAddedYet rimuoviAnimale addToro toriSom" />
+									<p:tooltip for="addToro"
+										value="#{text['tooltip.aggiungi.toro']}" position="top" />
+
 								</div>
 							</div>
 						</div>
@@ -124,8 +134,17 @@
 							<p:column styleClass="center-align" width="26%"
 								style="font-size: 1.2em!important"
 								headerText="#{text['column.header.nome']}">
-								<h:outputText value="#{sgdmVar.sgmNome}" styleClass="left"
-									style="font-size: 1.2em!important" />
+
+								<p:inplace id="sgmNomeEditable" editor="true">
+									<p:ajax event="save" listener="#{gdmMB.cambiaNomeGdm(sgdmVar,sgdmVar.sgmNome)}"
+										update="sgmNomeEditable" />
+									<p:inputText value="#{sgdmVar.sgmNome}" required="true"
+										styleClass="" label="text" />
+								</p:inplace>
+
+
+
+
 							</p:column>
 							<p:column styleClass="center-align"
 								headerText="#{text['column.header.data.apertura']}" width="26%"

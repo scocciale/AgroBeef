@@ -110,7 +110,7 @@ public class PesataCommercialeMB extends BaseMB {
 				return null;
 			}
 
-			nuovaValutazione.setVmaUteId(userMB.getUtente().getUteId());
+			nuovaValutazione.setVmaUteId(userMB.getUtente().getUteRifId());
 			boolean saved = federiciService.salvaNuovaValutazione(nuovaValutazione);
 			if (saved)
 				valutazioneMaceList.add(nuovaValutazione);

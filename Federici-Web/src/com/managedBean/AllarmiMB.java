@@ -67,7 +67,7 @@ public class AllarmiMB extends BaseMB {
 
 		query = report.getRepQuery();
 
-		Integer uteCod = userMB.getUtente().getUteId();
+		Integer uteCod = userMB.getUtente().getUteRifId();
 
 		query = query.replaceAll("\\?", uteCod.toString());
 

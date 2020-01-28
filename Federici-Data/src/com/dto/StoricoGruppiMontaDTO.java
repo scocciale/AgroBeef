@@ -11,7 +11,8 @@ public class StoricoGruppiMontaDTO {
 	private int sgmUteId;
 	private List<GruppoMontaDTO> gruppoMontas;
 	private UtenteDTO utente;
-
+	private String nomeDuplicato;
+	
 	public int getSgmId() {
 		return sgmId;
 	}
@@ -66,6 +67,14 @@ public class StoricoGruppiMontaDTO {
 
 	public void setUtente(UtenteDTO utente) {
 		this.utente = utente;
+	}
+
+	public String getNomeDuplicato() {
+		return nomeDuplicato;
+	}
+
+	public void setNomeDuplicato(String nomeDuplicato) {
+		this.nomeDuplicato = nomeDuplicato;
 	}
 
 }

@@ -121,7 +121,7 @@ public class AnagraficaMB extends BaseMB {
 					nuovoAnimale.setAnaRazId(r.getRazId());
 			}
 			// nuovoAnimale.setAnaSesso(sesso);
-			boolean saved = federiciService.salvaNuovoAnimale(nuovoAnimale, userMB.getUtente().getUteId());
+			boolean saved = federiciService.salvaNuovoAnimale(nuovoAnimale, userMB.getUtente().getUteRifId());
 			// if (saved)
 			// anagraficaList.add(federiciService.getAnimale(nuovoAnimale.getAnaNumMatricola()));
 			RequestContext.getCurrentInstance().update("@all");
