@@ -3,7 +3,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui" template="/templates/layout.xhtml"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
 
 	<ui:define name="title">
@@ -211,7 +212,7 @@
 										value="#{anagMB.animaleEdit.anaNumMatricola}"></h:outputText> -->
 
 									<p:inputText id="matricolaMod" styleClass="validate"
-										onkeypress="if (event.keyCode == 13) return false;"
+										onkeypress="if (event.keyCode == 13) return false;" disabled="true"
 										value="#{anagMB.animaleEdit.anaNumMatricola}">
 									</p:inputText>
 									<label class="left-align" for="matricolaMod"><h:outputText
@@ -238,7 +239,7 @@
 						<p:row>
 							<p:column>
 								<div class="input-field">
-									<p:inputText id="matMadreMod" styleClass="validate"
+									<p:inputText id="matMadreMod" styleClass="validate" disabled="true"
 										onkeypress="if (event.keyCode == 13) return false;"
 										value="#{anagMB.animaleEdit.anaNumMatricolaMadre}">
 										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
@@ -250,7 +251,7 @@
 
 							<p:column>
 								<div class="input-field">
-									<p:inputText id="matPadreMod" styleClass="validate"
+									<p:inputText id="matPadreMod" styleClass="validate"  disabled="true"
 										onkeypress="if (event.keyCode == 13) return false;"
 										value="#{anagMB.animaleEdit.anaNumMatricolaPadre}">
 										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
@@ -285,10 +286,10 @@
 
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:outputLabel for="dataAcqMod"
+									<p:outputLabel for="dataAcqMod" 
 										value="#{text['label.data.acquisto']}" styleClass="left-align"
 										style="font-size: 0.9rem !important;color: #888888;!important" />
-									<p:calendar id="dataAcqMod"
+									<p:calendar id="dataAcqMod" disabled="true"
 										value="#{anagMB.animaleEdit.anaDataAcquisto}" locale="it"
 										navigator="true" styleClass="validate" pattern="dd/MM/yyyy">
 									</p:calendar>
@@ -317,7 +318,7 @@
 
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:inputText id="nPartoMod" styleClass="validate"
+									<p:inputText id="nPartoMod" styleClass="validate" disabled="true"
 										onkeypress="if (event.keyCode == 13) return false;"
 										value="#{anagMB.animaleEdit.anaNumParto}">
 									</p:inputText>
@@ -327,9 +328,9 @@
 							</p:column>
 							<p:column colspan="1">
 								<div class="row" style="">
-									<p:outputLabel value="#{text['column.header.gemello']}"
+									<p:outputLabel value="#{text['column.header.gemello']}" 
 										style="margin-left: 20px;" for="flagGemelloMod" />
-									<p:selectBooleanCheckbox value="#{anagMB.flagGemello}"
+									<p:selectBooleanCheckbox value="#{anagMB.flagGemello}" disabled="true"
 										style="margin-left: 20px;" id="flagGemelloMod" />
 								</div>
 							</p:column>
@@ -337,7 +338,7 @@
 						<p:row>
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:inputText id="diffPartoMod" styleClass="validate"
+									<p:inputText id="diffPartoMod" styleClass="validate" disabled="true"
 										value="#{anagMB.animaleEdit.anaDifficoltaParto}"
 										onkeypress="if (event.keyCode == 13) return false;">
 									</p:inputText>
@@ -350,7 +351,7 @@
 									<p:outputLabel for="dataUscita"
 										value="#{text['label.data.uscita']}" styleClass="left-align"
 										style="font-size: 0.9rem !important;color: #888888;!important" />
-									<p:calendar id="dataUscita"
+									<p:calendar id="dataUscita" disabled="true"
 										value="#{anagMB.animaleEdit.anaDataUscita}" locale="it"
 										navigator="true" styleClass="validate" pattern="dd/MM/yyyy">
 									</p:calendar>
@@ -359,7 +360,7 @@
 
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:selectOneMenu id="causaUscita"
+									<p:selectOneMenu id="causaUscita" disabled="true"
 										value="#{anagMB.animaleEdit.anaUscitaCausa}"
 										style="width:125px">
 										<f:selectItem itemLabel="#{text['label.causa.uscita']}"
@@ -399,7 +400,7 @@
 							filteredValue="#{anagMB.anagraficaFilteredList}"
 							currentPageReportTemplate="({currentPage} Di {totalPages})"
 							rows="10" paginator="true" dynamic="true" lazy="true"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 							rowsPerPageTemplate="10,15,30">
 
 							<p:column headerText="#{text['column.header.numero.mat']}"
@@ -430,7 +431,11 @@
 								filterBy="#{ana.anaSesso}" filterMatchMode="contains"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaSesso}">
-								<h:outputText value="#{ana.anaSesso}" />
+								<!-- <h:outputText value="#{ana.anaSesso} " /> -->
+								<p:graphicImage rendered="#{ana.anaSesso eq 'F'}"
+									name="images/icons/female_gender.png" style="width:24px" />
+								<p:graphicImage rendered="#{ana.anaSesso eq 'M'}"
+									name="images/icons/male_gender.png" style="width:24px" />
 							</p:column>
 							<p:column headerText="#{text['column.header.toro']}"
 								filterStyleClass="filterClass" width="4%"
@@ -440,14 +445,21 @@
 								<h:outputText rendered="#{ana.anaFlagToro eq 1}"
 									styleClass="fa fa-check" />
 							</p:column>
-							<p:column headerText="Data di nascita" width="12%"
-								filterMatchMode="contains" filterStyleClass="filterClass"
-								filterBy="#{ana.anaDataNascita}"
+							<p:column headerText="#{text['column.header.data.nasc']}"
+								width="12%" filterMatchMode="contains"
+								filterStyleClass="filterClass" filterBy="#{ana.anaDataNascita}"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaDataNascita}">
 								<h:outputText value="#{ana.anaDataNascita}">
 									<f:convertDateTime pattern="dd/MM/yyyy" />
 								</h:outputText>
+							</p:column>
+							<p:column headerText="#{text['column.header.eta']}"
+								filterStyleClass="filterClass" filterBy="#{ana.anaEtaCalcolata}"
+								filterMatchMode="contains"
+								style="text-align: center; font-size:1.3em;"
+								sortBy="#{ana.anaEtaCalcolatao}">
+								<h:outputText value="#{ana.anaEtaCalcolata}" />
 							</p:column>
 							<p:column headerText="#{text['column.header.data.acquisto']}"
 								style="text-align: center; font-size:1.3em;" width="12%"
@@ -457,6 +469,8 @@
 								</h:outputText>
 							</p:column>
 							<p:column headerText="#{text['column.header.razza']}"
+								filterStyleClass="filterClass" filterBy="#{ana.anaRazza}"
+								filterMatchMode="contains"
 								style="text-align: center; font-size:1.3em;" width="10%"
 								sortBy="#{ana.anaRazza}">
 								<h:outputText value="#{ana.anaRazza}" />
@@ -471,14 +485,32 @@
 								sortBy="#{ana.anaUscitaCausa}">
 								<h:outputText value="#{ana.anaUscitaCausa}" />
 							</p:column>
-							<p:column width="4%" style="text-align: center; font-size:1.3em;">
+							<p:column
+								headerText="#{text['column.header.gruppi.appartenenza']}"
+								style="text-align: center; font-size:1.3em;">
+								<h:outputText value="#{ana.gruppiAppartenenza}" />
+							</p:column>
+							<p:column width="4%" style="text-align: center; font-size:1.3em;"
+								id="editButton">
 								<p:commandLink action="#{anagMB.editAnimale(ana)}"
-									rendered="#{!anagMB.valEsistenti.contains(ana.anaNumMatricola) and !userMB.utente.profilo.proNome.equals('lettura')}"
+									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
 									oncomplete="PF('dlgNuovoAnagMod').loadContents();">
-									<p:graphicImage name="images/icons/editing-edit-icon.png"
-										style="height: 23px; width: 23px;" />
+									<p:graphicImage name="images/icons/edit-icon.png"
+										style="width:24px" />
 								</p:commandLink>
 							</p:column>
+							<f:facet name="{Exporters}">
+								<div style="float: right; padding-top: 5px;">
+									<p:tooltip for="expPdf" value="#{text['tooltip.export.pdf']}"
+										position="bottom" />
+									<p:commandLink id="expPdf" ajax="false">
+										<p:graphicImage name="images\export\pdf-square-icon.png"
+											width="24" />
+										<pe:exporter type="pdf" target="anagrafica"
+											fileName="#{anagMB.expNome}" orientation="Landscape" />
+									</p:commandLink>
+								</div>
+							</f:facet>
 						</p:dataTable>
 					</div>
 				</div>

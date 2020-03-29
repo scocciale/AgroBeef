@@ -3,7 +3,9 @@ package com.converter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.dto.AnagrAccrFiniDTO;
 import com.dto.AnagraficaDTO;
@@ -50,8 +52,12 @@ public class ConverterEntityToDto {
 			anagraficaDTO.setAnaDataAcquisto(anagrafica.getAnaDataAcquisto());
 		if (anagrafica.getAnaDifficoltaParto() != null)
 			anagraficaDTO.setAnaDifficoltaParto(anagrafica.getAnaDifficoltaParto());
-		if (anagrafica.getAnaDataNascita() != null)
+		if (anagrafica.getAnaDataNascita() != null) {
 			anagraficaDTO.setAnaDataNascita(anagrafica.getAnaDataNascita());
+
+			anagraficaDTO.setAnaEtaCalcolata((int) (TimeUnit.MILLISECONDS.toDays(new Date().getTime() - anagraficaDTO.getAnaDataNascita().getTime()) / 30));
+
+		}
 		if (anagrafica.getAnaFlagGemello() != null)
 			anagraficaDTO.setAnaFlagGemello(anagrafica.getAnaFlagGemello());
 
@@ -120,7 +126,7 @@ public class ConverterEntityToDto {
 		// for (ValutazioneMace obj : anagrafica.getValutazioneMaces()) {
 		// list.add(valutazioneMaceEntityToValutazioneMaceDTO(obj));
 		// }
-		// anagraficaDTO.setValutazioneMaces(list);
+		// anagraficaDTO.setValutazioneMaces(list); 
 		// }
 
 		// if (anagrafica.getGruppoMontas() != null &&

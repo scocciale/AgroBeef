@@ -48,7 +48,11 @@
 								filterBy="#{ana.anaSesso}"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaSesso}">
-								<h:outputText value="#{ana.anaSesso}" />
+								<!-- <h:outputText value="#{ana.anaSesso} " /> -->
+								<p:graphicImage rendered="#{ana.anaSesso eq 'F'}"
+									name="images/icons/female_gender.png" style="width:24px" />
+								<p:graphicImage rendered="#{ana.anaSesso eq 'M'}"
+									name="images/icons/male_gender.png" style="width:24px" />
 							</p:column>
 
 							<p:column headerText="#{text['column.header.toro']}"
@@ -87,64 +91,68 @@
 							</p:column>
 
 							<p:rowExpansion id="rowExp">
-								<p:panelGrid id="panelRow" columns="1">
-									<p:dataTable id="vetForAnagDt" var="pes" value="#{ana.pesatas}"
-										style="width:auto!important; float:left!important; "
-										emptyMessage="#{text['label.emptyResult']}">
+								<div class="row">
+									<div class="ui-g">
+										<div class="ui-g-6">
+											<!-- <p:panelGrid id="panelRow" columns="1"> -->
+											<p:dataTable id="vetForAnagDt" var="pes"
+												value="#{ana.pesatas}"
+												style="width:auto!important; float:left!important; "
+												emptyMessage="#{text['label.emptyResult']}">
 
-										<p:column headerText="#{text['column.header.data.pesata']}"
-											style="text-align: center; font-size:1.3em;" width="10%"
-											sortBy="#{pes.pesData}">
-											<h:outputText value="#{pes.pesData}">
-												<f:convertDateTime pattern="dd/MM/yyyy" />
-											</h:outputText>
-										</p:column>
+												<p:column headerText="#{text['column.header.data.pesata']}"
+													style="text-align: center; font-size:1.3em;">
+													<h:outputText value="#{pes.pesData}">
+														<f:convertDateTime pattern="dd/MM/yyyy" />
+													</h:outputText>
+												</p:column>
 
-										<p:column headerText="#{text['column.header.peso']}"
-											style="text-align: center; font-size:1.3em;" width="10%"
-											sortBy="#{pes.pesPeso}">
-											<h:outputText value="#{pes.pesPeso}" />
-										</p:column>
+												<p:column headerText="#{text['column.header.peso']}"
+													style="text-align: center; font-size:1.3em;">
+													<h:outputText value="#{pes.pesPeso}" />
+												</p:column>
 
-										<p:column headerText="#{text['column.header.fase.peso']}"
-											style="text-align: center; font-size:1.3em;" width="10%"
-											sortBy="#{pes.pesFase}">
-											<h:outputText value="#{pes.pesFase}" />
-										</p:column>
+												<p:column headerText="#{text['column.header.fase.peso']}"
+													style="text-align: center; font-size:1.3em;">
+													<h:outputText value="#{pes.pesFase}" />
+												</p:column>
 
-										<p:column
-											headerText="#{text['column.header.delta.peso.prec']}"
-											style="text-align: center;font-size:1.3em;">
+												<p:column
+													headerText="#{text['column.header.delta.peso.prec']}"
+													style="text-align: center;font-size:1.3em;">
 
-											<h:outputText
-												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}'
-												styleClass="fa fa-caret-up" style="color:green" />
-											<h:outputText value=" #{pes.deltaPeso}" style="color:green"
-												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}' />
-											<h:outputText
-												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq -1}'
-												styleClass="fa fa-caret-down" style="color:red" />
-											<h:outputText value=" #{pes.deltaPeso}" style="color:red"
-												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq -1}' />
-											<h:outputText
-												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 0}'
-												styleClass="fa fa-minus" style="color:grey" />
-											<h:outputText value=" #{pes.deltaPeso}" style="color:grey"
-												rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 0}' />
-										</p:column>
+													<h:outputText
+														rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}'
+														styleClass="fa fa-caret-up" style="color:green" />
+													<h:outputText value=" #{pes.deltaPeso}" style="color:green"
+														rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 1}' />
+													<h:outputText
+														rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq -1}'
+														styleClass="fa fa-caret-down" style="color:red" />
+													<h:outputText value=" #{pes.deltaPeso}" style="color:red"
+														rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq -1}' />
+													<h:outputText
+														rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 0}'
+														styleClass="fa fa-minus" style="color:grey" />
+													<h:outputText value=" #{pes.deltaPeso}" style="color:grey"
+														rendered='#{pesataMB.renderingArrowIcon(pes,ana.pesatas) eq 0}' />
+												</p:column>
 
-									</p:dataTable>
+											</p:dataTable>
+										</div>
+										<div class="ui-g-2"></div>
+										<div class="ui-g-4">
+											<p:chart type="line" id="chart"
+												model="#{pesataMB.lineModelAndamento}"
+												rendered="#{pesataMB.graficoRendered and ana.pesatas.size() ge 2}" />
 
-
-									<p:chart type="line" id="chart"
-										model="#{pesataMB.lineModelAndamento}"
-										rendered="#{pesataMB.graficoRendered and ana.pesatas.size() ge 2}" />
-
-
-									<h:outputText rendered="#{ana.pesatas.size() lt 2}"
-										style="text-align: center; font-size:1.3em;" width="10%"
-										value="#{text['message.grafico.non.visibile']}" />
-								</p:panelGrid>
+											<h:outputText rendered="#{ana.pesatas.size() lt 2}"
+												style="text-align: center; font-size:1.3em;" width="10%"
+												value="#{text['message.grafico.non.visibile']}" />
+											<!-- </panelGrid> -->
+										</div>
+									</div>
+								</div>
 							</p:rowExpansion>
 
 						</p:dataTable>

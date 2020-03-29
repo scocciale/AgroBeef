@@ -77,13 +77,18 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 	final static String countRowInAnagraficaFromUte = "SELECT count(*) FROM Anagrafica a WHERE a.ana_ute_id = {0}";
 
+	final static String getStoricoMontaFromAnaId = "SELECT SGM.SGM_ID, SGM.SGM_NOME, SGM.SGM_DATA_APERTURA, SGM.SGM_DATA_CHIUSURA, SGM.SGM_UTE_ID FROM STORICO_GRUPPI_MONTA SGM, GRUPPO_MONTA GM WHERE GM.GMO_ANA_ID = {0} AND GM.GMO_DATA_USCITA IS NULL AND GM.GMO_SGM_ID = SGM.SGM_ID";
+
+	final static String getStoricoAccrFinisFromAnaId = "SELECT SAF.SAF_ID, SAF.SAF_NUM_APPEZZAMENTO, SAF.SAF_DATA_INIZIO, SAF.SAF_DATA_FINE, SAF.SAF_SCOPO, SAF.SAF_UTE_ID FROM STORICO_ACCRESC_FINIS SAF, ANAGR_ACCR_FINIS AAF WHERE AAF.AAF_ANA_ID = {0} AND AAF.AAF_DATA_USCITA IS NULL AND AAF.AAF_SAF_ID = SAF.SAF_ID";
+
 	final static String causaUscita = "Macellazione";
 
 	@Override
 	public UtenteDTO logIn(String username, String pwd) {
 		Utente ute = new Utente();
 		try {
-			ute = (Utente) getSession(em).createCriteria(Utente.class).add(Restrictions.eq("uteUsername", username)).uniqueResult();
+			ute = (Utente) getSession(em).createCriteria(Utente.class).add(Restrictions.eq("uteUsername", username))
+					.uniqueResult();
 			if (ute != null) {
 				if (BCrypt.checkpw(pwd, ute.getUtePwd())) {
 					return ConverterEntityToDto.utenteEntityToUtenteDTO(ute);
@@ -120,8 +125,11 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		List<AnagraficaDTO> listDTO = new ArrayList<>();
 		List<Anagrafica> list = new ArrayList<>();
 		try {
-			list = (List<Anagrafica>) getSession(em).createCriteria(Anagrafica.class).add(Restrictions.eq("anaUteId", uteCod))
-					.add(Restrictions.disjunction().add(Restrictions.eq("anaUscitaCausa", "")).add(Restrictions.isNull("anaUscitaCausa"))).add(Restrictions.eq("anaFlagDisponibile", "1")).list();
+			list = (List<Anagrafica>) getSession(em).createCriteria(Anagrafica.class)
+					.add(Restrictions.eq("anaUteId", uteCod))
+					.add(Restrictions.disjunction().add(Restrictions.eq("anaUscitaCausa", ""))
+							.add(Restrictions.isNull("anaUscitaCausa")))
+					.add(Restrictions.eq("anaFlagDisponibile", "1")).list();
 
 			if (list != null && list.size() > 0) {
 				AnagraficaDTO dto;
@@ -139,7 +147,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<AnagraficaDTO> getAllAnimaliAnagrafica(int uteCod, int start, int size, String sortOrderToStr, String sortField) {
+	public List<AnagraficaDTO> getAllAnimaliAnagrafica(int uteCod, int start, int size, String sortOrderToStr,
+			String sortField) {
 
 		List<AnagraficaDTO> listDTO = new ArrayList<>();
 		List<Anagrafica> list = new ArrayList<>();
@@ -170,6 +179,21 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 				for (Anagrafica ana : list) {
 					dto = new AnagraficaDTO();
 					dto = ConverterEntityToDto.anagraficaEntityToAngraficaDTO(ana);
+
+					if (ana.getAnaFlagDisponibile().equals("0")) {
+						StoricoGruppiMonta sgm = getStoricoGruppoMontaFromAnaId(dto.getAnaId());
+						List<StoricoAccrescFini> saf = getStoricoAccrescFiniFromAnaId(dto.getAnaId());
+						if (sgm != null) {
+							dto.setGruppiAppartenenza(sgm.getSgmNome());
+						}
+						if (saf != null && saf.size() > 0) {
+							if (dto.getGruppiAppartenenza() != null && !dto.getGruppiAppartenenza().trim().equals(""))
+								dto.setGruppiAppartenenza(dto.getGruppiAppartenenza().concat(" | "));
+							for (StoricoAccrescFini storico : saf)
+								dto.setGruppiAppartenenza("Appez. : " + storico.getSafNumAppezzamento());
+						}
+					}
+
 					listDTO.add(dto);
 				}
 			}
@@ -181,8 +205,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	}
 
 	public AnagraficaDTO getAnimale(String matricola) {
-		AnagraficaDTO animale = ConverterEntityToDto
-				.anagraficaEntityToAngraficaDTO((Anagrafica) getSession(em).createCriteria(Anagrafica.class).add(Restrictions.eq("anaNumMatricola", matricola)).uniqueResult());
+		AnagraficaDTO animale = ConverterEntityToDto.anagraficaEntityToAngraficaDTO((Anagrafica) getSession(em)
+				.createCriteria(Anagrafica.class).add(Restrictions.eq("anaNumMatricola", matricola)).uniqueResult());
 		return animale;
 	}
 
@@ -317,7 +341,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			// getSession(em).createSQLQuery("SELECT * FROM GRUPPO_MONTA GM
 			// ORDER BY
 			// GM.GMO_DATA_INSERIMENTO DESC").list();
-			anagraficaEntity = (List<AnagrAccrFini>) getSession(em).createCriteria(AnagrAccrFini.class).add(Restrictions.eq("aafAnaId", anaId)).addOrder(Order.desc("aafDataEntrata")).list();
+			anagraficaEntity = (List<AnagrAccrFini>) getSession(em).createCriteria(AnagrAccrFini.class)
+					.add(Restrictions.eq("aafAnaId", anaId)).addOrder(Order.desc("aafDataEntrata")).list();
 			// .add(Restrictions.eq("gmoAnaId",anaId)).setProjection(Projections.max("gmoDataInserimento")).uniqueResult();
 			// .add(Restrictions.isNull("gmoDataUscita"))
 
@@ -325,8 +350,10 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			e.printStackTrace();
 			return false;
 		}
-		if (anagraficaEntity == null || anagraficaEntity.size() == 0 || (anagraficaEntity != null && anagraficaEntity.size() > 0
-				&& (anagraficaEntity.get(0).getAafDataUscita() != null && anagraficaEntity.get(0).getAafDataUscita().after(anagraficaEntity.get(0).getAafDataEntrata())))) {
+		if (anagraficaEntity == null || anagraficaEntity.size() == 0
+				|| (anagraficaEntity != null && anagraficaEntity.size() > 0
+						&& (anagraficaEntity.get(0).getAafDataUscita() != null && anagraficaEntity.get(0)
+								.getAafDataUscita().after(anagraficaEntity.get(0).getAafDataEntrata())))) {
 			return true;
 		} else {
 			return false;
@@ -342,15 +369,18 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			// getSession(em).createSQLQuery("SELECT * FROM GRUPPO_MONTA GM
 			// ORDER BY
 			// GM.GMO_DATA_INSERIMENTO DESC").list();
-			anagraficaEntity = (List<GruppoMonta>) getSession(em).createCriteria(GruppoMonta.class).add(Restrictions.eq("gmoAnaId", anaId)).addOrder(Order.desc("gmoDataInserimento")).list();
+			anagraficaEntity = (List<GruppoMonta>) getSession(em).createCriteria(GruppoMonta.class)
+					.add(Restrictions.eq("gmoAnaId", anaId)).addOrder(Order.desc("gmoDataInserimento")).list();
 			// .add(Restrictions.eq("gmoAnaId",anaId)).setProjection(Projections.max("gmoDataInserimento")).uniqueResult();
 			// .add(Restrictions.isNull("gmoDataUscita"))
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		if (anagraficaEntity == null || anagraficaEntity.size() == 0 || (anagraficaEntity != null && anagraficaEntity.size() > 0
-				&& (anagraficaEntity.get(0).getGmoDataUscita() != null && anagraficaEntity.get(0).getGmoDataUscita().after(anagraficaEntity.get(0).getGmoDataInserimento())))) {
+		if (anagraficaEntity == null || anagraficaEntity.size() == 0
+				|| (anagraficaEntity != null && anagraficaEntity.size() > 0
+						&& (anagraficaEntity.get(0).getGmoDataUscita() != null && anagraficaEntity.get(0)
+								.getGmoDataUscita().after(anagraficaEntity.get(0).getGmoDataInserimento())))) {
 			return true;
 		} else {
 			return false;
@@ -363,7 +393,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		List<StoricoGruppiMonta> gruppiEntity = new ArrayList<>();
 		StoricoGruppiMontaDTO dto;
 
-		gruppiEntity = (List<StoricoGruppiMonta>) getSession(em).createCriteria(StoricoGruppiMonta.class).add(Restrictions.eq("sgmUteId", uteId)).add(Restrictions.isNull("sgmDataChiusura")).list();
+		gruppiEntity = (List<StoricoGruppiMonta>) getSession(em).createCriteria(StoricoGruppiMonta.class)
+				.add(Restrictions.eq("sgmUteId", uteId)).add(Restrictions.isNull("sgmDataChiusura")).list();
 
 		if (gruppiEntity != null && gruppiEntity.size() > 0) {
 			for (StoricoGruppiMonta gm : gruppiEntity) {
@@ -382,8 +413,11 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		List<StoricoGruppiMonta> gruppiEntity = new ArrayList<>();
 		StoricoGruppiMontaDTO dto;
 
-		gruppiEntity = (List<StoricoGruppiMonta>) getSession(em).createCriteria(GruppoMonta.class, "gruppoMonta").createAlias("gruppoMonta.storicoGruppiMonta", "storicoGruppoMonta")
-				.add(Restrictions.eq("storicoGruppoMonta.sgmUteId", uteId)).setProjection(Projections.projectionList().add(Projections.groupProperty("storicoGruppiMonta"))).list();
+		gruppiEntity = (List<StoricoGruppiMonta>) getSession(em).createCriteria(GruppoMonta.class, "gruppoMonta")
+				.createAlias("gruppoMonta.storicoGruppiMonta", "storicoGruppoMonta")
+				.add(Restrictions.eq("storicoGruppoMonta.sgmUteId", uteId))
+				.setProjection(Projections.projectionList().add(Projections.groupProperty("storicoGruppiMonta")))
+				.list();
 
 		if (gruppiEntity != null && gruppiEntity.size() > 0) {
 			for (StoricoGruppiMonta gm : gruppiEntity) {
@@ -402,7 +436,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		List<ValutazioneMace> valutazioniEntity = new ArrayList<>();
 		ValutazioneMaceDTO dto;
 
-		valutazioniEntity = (List<ValutazioneMace>) getSession(em).createCriteria(ValutazioneMace.class).add(Restrictions.eq("vmaUteId", uteId)).list();
+		valutazioniEntity = (List<ValutazioneMace>) getSession(em).createCriteria(ValutazioneMace.class)
+				.add(Restrictions.eq("vmaUteId", uteId)).list();
 
 		if (valutazioniEntity != null && valutazioniEntity.size() > 0) {
 			for (ValutazioneMace entity : valutazioniEntity) {
@@ -421,7 +456,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		List<Anagrafica> list = new ArrayList<>();
 		try {
 
-			list = (List<Anagrafica>) getSession(em).createCriteria(Anagrafica.class).add(Restrictions.eq("anaUteId", uteId)).add(Restrictions.eq("anaUscitaCausa", causaUscita)).list();
+			list = (List<Anagrafica>) getSession(em).createCriteria(Anagrafica.class)
+					.add(Restrictions.eq("anaUteId", uteId)).add(Restrictions.eq("anaUscitaCausa", causaUscita)).list();
 
 			if (list != null && list.size() > 0) {
 				AnagraficaDTO dto;
@@ -444,7 +480,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		List<StoricoAccrescFini> gruppiEntity = new ArrayList<>();
 		StoricoAccrescFiniDTO dto;
 
-		gruppiEntity = (List<StoricoAccrescFini>) getSession(em).createCriteria(StoricoAccrescFini.class).add(Restrictions.eq("safUteId", uteId)).add(Restrictions.isNull("safDataFine")).list();
+		gruppiEntity = (List<StoricoAccrescFini>) getSession(em).createCriteria(StoricoAccrescFini.class)
+				.add(Restrictions.eq("safUteId", uteId)).add(Restrictions.isNull("safDataFine")).list();
 
 		if (gruppiEntity != null && gruppiEntity.size() > 0) {
 			for (StoricoAccrescFini gm : gruppiEntity) {
@@ -463,8 +500,11 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		List<StoricoAccrescFini> gruppiEntity = new ArrayList<>();
 		StoricoAccrescFiniDTO dto;
 
-		gruppiEntity = (List<StoricoAccrescFini>) getSession(em).createCriteria(AnagrAccrFini.class, "gruppoAccr").createAlias("gruppoAccr.storicoAccrescFini", "storicoGruppoAccr")
-				.add(Restrictions.eq("storicoGruppoAccr.safUteId", uteId)).setProjection(Projections.projectionList().add(Projections.groupProperty("storicoAccrescFini"))).list();
+		gruppiEntity = (List<StoricoAccrescFini>) getSession(em).createCriteria(AnagrAccrFini.class, "gruppoAccr")
+				.createAlias("gruppoAccr.storicoAccrescFini", "storicoGruppoAccr")
+				.add(Restrictions.eq("storicoGruppoAccr.safUteId", uteId))
+				.setProjection(Projections.projectionList().add(Projections.groupProperty("storicoAccrescFini")))
+				.list();
 
 		if (gruppiEntity != null && gruppiEntity.size() > 0) {
 			for (StoricoAccrescFini gm : gruppiEntity) {
@@ -485,7 +525,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			getSession(em).saveOrUpdate(entity);
 			getSession(em).flush();
 
-			if (nuovoStoricoGruppoMonta.getGruppoMontas() != null && nuovoStoricoGruppoMonta.getGruppoMontas().size() > 0) {
+			if (nuovoStoricoGruppoMonta.getGruppoMontas() != null
+					&& nuovoStoricoGruppoMonta.getGruppoMontas().size() > 0) {
 				GruppoMonta gmEntity;
 				for (GruppoMontaDTO gmo : nuovoStoricoGruppoMonta.getGruppoMontas()) {
 					gmEntity = new GruppoMonta();
@@ -505,7 +546,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	@SuppressWarnings("unchecked")
 	public List<RazzaDTO> getAllRazze() {
 		List<RazzaDTO> razzeList = new ArrayList<>();
-		List<Razza> razzeListEntity = (List<Razza>) getSession(em).createCriteria(Razza.class).addOrder(Order.asc("razSigla")).list();
+		List<Razza> razzeListEntity = (List<Razza>) getSession(em).createCriteria(Razza.class)
+				.addOrder(Order.asc("razSigla")).list();
 		for (Razza razza : razzeListEntity) {
 			razzeList.add(ConverterEntityToDto.razzaEntityToRazzaDTO(razza));
 		}
@@ -521,7 +563,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			getSession(em).saveOrUpdate(entity);
 			getSession(em).flush();
 
-			if (nuovoStoricoAccrFini.getAnagrAccrFinis() != null && nuovoStoricoAccrFini.getAnagrAccrFinis().size() > 0) {
+			if (nuovoStoricoAccrFini.getAnagrAccrFinis() != null
+					&& nuovoStoricoAccrFini.getAnagrAccrFinis().size() > 0) {
 				AnagrAccrFini gAccrEntity;
 				for (AnagrAccrFiniDTO aaf : nuovoStoricoAccrFini.getAnagrAccrFinis()) {
 					gAccrEntity = new AnagrAccrFini();
@@ -559,7 +602,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 	public boolean updateStoricoGruppoMonta(StoricoGruppiMontaDTO sgm, int gmId) {
 		try {
-			GruppoMonta entity = ConverterDtoToEntity.gruppoMontaDTOtoGruppoMontaEntity(sgm.getGruppoMontas().get(gmId));
+			GruppoMonta entity = ConverterDtoToEntity
+					.gruppoMontaDTOtoGruppoMontaEntity(sgm.getGruppoMontas().get(gmId));
 			entity.setGmoSgmId(sgm.getSgmId());
 			getSession(em).saveOrUpdate(entity);
 			getSession(em).update(entity.getAnagrafica());
@@ -573,7 +617,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 	public boolean updateStoricoAccrFinis(StoricoAccrescFiniDTO sAccr, int accrId) {
 		try {
-			AnagrAccrFini entity = ConverterDtoToEntity.anagrAccrFiniDTOtoAnagrAccrFiniEntity(sAccr.getAnagrAccrFinis().get(accrId));
+			AnagrAccrFini entity = ConverterDtoToEntity
+					.anagrAccrFiniDTOtoAnagrAccrFiniEntity(sAccr.getAnagrAccrFinis().get(accrId));
 			entity.setAafSafId(sAccr.getSafId());
 			getSession(em).saveOrUpdate(entity);
 			getSession(em).update(entity.getAnagrafica());
@@ -587,7 +632,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 	public void updateStoricoAccrFiniss(StoricoAccrescFiniDTO sAccrFinis) {
 		try {
-			StoricoAccrescFini entity = ConverterDtoToEntity.storicoGruppiAccrFiniDTOtoStoricoGruppiAccrFiniEntity(sAccrFinis);
+			StoricoAccrescFini entity = ConverterDtoToEntity
+					.storicoGruppiAccrFiniDTOtoStoricoGruppiAccrFiniEntity(sAccrFinis);
 			getSession(em).update(entity);
 			getSession(em).flush();
 			System.out.println("SALVATO TUTTO");
@@ -826,7 +872,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		List<AnagraficaDTO> listaParti = new ArrayList<>();
 		try {
 
-			List<Anagrafica> list = (List<Anagrafica>) getSession(em).createCriteria(Anagrafica.class).add(Restrictions.eq("anaNumMatricolaMadre", anaNumMatricola))
+			List<Anagrafica> list = (List<Anagrafica>) getSession(em).createCriteria(Anagrafica.class)
+					.add(Restrictions.eq("anaNumMatricolaMadre", anaNumMatricola))
 					.add(Restrictions.eq("anaUteId", uteId)).addOrder(Order.asc("anaDataNascita")).list();
 
 			AnagraficaDTO dto;
@@ -851,9 +898,11 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			// new Integer(uteRifId).toString())
 			// .replace("{3}", queryParams);
 
-			String query = animaliDisponibiliQueryWithParams.replace("{0}", new Integer(uteRifId).toString()).replace("{1}", queryParams.toUpperCase());
+			String query = animaliDisponibiliQueryWithParams.replace("{0}", new Integer(uteRifId).toString())
+					.replace("{1}", queryParams.toUpperCase());
 
-			List<Anagrafica> list = (List<Anagrafica>) getSession(em).createSQLQuery(query).addEntity(Anagrafica.class).list();
+			List<Anagrafica> list = (List<Anagrafica>) getSession(em).createSQLQuery(query).addEntity(Anagrafica.class)
+					.list();
 
 			AnagraficaDTO dto;
 			for (Anagrafica anagrafica : list) {
@@ -873,9 +922,11 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		List<AnagraficaDTO> listaAnimaliDisp = new ArrayList<>();
 		try {
 
-			String query = animaliDisponibiliFemaleQueryWithParams.replace("{0}", new Integer(uteRifId).toString()).replace("{1}", queryParams.toUpperCase());
+			String query = animaliDisponibiliFemaleQueryWithParams.replace("{0}", new Integer(uteRifId).toString())
+					.replace("{1}", queryParams.toUpperCase());
 
-			List<Anagrafica> list = (List<Anagrafica>) getSession(em).createSQLQuery(query).addEntity(Anagrafica.class).list();
+			List<Anagrafica> list = (List<Anagrafica>) getSession(em).createSQLQuery(query).addEntity(Anagrafica.class)
+					.list();
 
 			AnagraficaDTO dto;
 			for (Anagrafica anagrafica : list) {
@@ -897,7 +948,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		return (BigInteger) getSession(em).createSQLQuery(query).uniqueResult();
 	}
 
-	public List<AnagraficaDTO> getAllAnimaliAnagraficaFiltered(int uteRifId, int first, int pageSize, String sortOrderToStr, Map<String, Object> filters, String sortField) {
+	public List<AnagraficaDTO> getAllAnimaliAnagraficaFiltered(int uteRifId, int first, int pageSize,
+			String sortOrderToStr, Map<String, Object> filters, String sortField) {
 
 		List<Anagrafica> listaAnimaliFiltered = new ArrayList<>();
 		List<AnagraficaDTO> listaAnimaliDone = new ArrayList<>();
@@ -910,7 +962,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 				String filterProperty = it.next();
 				if (filterProperty != null && !filterProperty.equals("")) {
 					if (filters.get(filterProperty) != null && !filters.get(filterProperty).toString().isEmpty())
-						crit.add(Restrictions.ilike(filterProperty, filters.get(filterProperty).toString(), MatchMode.ANYWHERE));
+						crit.add(Restrictions.ilike(filterProperty, filters.get(filterProperty).toString(),
+								MatchMode.ANYWHERE));
 				}
 			}
 
@@ -936,6 +989,19 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			for (Anagrafica anagrafica : listaAnimaliFiltered) {
 				dto = new AnagraficaDTO();
 				dto = ConverterEntityToDto.anagraficaEntityToAngraficaDTO(anagrafica);
+
+				if (anagrafica.getAnaFlagDisponibile().equals("0")) {
+					StoricoGruppiMonta sgm = getStoricoGruppoMontaFromAnaId(dto.getAnaId());
+					List<StoricoAccrescFini> saf = getStoricoAccrescFiniFromAnaId(dto.getAnaId());
+					if (sgm != null) {
+						dto.setGruppiAppartenenza(sgm.getSgmNome());
+					}
+					if (saf != null && saf.size() > 0) {
+						for (StoricoAccrescFini storico : saf)
+							dto.setGruppiAppartenenza("Appez. : " + storico.getSafNumAppezzamento());
+					}
+				}
+
 				listaAnimaliDone.add(dto);
 			}
 		} catch (Exception e) {
@@ -953,7 +1019,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			String filterProperty = it.next();
 			if (filterProperty != null && !filterProperty.equals("")) {
 				if (filters.get(filterProperty) != null && !filters.get(filterProperty).toString().isEmpty())
-					crit.add(Restrictions.ilike(filterProperty, filters.get(filterProperty).toString(), MatchMode.ANYWHERE));
+					crit.add(Restrictions.ilike(filterProperty, filters.get(filterProperty).toString(),
+							MatchMode.ANYWHERE));
 			}
 		}
 
@@ -984,7 +1051,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	public List<AnagraficaDTO> getAllToriDisponibili(int uteRifId) {
 
 		Criteria crit = getSession(em).createCriteria(Anagrafica.class);
-		crit.add(Restrictions.eq("anaUteId", uteRifId)).add(Restrictions.eq("anaSesso", "M")).add(Restrictions.eq("anaFlagDisponibile", "1"));
+		crit.add(Restrictions.eq("anaUteId", uteRifId)).add(Restrictions.eq("anaSesso", "M"))
+				.add(Restrictions.eq("anaFlagDisponibile", "1"));
 		return ConverterEntityToDto.anagraficaListEntityToAnagraficaListDto((List<Anagrafica>) crit.list());
 
 	}
@@ -993,7 +1061,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 		Criteria crit;
 		crit = getSession(em).createCriteria(StoricoGruppiMonta.class);
-		crit.add(Restrictions.eq("sgmUteId", uteRifId)).add(Restrictions.eq("sgmNome", newName).ignoreCase()).add(Restrictions.isNull("sgmDataChiusura"));
+		crit.add(Restrictions.eq("sgmUteId", uteRifId)).add(Restrictions.eq("sgmNome", newName).ignoreCase())
+				.add(Restrictions.isNull("sgmDataChiusura"));
 //		if (gruppoType.equals("gdm")) {
 //			crit = getSession(em).createCriteria(StoricoGruppiMonta.class);
 //			crit.add(Restrictions.eq("sgmNome",newName).ignoreCase()).add(Restrictions.isNull("sgmDataChiusura"));
@@ -1016,7 +1085,8 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 				getSession(em).flush();
 				return true;
 			} catch (Exception e) {
-				logger.info("Errore nel modificare il nome del gruppo di monta con id " + sgmDTO.getSgmId() + " da " + sgmDTO.getSgmNome() + " a " + newName);
+				logger.info("Errore nel modificare il nome del gruppo di monta con id " + sgmDTO.getSgmId() + " da "
+						+ sgmDTO.getSgmNome() + " a " + newName);
 				e.printStackTrace();
 			}
 			return false;
@@ -1024,4 +1094,36 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			return false;
 	}
 
+	public StoricoGruppiMonta getStoricoGruppoMontaFromAnaId(int anaId) {
+		StoricoGruppiMonta sgm = new StoricoGruppiMonta();
+		try {
+
+			sgm = (StoricoGruppiMonta) getSession(em)
+					.createSQLQuery(getStoricoMontaFromAnaId.replace("{0}", new Integer(anaId).toString()))
+					.addEntity(StoricoGruppiMonta.class).uniqueResult();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return sgm;
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<StoricoAccrescFini> getStoricoAccrescFiniFromAnaId(int anaId) {
+		List<StoricoAccrescFini> saf = new ArrayList<>();
+		try {
+
+			saf = (List<StoricoAccrescFini>) getSession(em)
+					.createSQLQuery(getStoricoAccrFinisFromAnaId.replace("{0}", new Integer(anaId).toString()))
+					.addEntity(StoricoAccrescFini.class).list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return saf;
+
+	}
 }

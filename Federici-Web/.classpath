@@ -22,5 +22,6 @@
 	<classpathentry kind="lib" path="C:/Users/AlessioScoccia/Desktop/File_utility/Utility_libs/poi-ooxml-3.7-20101029.jar"/>
 	<classpathentry kind="lib" path="C:/Users/AlessioScoccia/Desktop/File_utility/Utility_libs/primefaces-6.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Federici-Data"/>
+	<classpathentry kind="lib" path="C:/Users/AlessioScoccia/Desktop/File_utility/Utility_libs/primefaces-extensions-8.0.RC1.jar"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>

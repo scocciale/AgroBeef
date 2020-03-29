@@ -1,6 +1,8 @@
 package com.managedBean;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -23,9 +25,9 @@ import com.service.FedericiService;
 public class AnagraficaMB extends BaseMB {
 
 	Logger logger = Logger.getLogger(AnagraficaMB.class.getName());
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@ManagedProperty(value = "#{userMB}")
 	private UserMB userMB;
 
@@ -41,6 +43,7 @@ public class AnagraficaMB extends BaseMB {
 	private List<String> razzeString;
 	private List<RazzaDTO> razzeList;
 	private AnagraficaDTOLazyModel lazyModel;
+	private String expNome = "Export_Anagrafica_";
 
 	@EJB
 	FedericiService federiciService;
@@ -58,8 +61,7 @@ public class AnagraficaMB extends BaseMB {
 
 		lazyModel = new AnagraficaDTOLazyModel(userMB, federiciService);
 
-		List<ValutazioneMaceDTO> valutazioneMaceList = federiciService
-				.getAllValutazioniMace(userMB.getUtente().getUteRifId());
+		List<ValutazioneMaceDTO> valutazioneMaceList = federiciService.getAllValutazioniMace(userMB.getUtente().getUteRifId());
 
 		razzeList = federiciService.getAllRazze();
 
@@ -71,6 +73,8 @@ public class AnagraficaMB extends BaseMB {
 		for (ValutazioneMaceDTO val : valutazioneMaceList) {
 			valEsistenti.add(val.getAnagrafica().getAnaNumMatricola());
 		}
+
+		expNome = new String(expNome.concat(new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(new Date())));
 	}
 
 	public String salvaDatiAnag() {
@@ -196,13 +200,10 @@ public class AnagraficaMB extends BaseMB {
 	}
 
 	public void checkRazza() {
-		if (nuovoAnimale.getAnaNumMatricolaMadre() != null && !nuovoAnimale.getAnaNumMatricolaMadre().equals("")
-				&& nuovoAnimale.getAnaNumMatricolaPadre() != null
+		if (nuovoAnimale.getAnaNumMatricolaMadre() != null && !nuovoAnimale.getAnaNumMatricolaMadre().equals("") && nuovoAnimale.getAnaNumMatricolaPadre() != null
 				&& !nuovoAnimale.getAnaNumMatricolaPadre().equals("")) {
-			String razzaMadre = federiciService.getRazza(nuovoAnimale.getAnaNumMatricolaMadre(),
-					userMB.getUtente().getUteRifId());
-			String razzaPadre = federiciService.getRazza(nuovoAnimale.getAnaNumMatricolaPadre(),
-					userMB.getUtente().getUteRifId());
+			String razzaMadre = federiciService.getRazza(nuovoAnimale.getAnaNumMatricolaMadre(), userMB.getUtente().getUteRifId());
+			String razzaPadre = federiciService.getRazza(nuovoAnimale.getAnaNumMatricolaPadre(), userMB.getUtente().getUteRifId());
 			if (razzaMadre.toUpperCase().equals(razzaPadre.toUpperCase())) {
 				nuovoAnimale.setAnaRazza(razzaMadre);
 			}
@@ -223,7 +224,7 @@ public class AnagraficaMB extends BaseMB {
 			flagGemello = ana.getAnaFlagGemello().equals("1") ? true : false;
 		// flagGemello = true;
 		animaleEdit.setAnaFlagToro(ana.getAnaFlagToro());
-		
+
 		if (new Integer(ana.getAnaFlagToro()) != null)
 			flagToro = ana.getAnaFlagToro() == 1 ? true : false;
 		// flagToro=true;
@@ -339,6 +340,14 @@ public class AnagraficaMB extends BaseMB {
 
 	public void setLazyModel(AnagraficaDTOLazyModel lazyModel) {
 		this.lazyModel = lazyModel;
+	}
+
+	public String getExpNome() {
+		return expNome;
+	}
+
+	public void setExpNome(String expNome) {
+		this.expNome = expNome;
 	}
 
 }

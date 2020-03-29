@@ -49,7 +49,11 @@
 							<p:column headerText="#{text['column.header.ultimo.peso']}"
 								width="6%" style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.pesatas.get(0).pesPeso}">
-								<h:outputText
+								<h:outputText rendered="#{(ana.pesatas.get(0).pesPeso gt 700 and ana.anaSesso.equals('M')) or (ana.pesatas.get(0).pesPeso gt 500 and ana.anaSesso.equals('F'))}"
+									value="#{ana.pesatas.get(ana.pesatas.size()-1).pesPeso}" style="color:red">
+									<f:convertNumber pattern="#,##0.0" />
+								</h:outputText>
+								<h:outputText rendered="#{(ana.pesatas.get(0).pesPeso lt 700 and ana.anaSesso.equals('M')) or (ana.pesatas.get(0).pesPeso lt 500 and ana.anaSesso.equals('F'))}"
 									value="#{ana.pesatas.get(ana.pesatas.size()-1).pesPeso}">
 									<f:convertNumber pattern="#,##0.0" />
 								</h:outputText>

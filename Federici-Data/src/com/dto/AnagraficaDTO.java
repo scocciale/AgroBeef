@@ -29,22 +29,15 @@ public class AnagraficaDTO {
 	private RazzaDTO razza;
 	private int anaRazId;
 	private String anaFlagDisponibile;
-	
+	private int anaEtaCalcolata;
+	private String gruppiAppartenenza;
+
 	public int getAnaId() {
 		return anaId;
 	}
 
 	public void setAnaId(int anaId) {
 		this.anaId = anaId;
-	}
-
-	@Override
-	public String toString() {
-		return "AnagraficaDTO [anaId=" + anaId + ", anaDataAcquisto=" + anaDataAcquisto + ", anaDataNascita="
-				+ anaDataNascita + ", anaDifficoltaParto=" + anaDifficoltaParto + ", anaFlagGemello=" + anaFlagGemello
-				+ ", anaFlagToro=" + anaFlagToro + ", anaNumMatricola=" + anaNumMatricola + ", anaNumMatricolaMadre="
-				+ anaNumMatricolaMadre + ", anaNumMatricolaPadre=" + anaNumMatricolaPadre + ", anaNumParto="
-				+ anaNumParto + ", anaRazza=" + anaRazza + ", anaSesso=" + anaSesso + ", anaUteId=" + anaUteId + "]";
 	}
 
 	public Date getAnaDataAcquisto() {
@@ -229,6 +222,30 @@ public class AnagraficaDTO {
 
 	public void setAnaFlagDisponibile(String anaFlagDisponibile) {
 		this.anaFlagDisponibile = anaFlagDisponibile;
+	}
+
+	public int getAnaEtaCalcolata() {
+		return anaEtaCalcolata;
+	}
+
+	public void setAnaEtaCalcolata(int anaEtaCalcolata) {
+		this.anaEtaCalcolata = anaEtaCalcolata;
+	}
+
+	public String getGruppiAppartenenza() {
+		return gruppiAppartenenza;
+	}
+
+	public void setGruppiAppartenenza(String gruppiAppartenenza) {
+		this.gruppiAppartenenza = gruppiAppartenenza;
+	}
+
+	@Override
+	public String toString() {
+		return "AnagraficaDTO [anaId=" + anaId + ", anaDataAcquisto=" + anaDataAcquisto + ", anaDataNascita=" + anaDataNascita + ", anaDifficoltaParto=" + anaDifficoltaParto + ", anaFlagGemello="
+				+ anaFlagGemello + ", anaFlagToro=" + anaFlagToro + ", anaNumMatricola=" + anaNumMatricola + ", anaNumMatricolaMadre=" + anaNumMatricolaMadre + ", anaNumMatricolaPadre="
+				+ anaNumMatricolaPadre + ", anaNumParto=" + anaNumParto + ", anaRazza=" + anaRazza + ", anaSesso=" + anaSesso + ", anaUteId=" + anaUteId + ", anaEtaCalcolata=" + anaEtaCalcolata
+				+ ", gruppiAppartenenza=" + gruppiAppartenenza + "]";
 	}
 
 }
