@@ -10,7 +10,8 @@ public enum Navigation {
 	GRUPPI_MONTA("/pages/gruppiDiMonta.xhtml"),
 	GRUPPI_ACCRESCIMENTO("/pages/gruppiDiAccrescimento.xhtml"),
 	PESATA_COMMERCIALE("/pages/pesataCommerciale.xhtml"),
-	PESATA_ANAGRAFICA("/pages/pesataAnagrafica.xhtml");
+	PESATA_ANAGRAFICA("/pages/pesataAnagrafica.xhtml"),
+	INTERPARTO("/pages/interparto.xhtml");
 	
 	private String pageUrl;
 	
