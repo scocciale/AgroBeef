@@ -3,6 +3,7 @@ package com.service;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import com.converter.ConverterEntityToDto;
 import com.dto.AnagrAccrFiniDTO;
 import com.dto.AnagraficaDTO;
 import com.dto.GruppoMontaDTO;
+import com.dto.PartoDTO;
 import com.dto.PesataDTO;
 import com.dto.RazzaDTO;
 import com.dto.ReportDTO;
@@ -34,6 +36,7 @@ import com.dto.VeterinariaDTO;
 import com.entities.AnagrAccrFini;
 import com.entities.Anagrafica;
 import com.entities.GruppoMonta;
+import com.entities.Parto;
 import com.entities.Pesata;
 import com.entities.Razza;
 import com.entities.Report;
@@ -77,9 +80,11 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 
 	final static String countRowInAnagraficaFromUte = "SELECT count(*) FROM Anagrafica a WHERE a.ana_ute_id = {0}";
 
-	final static String getStoricoMontaFromAnaId = "SELECT SGM.SGM_ID, SGM.SGM_NOME, SGM.SGM_DATA_APERTURA, SGM.SGM_DATA_CHIUSURA, SGM.SGM_UTE_ID FROM STORICO_GRUPPI_MONTA SGM, GRUPPO_MONTA GM WHERE GM.GMO_ANA_ID = {0} AND GM.GMO_DATA_USCITA IS NULL AND GM.GMO_SGM_ID = SGM.SGM_ID";
+	final static String countAllFemaleAnagFromUte = "SELECT count(*) FROM Anagrafica a WHERE a.ana_ute_id = {0} and a.ana_sesso = 'F'";
 
-	final static String getStoricoAccrFinisFromAnaId = "SELECT SAF.SAF_ID, SAF.SAF_NUM_APPEZZAMENTO, SAF.SAF_DATA_INIZIO, SAF.SAF_DATA_FINE, SAF.SAF_SCOPO, SAF.SAF_UTE_ID FROM STORICO_ACCRESC_FINIS SAF, ANAGR_ACCR_FINIS AAF WHERE AAF.AAF_ANA_ID = {0} AND AAF.AAF_DATA_USCITA IS NULL AND AAF.AAF_SAF_ID = SAF.SAF_ID";
+	final static String getStoricoMontaFromAnaId = "select sgm.sgm_id, sgm.sgm_nome, sgm.sgm_data_apertura, sgm.sgm_data_chiusura, sgm.sgm_ute_id from storico_gruppi_monta sgm, gruppo_monta gm where gm.gmo_ana_id = {0} and gm.gmo_data_uscita is null and gm.gmo_sgm_id = sgm.sgm_id";
+
+	final static String getStoricoAccrFinisFromAnaId = "select saf.saf_id, saf.saf_num_appezzamento, saf.saf_data_inizio, saf.saf_data_fine, saf.saf_scopo, saf.saf_ute_id from storico_accresc_finis saf, anagr_accr_finis aaf where aaf.aaf_ana_id = {0} and aaf.aaf_data_uscita is null and aaf.aaf_saf_id = saf.saf_id";
 
 	final static String causaUscita = "Macellazione";
 
@@ -210,7 +215,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		return animale;
 	}
 
-	public boolean salvaNuovoAnimale(AnagraficaDTO nuovoAnimale, int uteId) {
+	public AnagraficaDTO salvaNuovoAnimale(AnagraficaDTO nuovoAnimale, int uteId) {
 		Anagrafica na = new Anagrafica();
 
 		nuovoAnimale.setAnaUteId(uteId);
@@ -222,11 +227,11 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 			logger.info("Salvato nuovo animale con matricola '" + na.getAnaNumMatricola() + "'.");
 			nuovoAnimale = new AnagraficaDTO();
 			nuovoAnimale = ConverterEntityToDto.anagraficaEntityToAngraficaDTO(na);
-			return true;
+			return nuovoAnimale;
 		} catch (Exception e) {
 			logger.info("Impossibile salvare nuovo animale con matricola '" + na.getAnaNumMatricola() + "'.");
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 
 	}
@@ -1051,7 +1056,7 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 	public List<AnagraficaDTO> getAllToriDisponibili(int uteRifId) {
 
 		Criteria crit = getSession(em).createCriteria(Anagrafica.class);
-		crit.add(Restrictions.eq("anaUteId", uteRifId)).add(Restrictions.eq("anaSesso", "M"))
+		crit.add(Restrictions.eq("anaUteId", uteRifId)).add(Restrictions.eq("anaFlagToro", 1))
 				.add(Restrictions.eq("anaFlagDisponibile", "1"));
 		return ConverterEntityToDto.anagraficaListEntityToAnagraficaListDto((List<Anagrafica>) crit.list());
 
@@ -1125,5 +1130,210 @@ public class FedericiServiceImpl extends BaseService implements FedericiService 
 		}
 		return saf;
 
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AnagraficaDTO> getAnagraficaWithParam(String param) {
+		List<Anagrafica> anaList = new ArrayList<>();
+
+		anaList = (List<Anagrafica>) getSession(em).createCriteria(Anagrafica.class)
+				.add(Restrictions.disjunction().add(Restrictions.ilike("anaNumMatricola", param, MatchMode.ANYWHERE))
+						.add(Restrictions.ilike("anaRazza", param, MatchMode.ANYWHERE)))
+				.list();
+
+		return (List<AnagraficaDTO>) (anaList.size() > 0
+				? ConverterEntityToDto.anagraficaListEntityToAnagraficaListDto(anaList)
+				: new ArrayList<>());
+	}
+
+	public BigInteger countAllFemaleForUser(int uteRifId) {
+
+		String query = countAllFemaleAnagFromUte.replace("{0}", new Integer(uteRifId).toString());
+
+		return (BigInteger) getSession(em).createSQLQuery(query).uniqueResult();
+	}
+
+	public List<AnagraficaDTO> getAllFemaleAnagraficaFiltered(int uteRifId, int first, int pageSize,
+			String sortOrderToStr, Map<String, Object> filters, String sortField) {
+
+		List<Anagrafica> listaAnimaliFiltered = new ArrayList<>();
+		List<AnagraficaDTO> listaAnimaliDone = new ArrayList<>();
+
+		try {
+			Criteria crit = getSession(em).createCriteria(Anagrafica.class);
+			crit.add(Restrictions.eq("anaUteId", uteRifId)).add(Restrictions.eq("anaSesso", "F"));
+
+			for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
+				String filterProperty = it.next();
+				if (filterProperty != null && !filterProperty.equals("")) {
+					if (filters.get(filterProperty) != null && !filters.get(filterProperty).toString().isEmpty())
+						crit.add(Restrictions.ilike(filterProperty, filters.get(filterProperty).toString(),
+								MatchMode.ANYWHERE));
+				}
+			}
+
+			// ordering query
+			if (sortField != null && !sortField.isEmpty()) {
+				if (sortOrderToStr != null && !sortOrderToStr.isEmpty()) {
+					crit.addOrder(sortOrderToStr.equals("desc") ? Order.desc(sortField) : Order.asc(sortField));
+				}
+			}
+
+			// limit query
+			crit.setFirstResult(first);
+			crit.setMaxResults(pageSize);
+
+			listaAnimaliFiltered = (List<Anagrafica>) crit.list();
+
+			AnagraficaDTO dto;
+			for (Anagrafica anagrafica : listaAnimaliFiltered) {
+				dto = new AnagraficaDTO();
+				dto = ConverterEntityToDto.anagraficaEntityToAngraficaDTO(anagrafica);
+
+				List<Parto> pList = getPartoFromAnaId(dto.getAnaId());
+
+				if (pList != null) {
+					if (pList.size() > 1) {
+						dto.setGiorniInterparto(getDateDiff(pList.get(1).getParData(), pList.get(0).getParData()));
+						dto.setGgUltimoPartoAdOggi(getDateDiff(pList.get(0).getParData(), new Date()));
+					} else if (pList.size() == 1) {
+						dto.setGiorniInterparto(0);
+						dto.setGgUltimoPartoAdOggi(getDateDiff(pList.get(0).getParData(), new Date()));
+					} else {
+						dto.setGiorniInterparto(-1);
+						dto.setGgUltimoPartoAdOggi(-1);
+					}
+				}
+
+				listaAnimaliDone.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listaAnimaliDone;
+
+	}
+
+	public static int getDateDiff(Date oldDate, Date newDate) {
+		return (int) ((newDate.getTime() - oldDate.getTime()) / (1000 * 60 * 60 * 24));
+	}
+
+	public int countAllFemaleAnagraficaFiltered(int uteRifId, Map<String, Object> filters) {
+
+		Criteria crit = getSession(em).createCriteria(Anagrafica.class);
+		crit.add(Restrictions.eq("anaUteId", uteRifId)).add(Restrictions.eq("anaSesso", "F"));
+		for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
+			String filterProperty = it.next();
+			if (filterProperty != null && !filterProperty.equals("")) {
+				if (filters.get(filterProperty) != null && !filters.get(filterProperty).toString().isEmpty())
+					crit.add(Restrictions.ilike(filterProperty, filters.get(filterProperty).toString(),
+							MatchMode.ANYWHERE));
+			}
+		}
+
+		crit.setProjection(Projections.rowCount());
+
+		Long l = (Long) crit.uniqueResult();
+
+		return Integer.parseInt(l.toString());
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Parto> getPartoFromAnaId(int ana_id) {
+		return (List<Parto>) getSession(em).createCriteria(Parto.class).add(Restrictions.eq("parMadreAnaId", ana_id))
+				.addOrder(Order.desc("parData")).list();
+	}
+
+	public List<AnagraficaDTO> getAllFemaleAnagrafica(int uteCod, int start, int size, String sortOrderToStr,
+			String sortField) {
+
+		List<AnagraficaDTO> listDTO = new ArrayList<>();
+		List<Anagrafica> list = new ArrayList<>();
+		try {
+
+			Criteria crit = getSession(em).createCriteria(Anagrafica.class);
+			crit.add(Restrictions.eq("anaUteId", uteCod)).add(Restrictions.eq("anaSesso", "F"));
+
+			// ordering query
+			if (sortField != null && !sortField.isEmpty()) {
+				if (sortOrderToStr != null && !sortOrderToStr.isEmpty()) {
+					if (sortOrderToStr.equals("desc")) {
+						crit.addOrder(Order.desc(sortField));
+					} else {
+						crit.addOrder(Order.asc(sortField));
+					}
+				}
+			}
+
+			// limit in query
+			crit.setFirstResult(start);
+			crit.setMaxResults(size);
+
+			list = (List<Anagrafica>) crit.list();
+
+			AnagraficaDTO dto;
+			for (Anagrafica anagrafica : list) {
+				dto = new AnagraficaDTO();
+				dto = ConverterEntityToDto.anagraficaEntityToAngraficaDTO(anagrafica);
+
+				List<Parto> pList = getPartoFromAnaId(dto.getAnaId());
+
+				if (pList != null) {
+					if (pList.size() > 1) {
+						dto.setGiorniInterparto(getDateDiff(pList.get(1).getParData(), pList.get(0).getParData()));
+						dto.setGgUltimoPartoAdOggi(getDateDiff(pList.get(0).getParData(), new Date()));
+					} else if (pList.size() == 1) {
+						dto.setGiorniInterparto(0);
+						dto.setGgUltimoPartoAdOggi(getDateDiff(pList.get(0).getParData(), new Date()));
+					} else {
+						dto.setGiorniInterparto(-1);
+						dto.setGgUltimoPartoAdOggi(-1);
+					}
+				}
+
+				listDTO.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return listDTO;
+
+	}
+
+	public PartoDTO salvaNuovoParto(PartoDTO newParto) {
+		try {
+			Parto p = ConverterDtoToEntity.partoDtoToPartoEntity(newParto);
+			getSession(em).saveOrUpdate(p);
+			getSession(em).flush();
+			return ConverterEntityToDto.partoEntityToPartoDto(p);
+		} catch (Exception e) {
+			logger.info("Impossibile salvare nuovo parto per matricola con id: '" + newParto.getParMadreAnaId() + "'.");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<AnagraficaDTO> getAllFigliFromMadre(String matricolaMadre) {
+		try {
+			Criteria crit = getSession(em).createCriteria(Anagrafica.class);
+			crit.add(Restrictions.eq("anaNumMatricolaMadre", matricolaMadre));
+			return (List<AnagraficaDTO>) ConverterEntityToDto.anagraficaListEntityToAnagraficaListDto(crit.list());
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public List<AnagraficaDTO> getAllFemaleFromUte(String valParam, int uteRifId) {
+		try {
+			Criteria crit = getSession(em).createCriteria(Anagrafica.class);
+			crit.add(Restrictions.eq("anaUteId", uteRifId));
+			crit.add(Restrictions.eq("anaSesso", "F"));
+			crit.add(Restrictions.ilike("anaNumMatricola", valParam, MatchMode.ANYWHERE));
+			return (List<AnagraficaDTO>) ConverterEntityToDto.anagraficaListEntityToAnagraficaListDto(crit.list());
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

@@ -16,6 +16,7 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.context.RequestContext;
 
 import com.dto.AnagraficaDTO;
+import com.dto.PartoDTO;
 import com.dto.RazzaDTO;
 import com.dto.ValutazioneMaceDTO;
 import com.service.FedericiService;
@@ -61,7 +62,8 @@ public class AnagraficaMB extends BaseMB {
 
 		lazyModel = new AnagraficaDTOLazyModel(userMB, federiciService);
 
-		List<ValutazioneMaceDTO> valutazioneMaceList = federiciService.getAllValutazioniMace(userMB.getUtente().getUteRifId());
+		List<ValutazioneMaceDTO> valutazioneMaceList = federiciService
+				.getAllValutazioniMace(userMB.getUtente().getUteRifId());
 
 		razzeList = federiciService.getAllRazze();
 
@@ -124,18 +126,33 @@ public class AnagraficaMB extends BaseMB {
 				if (nuovoAnimale.getAnaRazza().equals(r.getRazSigla()))
 					nuovoAnimale.setAnaRazId(r.getRazId());
 			}
+
 			// nuovoAnimale.setAnaSesso(sesso);
-			boolean saved = federiciService.salvaNuovoAnimale(nuovoAnimale, userMB.getUtente().getUteRifId());
+			nuovoAnimale = federiciService.salvaNuovoAnimale(nuovoAnimale, userMB.getUtente().getUteRifId());
 			// if (saved)
 			// anagraficaList.add(federiciService.getAnimale(nuovoAnimale.getAnaNumMatricola()));
 			RequestContext.getCurrentInstance().update("@all");
 			sesso = "";
 			flagGemello = false;
 			flagToro = false;
-			return saved ? "ok" : "ko";
+//			return saved ? "ok" : "ko";
 
+			if (nuovoAnimale.getAnaId() != 0) {
+				// inserisco parto per la madre
+				if (nuovoAnimale.getAnaNumMatricolaMadre() != null) {
+					AnagraficaDTO madre = federiciService.getAnimale(nuovoAnimale.getAnaNumMatricolaMadre());
+					if (madre != null) {
+						PartoDTO newParto = new PartoDTO();
+						newParto.setParMadreAnaId(madre.getAnaId());
+						newParto.setParData(nuovoAnimale.getAnaDataNascita());
+						newParto.setParAnaId(nuovoAnimale.getAnaId());
+						newParto = federiciService.salvaNuovoParto(newParto);
+					}
+				}
+				return "ok";
+			} else
+				return "ko";
 		}
-
 	}
 
 	public String updateDatiAnag() {
@@ -200,10 +217,13 @@ public class AnagraficaMB extends BaseMB {
 	}
 
 	public void checkRazza() {
-		if (nuovoAnimale.getAnaNumMatricolaMadre() != null && !nuovoAnimale.getAnaNumMatricolaMadre().equals("") && nuovoAnimale.getAnaNumMatricolaPadre() != null
+		if (nuovoAnimale.getAnaNumMatricolaMadre() != null && !nuovoAnimale.getAnaNumMatricolaMadre().equals("")
+				&& nuovoAnimale.getAnaNumMatricolaPadre() != null
 				&& !nuovoAnimale.getAnaNumMatricolaPadre().equals("")) {
-			String razzaMadre = federiciService.getRazza(nuovoAnimale.getAnaNumMatricolaMadre(), userMB.getUtente().getUteRifId());
-			String razzaPadre = federiciService.getRazza(nuovoAnimale.getAnaNumMatricolaPadre(), userMB.getUtente().getUteRifId());
+			String razzaMadre = federiciService.getRazza(nuovoAnimale.getAnaNumMatricolaMadre(),
+					userMB.getUtente().getUteRifId());
+			String razzaPadre = federiciService.getRazza(nuovoAnimale.getAnaNumMatricolaPadre(),
+					userMB.getUtente().getUteRifId());
 			if (razzaMadre.toUpperCase().equals(razzaPadre.toUpperCase())) {
 				nuovoAnimale.setAnaRazza(razzaMadre);
 			}
@@ -238,6 +258,16 @@ public class AnagraficaMB extends BaseMB {
 		animaleEdit.setAnaUteId(ana.getAnaUteId());
 		animaleEdit.setAnaUscitaCausa(ana.getAnaUscitaCausa());
 		animaleEdit.setAnaFlagDisponibile(ana.getAnaFlagDisponibile());
+	}
+
+	public List<String> cercaSeMadreEsiste(String valParam) {
+		List<String> listaStringAnimali = new ArrayList<>();
+		List<AnagraficaDTO> listaFemmine = new ArrayList<>();
+		listaFemmine = federiciService.getAllFemaleFromUte(valParam, userMB.getUtente().getUteRifId());
+		for (AnagraficaDTO ana : listaFemmine) {
+			listaStringAnimali.add(ana.getAnaNumMatricola());
+		}
+		return listaStringAnimali;
 	}
 
 	public void showDialogAnag() {

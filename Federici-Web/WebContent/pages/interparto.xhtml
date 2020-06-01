@@ -14,393 +14,41 @@
 		<h:outputText value="" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="#{text['panel.anagrafica.datatable']}"
+		<p:panel header="#{text['panel.interparto.datatable']}"
 			closable="false" toggleable="false" widgetVar="resultPanelWdg"
 			style="margin-left: 10px ; margin-right: 10px">
 			<div class="row">
-				<p:commandButton value="#{text['button.aggiungi']}"
-					style="float:right!important;"
-					rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
-					id="addAnag" action="#{anagMB.showDialogAnag}"
-					styleClass="width-100 waves-effect waves-light btn rosso_cdr"
-					update="dialogAnag" />
-				<p:tooltip for="addAnag"
-					value="#{text['tooltip.aggiungi.nuovo.animale']}" position="top" />
-			</div>
-			<p:dialog resizable="false" widgetVar="dlgNuovoAnag" width="60%"
-				id="dialogAnag" closable="true" styleClass="dialogClass"
-				style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
-
-				<div class="row center">
-					<h:outputText value="#{text['label.animale.dettagli']}"
-						styleClass="text-al-cen"
-						style="font-weight: bold !important; font-size:1.5em" />
-				</div>
-				<div class="row">
-					<p:panelGrid id="gridDettagliAnag" styleClass="companyHeaderGrid">
-						<p:row>
-							<p:column colspan="1">
-								<div class="input-field row">
-									<p:inputText id="matricola" styleClass="validate"
-										value="#{anagMB.nuovoAnimale.anaNumMatricola}"></p:inputText>
-									<label class="left-align" for="matricola"><h:outputText
-											value="#{text['column.header.numero.mat']} #{text['mandatory']}" /></label>
-								</div>
-							</p:column>
-							<p:column colspan="1">
-							</p:column>
-							<p:column colspan="1">
-								<div class="row">
-									<p:outputLabel
-										value="#{text['column.header.sesso']} #{text['mandatory']}"
-										for="sesso">
-										<p:selectOneRadio id="sesso"
-											value="#{anagMB.nuovoAnimale.anaSesso}" style="width: 40px;">
-											<f:selectItem itemLabel="#{text['gender.f']}" itemValue="F" />
-											<f:selectItem itemLabel="#{text['gender.m']}" itemValue="M" />
-										</p:selectOneRadio>
-									</p:outputLabel>
-
-								</div>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<div class="input-field">
-									<p:inputText id="matMadre" styleClass="validate"
-										onkeypress="if (event.keyCode == 13) return false;"
-										value="#{anagMB.nuovoAnimale.anaNumMatricolaMadre}">
-										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
-									</p:inputText>
-									<label class="left-align" for="matMadre"><h:outputText
-											value="#{text['column.header.numero.mat.madre']}" /></label>
-								</div>
-							</p:column>
-
-							<p:column>
-								<div class="input-field">
-									<p:inputText id="matPadre" styleClass="validate"
-										onkeypress="if (event.keyCode == 13) return false;"
-										value="#{anagMB.nuovoAnimale.anaNumMatricolaPadre}">
-										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
-									</p:inputText>
-									<label class="left-align" for="matPadre"><h:outputText
-											value="#{text['column.header.numero.mat.padre']}" /></label>
-								</div>
-							</p:column>
-
-							<p:column colspan="1">
-								<div class="row" style="">
-									<p:outputLabel value="#{text['column.header.toro']}"
-										style="margin-left: 20px;" for="flagToro" />
-									<p:selectBooleanCheckbox value="#{anagMB.flagToro}"
-										style="margin-left: 20px;" id="flagToro" />
-								</div>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column colspan="1">
-								<div class="input-field">
-									<p:outputLabel for="dataNasc"
-										value="#{text['column.header.data.nasc']}"
-										styleClass="left-align"
-										style="font-size: 0.9rem !important;color: #888888;!important" />
-									<p:calendar id="dataNasc"
-										value="#{anagMB.nuovoAnimale.anaDataNascita}" navigator="true"
-										styleClass="validate" pattern="dd/MM/yyyy">
-									</p:calendar>
-								</div>
-							</p:column>
-
-							<p:column colspan="1">
-								<div class="input-field">
-									<p:outputLabel for="dataAcq"
-										value="#{text['label.data.acquisto']}" styleClass="left-align"
-										style="font-size: 0.9rem !important;color: #888888;!important" />
-									<p:calendar id="dataAcq"
-										value="#{anagMB.nuovoAnimale.anaDataAcquisto}" locale="it"
-										navigator="true" styleClass="validate" pattern="dd/MM/yyyy">
-									</p:calendar>
-								</div>
-							</p:column>
-
-							<p:column colspan="1">
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column colspan="1">
-								<div class="input-field">
-									<label class="left-align" for="razza"><h:outputText
-											value="#{text['column.header.razza']}" /></label>
-
-									<p:selectOneMenu id="razza" widgetVar="razzaNuovoAnimale"
-										value="#{anagMB.nuovoAnimale.anaRazza}"
-										style="width:125px;display: block!important;margin-left: auto !important;margin-right: auto !important;">
-										<f:selectItem itemLabel="#{text['label.seleziona.razza']}"
-											itemValue="" />
-										<f:selectItems value="#{anagMB.razzeString}" />
-									</p:selectOneMenu>
-								</div>
-							</p:column>
-
-							<p:column colspan="1">
-								<div class="input-field">
-									<p:inputText id="nParto" styleClass="validate"
-										onkeypress="if (event.keyCode == 13) return false;"
-										value="#{anagMB.nuovoAnimale.anaNumParto}">
-									</p:inputText>
-									<label class="left-align" for="nParto"><h:outputText
-											value="#{text['label.num.parto']}" /></label>
-								</div>
-							</p:column>
-							<p:column colspan="1">
-								<div class="row" style="">
-									<p:outputLabel value="#{text['column.header.gemello']}"
-										style="margin-left: 20px;" for="flagGemello" />
-									<p:selectBooleanCheckbox value="#{anagMB.flagGemello}"
-										style="margin-left: 20px;" id="flagGemello" />
-								</div>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column colspan="1">
-								<div class="input-field">
-									<p:inputText id="diffParto" styleClass="validate"
-										value="#{anagMB.nuovoAnimale.anaDifficoltaParto}"
-										onkeypress="if (event.keyCode == 13) return false;">
-									</p:inputText>
-									<label class="left-align" for="diffParto"><h:outputText
-											value="#{text['label.diff.parto']}" /></label>
-								</div>
-							</p:column>
-
-						</p:row>
-					</p:panelGrid>
-				</div>
-				<div class="row">
-					<p:commandButton id="salvaAnag" value="#{text['button.salva']}"
-						actionListener="#{anagMB.salvaDatiAnag}"
-						styleClass="width-100 waves-effect waves-light btn rosso_cdr "
-						style="width:auto; float:right;"
-						oncomplete="PF('dlgNuovoAnag').hide();location.reload();"
-						update="anagrafica messages" />
-					<p:tooltip for="salvaAnag" value="#{text['tooltip.salva']}"
-						position="top" />
-				</div>
-			</p:dialog>
-
-			<p:dialog resizable="false" widgetVar="dlgNuovoAnagMod" width="60%"
-				id="dialogAnagMod" closable="true" styleClass="dialogClass"
-				style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
-
-				<div class="row center">
-					<h:outputText
-						value="#{text['label.animale.dettagli']} #{anagMB.animaleEdit.anaNumMatricola}"
-						styleClass="text-al-cen"
-						style="font-weight: bold !important; font-size:1.5em" />
-				</div>
-				<div class="row">
-					<p:panelGrid id="gridDettagliAnagMod"
-						styleClass="companyHeaderGrid">
-						<p:row>
-							<p:column colspan="1">
-								<div class="input-field row">
-									<!-- <h:outputText for="matricolaMod" value="Matricola"
-										styleClass="left-align"
-										style="font-size: 0.9rem !important;color: #888888;padding-bottom:3%!important;" />
-									<h:outputText id="matricolaMod" styleClass="validate"
-										value="#{anagMB.animaleEdit.anaNumMatricola}"></h:outputText> -->
-
-									<p:inputText id="matricolaMod" styleClass="validate"
-										onkeypress="if (event.keyCode == 13) return false;" disabled="true"
-										value="#{anagMB.animaleEdit.anaNumMatricola}">
-									</p:inputText>
-									<label class="left-align" for="matricolaMod"><h:outputText
-											value="#{text['column.header.numero.mat']}" /></label>
-
-								</div>
-							</p:column>
-							<p:column colspan="1">
-							</p:column>
-							<p:column colspan="1">
-								<div class="row">
-									<p:outputLabel value="#{text['column.header.sesso']}"
-										for="sessoMod">
-										<p:selectOneRadio id="sessoMod" value="#{anagMB.sesso}"
-											style="width: 40px;">
-											<f:selectItem itemLabel="#{text['gender.f']}" itemValue="F" />
-											<f:selectItem itemLabel="#{text['gender.m']}" itemValue="M" />
-										</p:selectOneRadio>
-									</p:outputLabel>
-
-								</div>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<div class="input-field">
-									<p:inputText id="matMadreMod" styleClass="validate" disabled="true"
-										onkeypress="if (event.keyCode == 13) return false;"
-										value="#{anagMB.animaleEdit.anaNumMatricolaMadre}">
-										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
-									</p:inputText>
-									<label class="left-align" for="matMadreMod"><h:outputText
-											value="#{text['column.header.numero.mat.madre']}" /></label>
-								</div>
-							</p:column>
-
-							<p:column>
-								<div class="input-field">
-									<p:inputText id="matPadreMod" styleClass="validate"  disabled="true"
-										onkeypress="if (event.keyCode == 13) return false;"
-										value="#{anagMB.animaleEdit.anaNumMatricolaPadre}">
-										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
-									</p:inputText>
-									<label class="left-align" for="matPadreMod"><h:outputText
-											value="#{text['column.header.numero.mat.padre']}" /></label>
-								</div>
-							</p:column>
-
-							<p:column colspan="1">
-								<div class="row" style="">
-									<p:outputLabel value="#{text['column.header.toro']}"
-										style="margin-left: 20px;" for="flagToroMod" />
-									<p:selectBooleanCheckbox value="#{anagMB.flagToro}"
-										style="margin-left: 20px;" id="flagToroMod" />
-								</div>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column colspan="1">
-								<div class="input-field">
-									<p:outputLabel for="dataNascMod"
-										value="#{text['column.header.data.nasc']}"
-										styleClass="left-align"
-										style="font-size: 0.9rem !important;color: #888888;!important" />
-									<p:calendar id="dataNascMod"
-										value="#{anagMB.animaleEdit.anaDataNascita}" locale="it"
-										navigator="true" styleClass="validate" pattern="dd/MM/yyyy">
-									</p:calendar>
-								</div>
-							</p:column>
-
-							<p:column colspan="1">
-								<div class="input-field">
-									<p:outputLabel for="dataAcqMod" 
-										value="#{text['label.data.acquisto']}" styleClass="left-align"
-										style="font-size: 0.9rem !important;color: #888888;!important" />
-									<p:calendar id="dataAcqMod" disabled="true"
-										value="#{anagMB.animaleEdit.anaDataAcquisto}" locale="it"
-										navigator="true" styleClass="validate" pattern="dd/MM/yyyy">
-									</p:calendar>
-								</div>
-							</p:column>
-
-							<p:column colspan="1">
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column colspan="1">
-								<div class="input-field">
-
-									<label class="left-align" for="razzaMod"><h:outputText
-											value="Razza" /></label>
-
-									<p:selectOneMenu id="razzaMod" widgetVar="razzaAnimaleEditing"
-										value="#{anagMB.animaleEdit.anaRazza}"
-										style="width:125px;display: block!important;margin-left: auto !important;margin-right: auto !important;">
-										<f:selectItem itemLabel="#{text['label.seleziona.razza']}"
-											itemValue="" />
-										<f:selectItems value="#{anagMB.razzeString}" />
-									</p:selectOneMenu>
-								</div>
-							</p:column>
-
-							<p:column colspan="1">
-								<div class="input-field">
-									<p:inputText id="nPartoMod" styleClass="validate" disabled="true"
-										onkeypress="if (event.keyCode == 13) return false;"
-										value="#{anagMB.animaleEdit.anaNumParto}">
-									</p:inputText>
-									<label class="left-align" for="nPartoMod"><h:outputText
-											value="#{text['label.num.parto']}" /></label>
-								</div>
-							</p:column>
-							<p:column colspan="1">
-								<div class="row" style="">
-									<p:outputLabel value="#{text['column.header.gemello']}" 
-										style="margin-left: 20px;" for="flagGemelloMod" />
-									<p:selectBooleanCheckbox value="#{anagMB.flagGemello}" disabled="true"
-										style="margin-left: 20px;" id="flagGemelloMod" />
-								</div>
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column colspan="1">
-								<div class="input-field">
-									<p:inputText id="diffPartoMod" styleClass="validate" disabled="true"
-										value="#{anagMB.animaleEdit.anaDifficoltaParto}"
-										onkeypress="if (event.keyCode == 13) return false;">
-									</p:inputText>
-									<label class="left-align" for="diffPartoMod"><h:outputText
-											value="#{text['label.diff.parto']}" /></label>
-								</div>
-							</p:column>
-							<p:column colspan="1">
-								<div class="input-field">
-									<p:outputLabel for="dataUscita"
-										value="#{text['label.data.uscita']}" styleClass="left-align"
-										style="font-size: 0.9rem !important;color: #888888;!important" />
-									<p:calendar id="dataUscita" disabled="true"
-										value="#{anagMB.animaleEdit.anaDataUscita}" locale="it"
-										navigator="true" styleClass="validate" pattern="dd/MM/yyyy">
-									</p:calendar>
-								</div>
-							</p:column>
-
-							<p:column colspan="1">
-								<div class="input-field">
-									<p:selectOneMenu id="causaUscita" disabled="true"
-										value="#{anagMB.animaleEdit.anaUscitaCausa}"
-										style="width:125px">
-										<f:selectItem itemLabel="#{text['label.causa.uscita']}"
-											itemValue="" />
-										<f:selectItem itemLabel="#{text['label.causa.morte']}"
-											itemValue="Morte" />
-										<f:selectItem itemLabel="#{text['label.causa.macellazione']}"
-											itemValue="Macellazione" />
-										<f:selectItem itemLabel="#{text['label.causa.vita']}"
-											itemValue="Vita" />
-									</p:selectOneMenu>
-								</div>
-							</p:column>
-						</p:row>
-					</p:panelGrid>
-				</div>
-				<div class="row">
-					<p:commandButton id="salvaAnagMod" value="#{text['tooltip.salva']}"
-						actionListener="#{anagMB.updateDatiAnag()}"
-						styleClass="width-100 waves-effect waves-light btn rosso_cdr"
-						style="width:auto; float:right;"
-						oncomplete="PF('dlgNuovoAnagMod').hide();"
-						update="anagrafica messages" />
-					<p:tooltip for="salvaAnag" value="#{text['tooltip.salva']}"
-						position="top" />
-				</div>
-			</p:dialog>
-
-			<div class="row">
 				<div class="ui-g">
-					<div class="ui-g-12">
+					<!-- <div class="ui-g-3">
+
+						<p:inputText id="paramSearch" value="#{interMB.searchParam}"
+							required="true">
+							<f:validateLength minimum="3" />
+						</p:inputText>
+						<p:watermark for="paramSearch" value="Iscerire parte della matricola o la razza." />
+					</div>
+					<div class="ui-g-1">
+						<p:commandButton actionListener="#{interMB.findFromParms()}"
+							update="anagraficaList" value="cerca"
+							styleClass="width-100 waves-effect waves-light btn rosso_cdr center" />
+					</div> -->
+					<!-- <p:autoComplete id="acRicerca" queryDelay="2000"
+							onkeypress="if (event.keyCode == 13) return false;"
+							completeMethod="#{interMB.findFromParms}"
+							value="#{interMB.searchParam}">
+							<p:ajax	update="" event="itemSelect" listener="#{gdmMB.addToGruppoDiMonta()}" />
+						</p:autoComplete> -->
+					<div class="ui-g-4"></div>
+					<div class="ui-g-8">
 						<!-- anagraficaList -->
 
-						<p:dataTable id="anagrafica" var="ana" widgetVar="templateWdg"
+						<p:dataTable id="anagraficaList" var="ana" widgetVar="templateWdg"
 							emptyMessage="#{text['label.emptyResult']}"
-							value="#{anagMB.lazyModel}" paginatorPosition="bottom"
-							filteredValue="#{anagMB.anagraficaFilteredList}"
+							value="#{interMB.lazyModel}" paginatorPosition="bottom"
+							filteredValue="#{interMB.anaFilteredList}"
 							currentPageReportTemplate="({currentPage} Di {totalPages})"
 							rows="10" paginator="true" dynamic="true" lazy="true"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="10,15,30">
 
 							<p:column headerText="#{text['column.header.numero.mat']}"
@@ -408,27 +56,11 @@
 								filterBy="#{ana.anaNumMatricola}" filterMatchMode="contains"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaNumMatricola}">
-								<h:outputText value="#{ana.anaNumMatricola}" />
+								<h:commandLink
+									action="#{interMB.getDetailParto(ana.anaNumMatricola)}"
+									value="#{ana.anaNumMatricola}" />
 							</p:column>
-							<p:column headerText="#{text['column.header.numero.mat.madre']}"
-								filterStyleClass="filterClass" width="10%"
-								filterMatchMode="contains"
-								filterBy="#{ana.anaNumMatricolaMadre}"
-								style="text-align: center; font-size:1.3em;"
-								sortBy="#{ana.anaNumMatricolaMadre}">
-								<h:outputText value="#{ana.anaNumMatricolaMadre}" />
-							</p:column>
-							<p:column headerText="#{text['column.header.numero.mat.padre']}"
-								filterMatchMode="contains"
-								style="text-align: center; font-size:1.3em;"
-								filterStyleClass="filterClass" width="10%"
-								filterBy="#{ana.anaNumMatricolaPadre}"
-								sortBy="#{ana.anaNumMatricolaPadre}">
-								<h:outputText value="#{ana.anaNumMatricolaPadre}" />
-							</p:column>
-							<p:column headerText="#{text['column.header.sesso']}"
-								filterStyleClass="filterClass" width="4%"
-								filterBy="#{ana.anaSesso}" filterMatchMode="contains"
+							<p:column headerText="#{text['column.header.sesso']}" width="4%"
 								style="text-align: center; font-size:1.3em;"
 								sortBy="#{ana.anaSesso}">
 								<!-- <h:outputText value="#{ana.anaSesso} " /> -->
@@ -437,13 +69,12 @@
 								<p:graphicImage rendered="#{ana.anaSesso eq 'M'}"
 									name="images/icons/male_gender.png" style="width:24px" />
 							</p:column>
-							<p:column headerText="#{text['column.header.toro']}"
-								filterStyleClass="filterClass" width="4%"
-								filterBy="#{ana.anaFlagToro}" filterMatchMode="contains"
-								style="text-align: center; font-size:1.3em;"
-								sortBy="#{ana.anaFlagToro}">
-								<h:outputText rendered="#{ana.anaFlagToro eq 1}"
-									styleClass="fa fa-check" />
+							<p:column headerText="#{text['column.header.razza']}"
+								filterStyleClass="filterClass" filterBy="#{ana.anaRazza}"
+								filterMatchMode="contains"
+								style="text-align: center; font-size:1.3em;" width="10%"
+								sortBy="#{ana.anaRazza}">
+								<h:outputText value="#{ana.anaRazza}" />
 							</p:column>
 							<p:column headerText="#{text['column.header.data.nasc']}"
 								width="12%" filterMatchMode="contains"
@@ -454,67 +85,65 @@
 									<f:convertDateTime pattern="dd/MM/yyyy" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="#{text['column.header.eta']}"
-								filterStyleClass="filterClass" filterBy="#{ana.anaEtaCalcolata}"
-								filterMatchMode="contains"
-								style="text-align: center; font-size:1.3em;"
-								sortBy="#{ana.anaEtaCalcolatao}">
-								<h:outputText value="#{ana.anaEtaCalcolata}" />
+							<p:column headerText="#{text['column.header.giorni.interparto']}"
+								width="10%" style="text-align: center; font-size:1.3em;">
+								<h:outputText
+									value="#{ana.giorniInterparto eq -1 ? 'Nessun parto disponibile': ana.giorniInterparto}" />
 							</p:column>
-							<p:column headerText="#{text['column.header.data.acquisto']}"
-								style="text-align: center; font-size:1.3em;" width="12%"
-								sortBy="#{ana.anaDataAcquisto}">
-								<h:outputText value="#{ana.anaDataAcquisto}">
-									<f:convertDateTime pattern="dd/MM/yyyy" />
-								</h:outputText>
+							<p:column headerText="#{text['column.header.giorni.inter.oggi']}"
+								width="10%" style="text-align: center; font-size:1.3em;">
+								<h:outputText
+									value="#{ana.ggUltimoPartoAdOggi eq -1 ? 'Nessun parto disponibile': ana.ggUltimoPartoAdOggi}" />
 							</p:column>
-							<p:column headerText="#{text['column.header.razza']}"
-								filterStyleClass="filterClass" filterBy="#{ana.anaRazza}"
-								filterMatchMode="contains"
-								style="text-align: center; font-size:1.3em;" width="10%"
-								sortBy="#{ana.anaRazza}">
-								<h:outputText value="#{ana.anaRazza}" />
-							</p:column>
-							<p:column headerText="#{text['column.header.diff.parto']}"
-								width="4%" style="text-align: center; font-size:1.3em;"
-								sortBy="#{ana.anaDifficoltaParto}">
-								<h:outputText value="#{ana.anaDifficoltaParto}" />
-							</p:column>
-							<p:column headerText="#{text['column.header.causa.uscita']}"
-								width="6%" style="text-align: center; font-size:1.3em;"
-								sortBy="#{ana.anaUscitaCausa}">
-								<h:outputText value="#{ana.anaUscitaCausa}" />
-							</p:column>
-							<p:column
-								headerText="#{text['column.header.gruppi.appartenenza']}"
-								style="text-align: center; font-size:1.3em;">
-								<h:outputText value="#{ana.gruppiAppartenenza}" />
-							</p:column>
-							<p:column width="4%" style="text-align: center; font-size:1.3em;"
-								id="editButton">
-								<p:commandLink action="#{anagMB.editAnimale(ana)}"
-									rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
-									oncomplete="PF('dlgNuovoAnagMod').loadContents();">
-									<p:graphicImage name="images/icons/edit-icon.png"
-										style="width:24px" />
-								</p:commandLink>
-							</p:column>
-							<f:facet name="{Exporters}">
-								<div style="float: right; padding-top: 5px;">
-									<p:tooltip for="expPdf" value="#{text['tooltip.export.pdf']}"
-										position="bottom" />
-									<p:commandLink id="expPdf" ajax="false">
-										<p:graphicImage name="images\export\pdf-square-icon.png"
-											width="24" />
-										<pe:exporter type="pdf" target="anagrafica"
-											fileName="#{anagMB.expNome}" orientation="Landscape" />
-									</p:commandLink>
-								</div>
-							</f:facet>
+
 						</p:dataTable>
 					</div>
 				</div>
 			</div>
+
+			<p:dialog resizable="false" widgetVar="dlgAnagraficheParto"
+				width="40%" id="dlgAnagraficheParto" closable="true"
+				styleClass="dialogClass"
+				style="box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.7) !important;">
+				<div class="row">
+					<h:outputText value="#{text['label.dialog.anagrafica.figli']}"
+						style="font-size: 15px;text-transform: uppercase;color:#777;" />
+				</div>
+
+				<p:dataTable var="ana" value="#{interMB.figlifromMadre}"
+					scrollWidth="false" id="dtFigliPerMadre"
+					emptyMessage="#{text['label.emptyResult']}">
+
+					<p:column headerText="#{text['column.header.numero.mat.figlio']}"
+						filterStyleClass="filterClass" width="10%"
+						filterBy="#{ana.anaNumMatricola}" filterMatchMode="contains"
+						style="text-align: center; font-size:1.3em;"
+						sortBy="#{ana.anaNumMatricola}">
+						<h:outputText value="#{ana.anaNumMatricola}" />
+					</p:column>
+					<p:column headerText="#{text['column.header.sesso']}"
+						filterStyleClass="filterClass" width="4%"
+						filterBy="#{ana.anaSesso}" filterMatchMode="contains"
+						style="text-align: center; font-size:1.3em;"
+						sortBy="#{ana.anaSesso}">
+						<!-- <h:outputText value="#{ana.anaSesso} " /> -->
+						<p:graphicImage rendered="#{ana.anaSesso eq 'F'}"
+							name="images/icons/female_gender.png" style="width:24px" />
+						<p:graphicImage rendered="#{ana.anaSesso eq 'M'}"
+							name="images/icons/male_gender.png" style="width:24px" />
+					</p:column>
+					<p:column headerText="#{text['column.header.data.nasc']}"
+						width="12%" filterMatchMode="contains"
+						filterStyleClass="filterClass" filterBy="#{ana.anaDataNascita}"
+						style="text-align: center; font-size:1.3em;"
+						sortBy="#{ana.anaDataNascita}">
+						<h:outputText value="#{ana.anaDataNascita}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</p:dialog>
 		</p:panel>
 	</ui:define>
 </ui:composition>

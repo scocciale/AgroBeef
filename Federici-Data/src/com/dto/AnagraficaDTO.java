@@ -32,6 +32,9 @@ public class AnagraficaDTO {
 	private int anaEtaCalcolata;
 	private String gruppiAppartenenza;
 
+	private int giorniInterparto;
+	private int ggUltimoPartoAdOggi;
+
 	public int getAnaId() {
 		return anaId;
 	}
@@ -240,12 +243,20 @@ public class AnagraficaDTO {
 		this.gruppiAppartenenza = gruppiAppartenenza;
 	}
 
-	@Override
-	public String toString() {
-		return "AnagraficaDTO [anaId=" + anaId + ", anaDataAcquisto=" + anaDataAcquisto + ", anaDataNascita=" + anaDataNascita + ", anaDifficoltaParto=" + anaDifficoltaParto + ", anaFlagGemello="
-				+ anaFlagGemello + ", anaFlagToro=" + anaFlagToro + ", anaNumMatricola=" + anaNumMatricola + ", anaNumMatricolaMadre=" + anaNumMatricolaMadre + ", anaNumMatricolaPadre="
-				+ anaNumMatricolaPadre + ", anaNumParto=" + anaNumParto + ", anaRazza=" + anaRazza + ", anaSesso=" + anaSesso + ", anaUteId=" + anaUteId + ", anaEtaCalcolata=" + anaEtaCalcolata
-				+ ", gruppiAppartenenza=" + gruppiAppartenenza + "]";
+	public int getGiorniInterparto() {
+		return giorniInterparto;
+	}
+
+	public void setGiorniInterparto(int giorniInterparto) {
+		this.giorniInterparto = giorniInterparto;
+	}
+
+	public int getGgUltimoPartoAdOggi() {
+		return ggUltimoPartoAdOggi;
+	}
+
+	public void setGgUltimoPartoAdOggi(int ggUltimoPartoAdOggi) {
+		this.ggUltimoPartoAdOggi = ggUltimoPartoAdOggi;
 	}
 
 }

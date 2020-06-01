@@ -11,6 +11,7 @@
 		<class>com.entities.AnagrAccrFini</class>
 		<class>com.entities.Anagrafica</class>
 		<class>com.entities.GruppoMonta</class>
+		<class>com.entities.Parto</class>
 		<class>com.entities.Pesata</class>
 		<class>com.entities.Profilo</class>
 		<class>com.entities.Razza</class>
@@ -27,12 +28,13 @@
 
 
 			<!-- per il deploy utilizzare questi parametri -->
-			<!-- <property name="hibernate.default_schema" value="Sql891011_4" /> 
-				<property name="hibernate.show_sql" value="false" /> -->
+			<!-- <property name="hibernate.default_schema"
+				value="Sql891011_4" />
+			<property name="hibernate.show_sql" value="false" /> -->
 
 			<!-- per sviluppare in locale utilizzare questi parametri -->
-			<property name="hibernate.default_schema" value="federicidb" />
-			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.default_schema" value="federicidb" /> <property 
+				name="hibernate.show_sql" value="true" /> 
 
 			<property name="hibernate.connection.characterEncoding"
 				value="UTF-8" />

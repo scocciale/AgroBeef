@@ -59,15 +59,15 @@
 4. Modifica del numero di righe tabelle 																					+ non più 5, 10, 15 ma 10,15,30
 																																																																																							
 5. Anagrafica:																												+ Aggiunta campo "Età" vicino a "Data di nascita" calcolandolo in mesi e arrotondarlo per difetto
-	 																														- All’aggiunta di una nuova matricola aggiungere parto alla madre (se presente in anagrafica)
+	 																														+ All’aggiunta di una nuova matricola aggiungere parto alla madre (se presente in anagrafica)
 																															+ Aggiunta possibilità di estrarre in PDF
 																															+ Rendere modificabili i campi: Data nascita, Sesso, Razza
 																															+ Rendere filtrabile, e ordinabile il campo Razza
 																															+ Aggiungere campo “Gruppo appartenenza” dove viene mostrato il nome del gruppo di finiss/accr a cui appartiene
 																															?- rendere filtrabile e ordinabile campo "Gruppo appartenenza"
 																															
-6. (NUOVO) Sezione Interparto:																								- Creare nuova pagina "Interparto" dove è possibile ricercare per razza e/o per matricola (autocomplete) 
-																															- Intabellare con campi: Matricola, Data nascita, Data ultimo parto, Interparto (differenza in mesi tra Data ultimo parto e data parto precedente)																														
+6. (NUOVO) Sezione Interparto:																								+ Creare nuova pagina "Interparto" dove è possibile ricercare per razza e/o per matricola (autocomplete) 
+																															+ Intabellare con campi: Matricola, Data nascita, Data ultimo parto, Interparto (differenza in mesi tra Data ultimo parto e data parto precedente)																														
 																															
 7. Veterinaria:																												?- Indicare in Rosso peso superiore a 700 kg per i maschi e 500 per le femmine																													
 

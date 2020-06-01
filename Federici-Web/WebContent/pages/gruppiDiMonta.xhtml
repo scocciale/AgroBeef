@@ -79,11 +79,12 @@
 										<f:selectItem itemLabel="#{text['label.selezione.toro']}"
 											itemValue="" />
 										<f:selectItems value="#{gdmMB.toriDisponibiliFinalString}" />
+										<p:ajax update="addToro" event="itemSelect" />
 									</p:selectOneMenu>
 
 									<p:commandButton value="#{text['button.aggiungi.toro']}"
 										style="float:right!important;margin-top: 4%!important;"
-										disabled="#{gdmMB.toroAdded}"
+										disabled="#{!gdmMB.toroAdded and gdmMB.valueAnaToro eq ''}"
 										actionListener="#{gdmMB.addToroToGruppoDiMonta()}"
 										id="addToro"
 										rendered="#{!userMB.utente.profilo.proNome.equals('lettura')}"
@@ -136,7 +137,8 @@
 								headerText="#{text['column.header.nome']}">
 
 								<p:inplace id="sgmNomeEditable" editor="true">
-									<p:ajax event="save" listener="#{gdmMB.cambiaNomeGdm(sgdmVar,sgdmVar.sgmNome)}"
+									<p:ajax event="save"
+										listener="#{gdmMB.cambiaNomeGdm(sgdmVar,sgdmVar.sgmNome)}"
 										update="sgmNomeEditable" />
 									<p:inputText value="#{sgdmVar.sgmNome}" required="true"
 										styleClass="" label="text" />

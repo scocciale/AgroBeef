@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -20,6 +21,7 @@ import org.hibernate.annotations.NamedQuery;
  * 
  */
 @Entity
+@Table(name = "anagr_accr_finis")
 @NamedQuery(name = "AnagrAccrFini.findAll", query = "SELECT a FROM AnagrAccrFini a")
 public class AnagrAccrFini implements Serializable {
 	private static final long serialVersionUID = 1L;

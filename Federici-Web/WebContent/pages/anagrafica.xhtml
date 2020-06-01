@@ -67,14 +67,31 @@
 						<p:row>
 							<p:column>
 								<div class="input-field">
-									<p:inputText id="matMadre" styleClass="validate"
+									<!-- <p:inputText id="matMadre" styleClass="validate"
 										onkeypress="if (event.keyCode == 13) return false;"
 										value="#{anagMB.nuovoAnimale.anaNumMatricolaMadre}">
 										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
-									</p:inputText>
-									<label class="left-align" for="matMadre"><h:outputText
+									</p:inputText> -->
+									<p:autoComplete id="acMadre" queryDelay="800"
+										onkeypress="if (event.keyCode == 13) return false;"
+										completeMethod="#{anagMB.cercaSeMadreEsiste}"
+										value="#{anagMB.nuovoAnimale.anaNumMatricolaMadre}">
+									</p:autoComplete>
+									<label class="left-align" for="acMadre"><h:outputText
 											value="#{text['column.header.numero.mat.madre']}" /></label>
 								</div>
+
+
+								<!-- <p:autoComplete id="acAnimali" queryDelay="600"
+								onkeypress="if (event.keyCode == 13) return false;"
+								completeMethod="#{accrMB.findFromParms}"
+								value="#{accrMB.valueAna}">
+								<p:ajax
+									update="showListAddedAnimal contForm:dlgAnimaleAddedYet rimuoviAnimale"
+									event="itemSelect" listener="#{accrMB.addToGruppoDiAccr()}" />
+							</p:autoComplete> -->
+
+
 							</p:column>
 
 							<p:column>
@@ -180,7 +197,7 @@
 				<div class="row">
 					<p:commandButton id="salvaAnag" value="#{text['button.salva']}"
 						actionListener="#{anagMB.salvaDatiAnag}"
-						styleClass="width-100 waves-effect waves-light btn rosso_cdr "
+						styleClass="width-100 waves-effect waves-light btn rosso_cdr"
 						style="width:auto; float:right;"
 						oncomplete="PF('dlgNuovoAnag').hide();location.reload();"
 						update="anagrafica messages" />
@@ -212,8 +229,8 @@
 										value="#{anagMB.animaleEdit.anaNumMatricola}"></h:outputText> -->
 
 									<p:inputText id="matricolaMod" styleClass="validate"
-										onkeypress="if (event.keyCode == 13) return false;" disabled="true"
-										value="#{anagMB.animaleEdit.anaNumMatricola}">
+										onkeypress="if (event.keyCode == 13) return false;"
+										disabled="true" value="#{anagMB.animaleEdit.anaNumMatricola}">
 									</p:inputText>
 									<label class="left-align" for="matricolaMod"><h:outputText
 											value="#{text['column.header.numero.mat']}" /></label>
@@ -239,7 +256,8 @@
 						<p:row>
 							<p:column>
 								<div class="input-field">
-									<p:inputText id="matMadreMod" styleClass="validate" disabled="true"
+									<p:inputText id="matMadreMod" styleClass="validate"
+										disabled="true"
 										onkeypress="if (event.keyCode == 13) return false;"
 										value="#{anagMB.animaleEdit.anaNumMatricolaMadre}">
 										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
@@ -251,7 +269,8 @@
 
 							<p:column>
 								<div class="input-field">
-									<p:inputText id="matPadreMod" styleClass="validate"  disabled="true"
+									<p:inputText id="matPadreMod" styleClass="validate"
+										disabled="true"
 										onkeypress="if (event.keyCode == 13) return false;"
 										value="#{anagMB.animaleEdit.anaNumMatricolaPadre}">
 										<p:ajax listener="#{anagMB.checkRazza}" update="razza" />
@@ -286,7 +305,7 @@
 
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:outputLabel for="dataAcqMod" 
+									<p:outputLabel for="dataAcqMod"
 										value="#{text['label.data.acquisto']}" styleClass="left-align"
 										style="font-size: 0.9rem !important;color: #888888;!important" />
 									<p:calendar id="dataAcqMod" disabled="true"
@@ -318,7 +337,8 @@
 
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:inputText id="nPartoMod" styleClass="validate" disabled="true"
+									<p:inputText id="nPartoMod" styleClass="validate"
+										disabled="true"
 										onkeypress="if (event.keyCode == 13) return false;"
 										value="#{anagMB.animaleEdit.anaNumParto}">
 									</p:inputText>
@@ -328,17 +348,18 @@
 							</p:column>
 							<p:column colspan="1">
 								<div class="row" style="">
-									<p:outputLabel value="#{text['column.header.gemello']}" 
+									<p:outputLabel value="#{text['column.header.gemello']}"
 										style="margin-left: 20px;" for="flagGemelloMod" />
-									<p:selectBooleanCheckbox value="#{anagMB.flagGemello}" disabled="true"
-										style="margin-left: 20px;" id="flagGemelloMod" />
+									<p:selectBooleanCheckbox value="#{anagMB.flagGemello}"
+										disabled="true" style="margin-left: 20px;" id="flagGemelloMod" />
 								</div>
 							</p:column>
 						</p:row>
 						<p:row>
 							<p:column colspan="1">
 								<div class="input-field">
-									<p:inputText id="diffPartoMod" styleClass="validate" disabled="true"
+									<p:inputText id="diffPartoMod" styleClass="validate"
+										disabled="true"
 										value="#{anagMB.animaleEdit.anaDifficoltaParto}"
 										onkeypress="if (event.keyCode == 13) return false;">
 									</p:inputText>

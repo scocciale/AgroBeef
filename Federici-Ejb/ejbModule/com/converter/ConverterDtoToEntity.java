@@ -3,11 +3,10 @@ package com.converter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-
 import com.dto.AnagrAccrFiniDTO;
 import com.dto.AnagraficaDTO;
 import com.dto.GruppoMontaDTO;
+import com.dto.PartoDTO;
 import com.dto.PesataDTO;
 import com.dto.ProfiloDTO;
 import com.dto.StoricoAccrescFiniDTO;
@@ -18,6 +17,7 @@ import com.dto.VeterinariaDTO;
 import com.entities.AnagrAccrFini;
 import com.entities.Anagrafica;
 import com.entities.GruppoMonta;
+import com.entities.Parto;
 import com.entities.Pesata;
 import com.entities.Profilo;
 import com.entities.StoricoAccrescFini;
@@ -319,6 +319,19 @@ public class ConverterDtoToEntity {
 		if (pesDto.getPesPeso() != null)
 			pes.setPesPeso(pesDto.getPesPeso());
 		return pes;
+	}
+
+	public static Parto partoDtoToPartoEntity(PartoDTO dto) {
+		Parto par = new Parto();
+
+		if (dto.getParAnaId() != 0)
+			par.setParAnaId(dto.getParAnaId());
+		if (dto.getParData() != null)
+			par.setParData(dto.getParData());
+		if (dto.getParMadreAnaId() != 0)
+			par.setParMadreAnaId(dto.getParMadreAnaId());
+
+		return par;
 	}
 
 }

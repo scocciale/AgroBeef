@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import com.dto.AnagrAccrFiniDTO;
 import com.dto.AnagraficaDTO;
 import com.dto.GruppoMontaDTO;
+import com.dto.PartoDTO;
 import com.dto.PesataDTO;
 import com.dto.ProfiloDTO;
 import com.dto.RazzaDTO;
@@ -22,6 +23,7 @@ import com.dto.VeterinariaDTO;
 import com.entities.AnagrAccrFini;
 import com.entities.Anagrafica;
 import com.entities.GruppoMonta;
+import com.entities.Parto;
 import com.entities.Pesata;
 import com.entities.Profilo;
 import com.entities.Razza;
@@ -55,7 +57,8 @@ public class ConverterEntityToDto {
 		if (anagrafica.getAnaDataNascita() != null) {
 			anagraficaDTO.setAnaDataNascita(anagrafica.getAnaDataNascita());
 
-			anagraficaDTO.setAnaEtaCalcolata((int) (TimeUnit.MILLISECONDS.toDays(new Date().getTime() - anagraficaDTO.getAnaDataNascita().getTime()) / 30));
+			anagraficaDTO.setAnaEtaCalcolata((int) (TimeUnit.MILLISECONDS
+					.toDays(new Date().getTime() - anagraficaDTO.getAnaDataNascita().getTime()) / 30));
 
 		}
 		if (anagrafica.getAnaFlagGemello() != null)
@@ -78,7 +81,8 @@ public class ConverterEntityToDto {
 				pes = new PesataDTO();
 				pes = pesataEntityToPesataDTO(obj);
 				if (anagrafica.getPesatas().indexOf(obj) > 0) {
-					pes.setDeltaPeso(pes.getPesPeso() - anagrafica.getPesatas().get((anagrafica.getPesatas().indexOf(obj) - 1)).getPesPeso());
+					pes.setDeltaPeso(pes.getPesPeso()
+							- anagrafica.getPesatas().get((anagrafica.getPesatas().indexOf(obj) - 1)).getPesPeso());
 				}
 				list.add(pes);
 			}
@@ -126,7 +130,7 @@ public class ConverterEntityToDto {
 		// for (ValutazioneMace obj : anagrafica.getValutazioneMaces()) {
 		// list.add(valutazioneMaceEntityToValutazioneMaceDTO(obj));
 		// }
-		// anagraficaDTO.setValutazioneMaces(list); 
+		// anagraficaDTO.setValutazioneMaces(list);
 		// }
 
 		// if (anagrafica.getGruppoMontas() != null &&
@@ -383,5 +387,18 @@ public class ConverterEntityToDto {
 			dtoList.add(anagraficaEntityToAngraficaDTO(anagrafica));
 		}
 		return dtoList;
+	}
+
+	public static PartoDTO partoEntityToPartoDto(Parto p) {
+		PartoDTO dto = new PartoDTO();
+		if (p.getParId() != 0)
+			dto.setParId(p.getParId());
+		if (p.getParAnaId() != 0)
+			dto.setParAnaId(p.getParAnaId());
+		if (p.getParMadreAnaId() != 0)
+			dto.setParMadreAnaId(p.getParMadreAnaId());
+		if (p.getParData() != null)
+			dto.setParData(p.getParData());
+		return dto;
 	}
 }
